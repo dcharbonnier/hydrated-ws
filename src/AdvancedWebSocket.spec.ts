@@ -341,4 +341,4 @@ describe("AdvancedWebSocket", () => {
         });
 
     });
-}).timeout(30000);
+});
