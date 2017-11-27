@@ -75,7 +75,7 @@ const expectEventually = (f: () => boolean, message: string): Promise<void> => {
                     clearTimeout(timeout);
                     resolve();
                 } else {
-                    setTimeout(() => test(), 10);
+                    setTimeout(() => test(), 100);
                 }
             } catch (e) {
                 clearTimeout(timeout);

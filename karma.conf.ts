@@ -14,7 +14,7 @@ let configData: any = {
     },
     client: {
         mocha: {
-            timeout: 30000
+            timeout: 120000
         }
     },
     autoWatch: true,
@@ -27,7 +27,7 @@ let configData: any = {
         }
     },
     captureTimeout: 0,
-    browserNoActivityTimeout: 45000,
+    browserNoActivityTimeout: 120000,
 };
 
 if (process.env.TRAVIS_JOB_NUMBER) {
