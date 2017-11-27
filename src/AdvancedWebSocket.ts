@@ -6,7 +6,7 @@ export class AdvancedWebSocket extends WrapperWebSocket {
 
 
     private timeout: any;
-    private connectionTimeout: number = 3000;
+    private connectionTimeout: number = 5000;
     private retryPolicy: (attempt: number, ws: AdvancedWebSocket) => number;
     private _url: string;
 
