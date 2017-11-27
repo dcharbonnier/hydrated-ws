@@ -87,9 +87,15 @@ const expectEventually = (f: () => boolean, message: string): Promise<void> => {
 };
 
 describe("AdvancedWebSocket", () => {
+    let ws: AdvancedWebSocket;
     before(async() => {
         await expectEventually(() => supervisor.ws.readyState === WebSocket.OPEN,
             "The supervisor failed to connect");
+    });
+    afterEach(async() => {
+        if(ws) {
+            ws.close();
+        }
     });
     describe("constructor", () => {
         it("should throw an error when not using the new operator", () => {
@@ -108,8 +114,8 @@ describe("AdvancedWebSocket", () => {
                 expect(() => new AdvancedWebSocket(url)).to.not.throw();
             });
         });
-        it("should immediately connect to the server", () => {
-            const ws = new AdvancedWebSocket("ws://localhost:8088");
+        it("should immediately connect to the server", async () => {
+            ws = new AdvancedWebSocket("ws://localhost:8088");
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             return expectEventually(() => ws.readyState === WebSocket.OPEN, "The WebSocket should be open");
         })
@@ -277,7 +283,7 @@ describe("AdvancedWebSocket", () => {
         it("should connect after 2 failures", async () => {
             const testCase = rnd();
             await supervisor.setup(testCase, [{fail: true}, {fail: true}]);
-            const ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -287,7 +293,7 @@ describe("AdvancedWebSocket", () => {
         it("should retry if the first connection timeout", async () => {
             const testCase = rnd();
             await supervisor.setup(testCase, [{delay: 2000}]);
-            const ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`, null, {connectionTimeout: 100});
+            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`, null, {connectionTimeout: 100});
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -299,7 +305,7 @@ describe("AdvancedWebSocket", () => {
     describe("properties", () => {
         it("should return the socket properties", async () => {
             const testCase = rnd();
-            const ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
             expect(ws.extensions).to.equal("");
             expect(ws.protocol).to.equal("");
             expect(ws.bufferedAmount).to.equal(0);
@@ -309,7 +315,7 @@ describe("AdvancedWebSocket", () => {
     describe("when close", () => {
         it("should not reconnect", async () => {
             const testCase = rnd();
-            const ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -321,7 +327,7 @@ describe("AdvancedWebSocket", () => {
         });
         it("should pass the close reason to the server", async () => {
             const testCase = rnd();
-            const ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -335,7 +341,7 @@ describe("AdvancedWebSocket", () => {
         });
         it("should ignore a second close", async () => {
             const testCase = rnd();
-            const ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
