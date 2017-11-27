@@ -109,7 +109,7 @@ describe("AdvancedWebSocket", () => {
             return expectEventually(() => ws.readyState === WebSocket.OPEN, "The WebSocket should be open");
         })
     });
-    describe("when connected", () => {
+    describe.only("when connected", () => {
         let ws: AdvancedWebSocket;
 
         beforeEach(async () => {
