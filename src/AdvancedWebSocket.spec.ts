@@ -86,7 +86,6 @@ const expectEventually = (f: () => boolean, message: string): Promise<void> => {
 };
 
 describe("AdvancedWebSocket", () => {
-    this.timeout(30000);
     describe("constructor", () => {
         it("should throw an error when not using the new operator", () => {
             const error = captureError(() => (WebSocket as any)());
@@ -342,4 +341,4 @@ describe("AdvancedWebSocket", () => {
         });
 
     });
-});
+}).timeout(30000);
