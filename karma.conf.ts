@@ -53,15 +53,15 @@ const config = (config:karma.Config):void => {
                 excludes: 'src/**/(*.spec).ts'
             }
         },
+        captureTimeout: 0,
+        browserNoActivityTimeout: 45000,
         sauceLabs: {
             testName: "Advanced WebSocket",
             recordScreenshots: false,
             tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
+            username: process.env.SAUCE_USERNAME,
+            accessKey: process.env.SAUCE_ACCESS_KEY,
             startConnect: false,
-            connectOptions: {
-                port: 5757,
-                logfile: 'sauce_connect.log'
-            },
             public: 'public'
         }
     } as any);
