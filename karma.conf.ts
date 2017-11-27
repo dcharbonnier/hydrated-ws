@@ -14,7 +14,7 @@ let configData: any = {
     },
     autoWatch: true,
     singleRun: false,
-    reporters: ["progress", "coverage", "karma-typescript"],
+    reporters: ["coverage", "karma-typescript"],
     browsers: ["ChromeHeadless"],
     karmaTypescriptConfig: {
         coverageOptions: {
