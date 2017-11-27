@@ -292,7 +292,7 @@ describe("AdvancedWebSocket", () => {
 
     });
     describe("properties", () => {
-        it("should return the coket properties", async () => {
+        it("should return the socket properties", async () => {
             const testCase = rnd();
             const ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
             expect(ws.extensions).to.equal("");
@@ -301,7 +301,7 @@ describe("AdvancedWebSocket", () => {
 
         });
     });
-    describe("when close", () => {
+    describe.only("when close", () => {
         it("should not reconnect", async () => {
             const testCase = rnd();
             const ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
