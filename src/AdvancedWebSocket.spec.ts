@@ -301,7 +301,7 @@ describe("AdvancedWebSocket", () => {
 
         });
     });
-    describe.only("when close", () => {
+    describe("when close", () => {
         it("should not reconnect", async () => {
             const testCase = rnd();
             const ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
