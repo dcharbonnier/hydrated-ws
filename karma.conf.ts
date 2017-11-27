@@ -56,6 +56,8 @@ const config = (config:karma.Config):void => {
         sauceLabs: {
             testName: "Advanced WebSocket",
             recordScreenshots: false,
+            tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
+            startConnect: false,
             connectOptions: {
                 port: 5757,
                 logfile: 'sauce_connect.log'
