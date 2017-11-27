@@ -1,0 +1,17 @@
+Support :
+
+- [x] Browser (WebSocket API compatible)
+- [ ] Nodejs
+- [x] Reconnect (with an exponential truncated backoff by default)
+- [ ] Multiplexing
+- [ ] Layers
+- [ ] Url change
+
+```
+{
+  "name": "multiplex-websocket",
+  ...
+  "dependencies": null,
+  ...
+}
+```
