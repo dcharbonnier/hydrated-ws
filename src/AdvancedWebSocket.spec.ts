@@ -87,7 +87,7 @@ const expectEventually = (f: () => boolean, message: string): Promise<void> => {
 
 describe("AdvancedWebSocket", () => {
     describe("constructor", () => {
-        it("should throw an error when not using the new operator", () => {
+        it.only("should throw an error when not using the new operator", () => {
             const error = captureError(() => (WebSocket as any)());
             expect(() => (AdvancedWebSocket as any)("")).to.throw(error.constructor, error.message);
         });

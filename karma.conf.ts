@@ -12,11 +12,6 @@ let configData: any = {
         'src/**/*!(*.spec).ts': ["karma-typescript", "coverage"]
 
     },
-    client: {
-        mocha: {
-            timeout: 30000
-        }
-    },
     autoWatch: true,
     singleRun: false,
     reporters: ["progress", "coverage", "karma-typescript"],
