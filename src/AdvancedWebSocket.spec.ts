@@ -1,4 +1,5 @@
 import {AdvancedWebSocket} from "./AdvancedWebSocket";
+const expect = chai.expect;
 
 const captureError = (f: () => any): Error => {
     try {
@@ -43,7 +44,7 @@ const supervisor = (() => {
     };
 
     return {
-        logs: async (testCase: string) => new Promise(resolve => {
+        logs: async (testCase: string) => new Promise<any>(resolve => {
             const id = rnd();
             rpc[id] = resolve;
             ws.send(JSON.stringify({rpc: id, method: "logs", args: {testCase}}));

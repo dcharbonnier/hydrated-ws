@@ -10,12 +10,15 @@
   "author": "David Charbonnier",
   "license": "ISC",
   "dependencies": {
+    "@types/es6-collections": "^0.5.31",
+    "@types/es6-promise": "0.0.33",
     "ws": "^3.3.2"
   },
   "devDependencies": {
     "@types/chai": "^4.0.5",
     "@types/karma": "^1.7.2",
     "@types/mocha": "^2.2.44",
+    "es6-promise": "^4.1.1",
     "forever": "^0.15.3",
     "karma": "^1.7.1",
     "karma-chai-plugins": "^0.9.0",

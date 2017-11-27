@@ -1,1 +1,1 @@
-declare var expect = chai.expect;
+// declare var ;
