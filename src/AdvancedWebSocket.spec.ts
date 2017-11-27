@@ -268,7 +268,7 @@ describe("AdvancedWebSocket", () => {
             });
         });
     });
-    describe.only("when reconnect", () => {
+    describe.skip("when reconnect", () => {
         it("should connect after 2 failures", async () => {
             const testCase = rnd();
             await supervisor.setup(testCase, [{fail: true}, {fail: true}]);
