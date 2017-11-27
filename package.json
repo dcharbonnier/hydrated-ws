@@ -3,9 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "start-mock": "forever start --minUptime 1000 --spinSleepTime 1000 -c \"node --experimental-modules\" mock.mjs",
-    "stop-mock": "forever stop mock.mjs",
-    "test": "npm run start-mock && karma start && npm run stop-mock"
+    "test": "node --experimental-modules mock.mjs & karma start"
   },
   "author": "David Charbonnier",
   "license": "ISC",
