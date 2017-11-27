@@ -35,26 +35,23 @@ if (process.env.TRAVIS_JOB_NUMBER) {
         sl_chrome: {
             base: 'SauceLabs',
             browserName: 'chrome',
-            platform: 'Windows 10',
             version: '61'
         },
-        // sl_firefox: {
-        //     base: 'SauceLabs',
-        //     browserName: 'firefox',
-        //     version: '30'
-        // },
-        // sl_ios_safari: {
-        //     base: 'SauceLabs',
-        //     browserName: 'iphone',
-        //     platform: 'OS X 10.9',
-        //     version: '7.1'
-        // },
-        // sl_ie_11: {
-        //     base: 'SauceLabs',
-        //     browserName: 'internet explorer',
-        //     platform: 'Windows 8.1',
-        //     version: '11'
-        // }
+        sl_firefox: {
+            base: 'SauceLabs',
+            browserName: 'firefox',
+            version: '55'
+        },
+        sl_macos_safari: {
+            base: 'SauceLabs',
+            browserName: 'safari',
+            version: '11.0'
+        },
+        sl_ie_11: {
+            base: 'SauceLabs',
+            browserName: 'internet explorer',
+            version: '11.0'
+        }
     };
 
 

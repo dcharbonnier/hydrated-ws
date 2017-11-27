@@ -301,8 +301,8 @@ describe("AdvancedWebSocket", () => {
         });
         it("should retry if the first connection timeout", async () => {
             const testCase = rnd();
-            await supervisor.setup(testCase, [{delay: 2000}]);
-            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`, null, {connectionTimeout: 100});
+            await supervisor.setup(testCase, [{delay: 6000}]);
+            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`, null, {connectionTimeout: 3000});
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
