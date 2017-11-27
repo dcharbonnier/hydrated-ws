@@ -64,7 +64,7 @@ const expectEventually = (f: () => boolean, message: string): Promise<void> => {
         let timeout = setTimeout(() => {
             done = true;
             reject(new Error(message))
-        }, 1000);
+        }, 1500);
         const test = () => {
             if (done) {
                 return;
