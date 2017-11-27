@@ -59,6 +59,7 @@ const config = (config:karma.Config):void => {
             testName: "Advanced WebSocket",
             recordScreenshots: false,
             tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
+            build: 'Build ' + process.env.TRAVIS_BUILD_NUMBER + '.' + process.env.TRAVIS_BUILD_ID
             username: process.env.SAUCE_USERNAME,
             accessKey: process.env.SAUCE_ACCESS_KEY,
             startConnect: false,
