@@ -44,6 +44,7 @@ const supervisor = (() => {
     };
 
     return {
+        ws,
         logs: async (testCase: string) => new Promise<any>(resolve => {
             const id = rnd();
             rpc[id] = resolve;
@@ -86,6 +87,10 @@ const expectEventually = (f: () => boolean, message: string): Promise<void> => {
 };
 
 describe("AdvancedWebSocket", () => {
+    before(async() => {
+        await expectEventually(() => supervisor.ws.readyState === WebSocket.OPEN,
+            "The supervisor failed to connect");
+    });
     describe("constructor", () => {
         it("should throw an error when not using the new operator", () => {
             const error = captureError(() => (WebSocket as any)());

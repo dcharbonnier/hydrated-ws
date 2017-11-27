@@ -29,7 +29,7 @@ const wss = new WebSocket.Server({
             } else {
                 done(!setup.fail);
             }
-            if(reqCount[testCase]) {
+            if (reqCount[testCase]) {
                 reqCount[testCase] = reqCount[testCase] + 1;
             } else {
                 reqCount[testCase] = 1;
@@ -45,6 +45,7 @@ const wss = new WebSocket.Server({
 wss.on('connection', (ws, request) => {
     if (request.url === "/supervisor") {
         ws.on('message', (message) => {
+            console.log("supervisor", message);
             let data = JSON.parse(message);
             const method = data.method;
             if (method === "logs") {
@@ -64,9 +65,9 @@ wss.on('connection', (ws, request) => {
         const testCase = request.url.slice(1);
         ws.on('close', (code, reason) => {
             log(testCase, "close", [code, reason]);
-
         });
         ws.on('message', (message) => {
+            console.log("testCase", message);
             log(testCase, message);
             if (message === "ping") {
                 try {
