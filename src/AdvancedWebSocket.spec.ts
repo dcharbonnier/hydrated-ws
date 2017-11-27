@@ -64,7 +64,7 @@ const expectEventually = (f: () => boolean, message: string): Promise<void> => {
         let timeout = setTimeout(() => {
             done = true;
             reject(new Error(message))
-        }, 2000);
+        }, 5000);
         const test = () => {
             if (done) {
                 return;
@@ -86,6 +86,7 @@ const expectEventually = (f: () => boolean, message: string): Promise<void> => {
 };
 
 describe("AdvancedWebSocket", () => {
+    this.timeout(30000);
     describe("constructor", () => {
         it("should throw an error when not using the new operator", () => {
             const error = captureError(() => (WebSocket as any)());
@@ -189,7 +190,7 @@ describe("AdvancedWebSocket", () => {
                     expect(events.length).to.equal(2);
                     events.push(event);
                 });
-                const timeout = setTimeout(() => reject(new Error("did not received the open event")), 1000);
+                const timeout = setTimeout(() => reject(new Error("did not received the open event")), 3000);
                 await expectEventually(() => ws.readyState === WebSocket.OPEN,
                     "The WebSocket should be open");
                 expect(events.length).to.equal(3);
@@ -213,7 +214,7 @@ describe("AdvancedWebSocket", () => {
                     expect(events.length).to.equal(2);
                     events.push(event);
                 });
-                const timeout = setTimeout(() => reject(new Error("did not received the close event")), 1000);
+                const timeout = setTimeout(() => reject(new Error("did not received the close event")), 3000);
                 await expectEventually(() => ws.readyState === WebSocket.OPEN,
                     "The WebSocket should be open");
                 ws.close();
@@ -229,7 +230,7 @@ describe("AdvancedWebSocket", () => {
                 };
                 ws.addEventListener("open", listener);
                 ws.removeEventListener("open", listener);
-                const timeout = setTimeout(() => reject(new Error("did not received the open event")), 1000);
+                const timeout = setTimeout(() => reject(new Error("did not received the open event")), 3000);
                 await expectEventually(() => ws.readyState === WebSocket.OPEN,
                     "The WebSocket should be open");
                 clearTimeout(timeout);
@@ -259,7 +260,7 @@ describe("AdvancedWebSocket", () => {
                     reject(new Error("this listener not be call"));
                     events.push(event);
                 });
-                const timeout = setTimeout(() => reject(new Error("did not received the open event")), 1000);
+                const timeout = setTimeout(() => reject(new Error("did not received the open event")), 3000);
                 await expectEventually(() => ws.readyState === WebSocket.OPEN,
                     "The WebSocket should be open");
                 expect(events.length).to.equal(2);
