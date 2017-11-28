@@ -24,7 +24,7 @@ let configData: any = {
     singleRun: false,
     concurrency: 4,
     reporters: [/*"progress",*/ "helpful", "karma-typescript"],
-    browsers: ["Safari"],
+    browsers: ["Chrome"],
     karmaTypescriptConfig: {
         bundlerOptions: {
             constants: {

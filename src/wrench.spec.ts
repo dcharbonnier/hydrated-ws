@@ -86,7 +86,7 @@ export const expectEventually = (f: () => boolean, message: string): Promise<voi
                     clearTimeout(timeout);
                     resolve();
                 } else {
-                    setTimeout(() => test(), 10);
+                    setTimeout(() => test(), 50);
                 }
             } catch (e) {
                 done = true;

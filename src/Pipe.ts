@@ -7,13 +7,21 @@ export class Pipe extends Shell implements WebSocket {
     private channel: string;
     private prefixLength = 4;
 
+    private static repeatString(str: string, count: number): string {
+        let res = "";
+        for (let i = count; i > 0; i--) {
+            res += str;
+        }
+        return res;
+    }
+
     constructor(ws: WebSocket, channel: string) {
         super();
 
         if (typeof(channel) !== "string" || !channel.length || channel.length > this.prefixLength) {
             throw new Error("Channel should be a string between 1 and 4 characters");
         }
-        this.channel = `${" ".repeat(this.prefixLength)}${channel}`.slice(this.prefixLength * -1);
+        this.channel = `${Pipe.repeatString(" ", this.prefixLength)}${channel}`.slice(this.prefixLength * -1);
         this.ws = ws;
 
         this.onMessageListener = this._onMessageListener.bind(this);
