@@ -1,6 +1,7 @@
 {
   "name": "advanced-websocket",
   "version": "0.0.6",
+  "license": "Apache-2.0",
   "description": "",
   "scripts": {
     "test": "npm run test-phantom",
@@ -11,7 +12,6 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "author": "David Charbonnier",
-  "license": "ISC",
   "dependencies": null,
   "devDependencies": {
     "@types/chai": "^4.0.5",
