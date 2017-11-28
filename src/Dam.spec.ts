@@ -13,7 +13,7 @@ describe("Dam", () => {
 
     beforeEach((done) => {
         testCase = rnd();
-        ws = new WebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
+        ws = new WebSocket(`ws://localtest.me:3000/${testCase}`);
         ws.onopen = () => done();
     });
 
@@ -71,7 +71,7 @@ describe("Dam", () => {
         });
         it("should dispatch an open event when the socket open", async () => {
             ws.close();
-            ws = new WebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
+            ws = new WebSocket(`ws://localtest.me:3000/${testCase}`);
             dam = new Dam(ws);
             dam.status = "OPEN";
             return new Promise(async (resolve, reject) => {

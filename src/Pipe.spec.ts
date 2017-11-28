@@ -12,7 +12,7 @@ describe("Pipe", () => {
     });
     beforeEach((done) => {
         testCase = rnd();
-        this.ws = new WebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
+        this.ws = new WebSocket(`ws://localtest.me:3000/${testCase}`);
         this.ws.onopen = () => done();
     });
 
