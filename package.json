@@ -3,8 +3,11 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "test": "node --experimental-modules mock.mjs & karma start"
+    "test": "node --experimental-modules mock.mjs & karma start",
+    "prepublishOnly": "tsc -p ./tsconfig.json --outDir dist/"
   },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "author": "David Charbonnier",
   "license": "ISC",
   "dependencies": null,

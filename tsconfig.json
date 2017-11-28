@@ -2,19 +2,24 @@
   "compileOnSave": false,
   "compilerOptions": {
     "module": "commonjs",
-    "noImplicitAny": true,
-    "outDir": "tmp",
+    "noImplicitAny": false,
+    "outDir": "dist/",
     "target": "ES5",
     "sourceMap": true,
-    "types" : [
+    "types": [
       "mocha",
       "chai"
     ],
     "lib": [
-      "es5"
+      "es5",
+      "dom"
     ]
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.spec.ts"
+  ],
+  "include": [
+    "src/*.ts"
   ]
 }
