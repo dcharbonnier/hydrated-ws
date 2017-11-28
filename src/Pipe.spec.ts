@@ -1,5 +1,6 @@
 import {expect, expectEventually, rnd, sleep, supervisor} from "./wrench.spec";
 import {Pipe} from "./Pipe";
+import {Promise} from "es6-promise";
 
 
 describe("Pipe", () => {

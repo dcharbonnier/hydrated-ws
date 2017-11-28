@@ -5,7 +5,7 @@ process.env.CHROME_BIN = require('puppeteer').executablePath()
 const TIMEOUT_FACTOR = process.env.TRAVIS_JOB_NUMBER ? 20 : 1;
 
 let configData: any = {
-    frameworks: ["mocha", "chai", "karma-typescript"],
+    frameworks: ["mocha", "chai", "karma-typescript", "promise"],
     files: [
         "src/**/*.ts"
     ],

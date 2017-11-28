@@ -1,5 +1,6 @@
 import {expect, expectEventually, rnd, sleep, supervisor} from "./wrench.spec";
 import {Dam} from "./Dam";
+import {Promise} from "es6-promise";
 
 
 describe("Dam", () => {
