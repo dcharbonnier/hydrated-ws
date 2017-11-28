@@ -49,7 +49,7 @@ ${SC_DIR}/bin/sc \
   -B all \
   --vm-version dev-varnish \
   -f ${SC_READYFILE} \
-  -l ${SC_LOGFILE}
+  -l ${SC_LOGFILE} \
   - &
  
 echo "Waiting for Sauce Connect readyfile"
