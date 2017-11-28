@@ -37,7 +37,7 @@ const rnd = () => {
 };
 
 const supervisor = (() => {
-    const ws = new WebSocket("ws://localhost:8088/supervisor");
+    const ws = new WebSocket("ws://local.tawenda-tech.org:8088/supervisor");
     const rpc = [];
     ws.onmessage = (e) => {
         console.log("supervisor", e);
@@ -141,7 +141,7 @@ describe("AdvancedWebSocket", () => {
             });
         });
         it("should immediately connect to the server", async () => {
-            ws = new AdvancedWebSocket("ws://localhost:8088");
+            ws = new AdvancedWebSocket("ws://local.tawenda-tech.org:8088");
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             return expectEventually(() => ws.readyState === WebSocket.OPEN, "The WebSocket should be open");
         })
@@ -150,7 +150,7 @@ describe("AdvancedWebSocket", () => {
         let ws: AdvancedWebSocket;
 
         beforeEach(async () => {
-            ws = new AdvancedWebSocket("ws://localhost:8088");
+            ws = new AdvancedWebSocket("ws://local.tawenda-tech.org:8088");
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN, "The WebSocket should be open");
             return
@@ -173,7 +173,7 @@ describe("AdvancedWebSocket", () => {
         let testCase: string;
         beforeEach(async () => {
             testCase = rnd();
-            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:8088/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -212,7 +212,7 @@ describe("AdvancedWebSocket", () => {
         });
         it("should dispatch the open event", async () => {
             return new Promise(async (resolve, reject) => {
-                ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+                ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:8088/${testCase}`);
                 const events = [];
                 ws.onopen = (event) => {
                     expect(events.length).to.equal(0);
@@ -237,7 +237,7 @@ describe("AdvancedWebSocket", () => {
         });
         it("should dispatch the close event", async () => {
             return new Promise(async (resolve, reject) => {
-                ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+                ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:8088/${testCase}`);
                 const events = [];
                 ws.onclose = (event) => {
                     expect(events.length).to.equal(0);
@@ -264,7 +264,7 @@ describe("AdvancedWebSocket", () => {
         });
         it("should remove the registered listeners", async () => {
             return new Promise(async (resolve, reject) => {
-                ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+                ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:8088/${testCase}`);
                 const listener = (event) => {
                     reject(new Error("this listener should be removes"));
                 };
@@ -277,14 +277,14 @@ describe("AdvancedWebSocket", () => {
             });
         });
         it("should ignore an unexisting listener", async () => {
-            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:8088/${testCase}`);
             ws.removeEventListener("ignore me" as any, () => {
             });
 
         });
         it("should stop dispatching the events if one return false", async () => {
             return new Promise(async (resolve, reject) => {
-                ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+                ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:8088/${testCase}`);
                 const events = [];
                 ws.onopen = (event) => {
                     expect(events.length).to.equal(0);
@@ -313,7 +313,7 @@ describe("AdvancedWebSocket", () => {
         it("should connect after 2 failures", async () => {
             const testCase = rnd();
             await supervisor.setup(testCase, [{fail: true}, {fail: true}]);
-            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:8088/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -323,7 +323,7 @@ describe("AdvancedWebSocket", () => {
         it("should retry if the first connection timeout", async () => {
             const testCase = rnd();
             await supervisor.setup(testCase, [{delay: 6000}]);
-            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`, null, {connectionTimeout: 3000});
+            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:8088/${testCase}`, null, {connectionTimeout: 3000});
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -335,7 +335,7 @@ describe("AdvancedWebSocket", () => {
     describe("properties", () => {
         it("should return the socket properties", async () => {
             const testCase = rnd();
-            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:8088/${testCase}`);
             expect(ws.extensions).to.equal("");
             expect(ws.protocol).to.equal("");
             expect(ws.bufferedAmount).to.equal(0);
@@ -345,7 +345,7 @@ describe("AdvancedWebSocket", () => {
     describe("when close", () => {
         it("should not reconnect", async () => {
             const testCase = rnd();
-            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:8088/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -357,7 +357,7 @@ describe("AdvancedWebSocket", () => {
         });
         it("should pass the close reason to the server", async () => {
             const testCase = rnd();
-            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:8088/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -371,7 +371,7 @@ describe("AdvancedWebSocket", () => {
         });
         it("should ignore a second close", async () => {
             const testCase = rnd();
-            ws = new AdvancedWebSocket(`ws://localhost:8088/${testCase}`);
+            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:8088/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
