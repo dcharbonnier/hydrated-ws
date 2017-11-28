@@ -117,7 +117,7 @@ describe("AdvancedWebSocket", () => {
     describe("constructor", () => {
         it("should throw an error when not using the new operator", () => {
             const error = captureError(() => (WebSocket as any)());
-            expect(() => (AdvancedWebSocket as any)("")).to.throw(Error, captureError(() => new WebSocket(url)).message);
+            expect(() => (AdvancedWebSocket as any)("")).to.throw(Error, error.message);
         });
 
         it("should throw an error when using a bad url", () => {
