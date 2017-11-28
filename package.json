@@ -3,10 +3,11 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "test": "npm run test-phantom && (npm run test-saucelab || true)",
+    "test": "npm run test-phantom",
     "test-saucelab": "node --experimental-modules mock.mjs & karma start --single-run",
     "test-phantom": "node --experimental-modules mock.mjs & karma start --single-run --browsers PhantomJS",
     "prepublishOnly": "tsc -p ./tsconfig.json --outDir dist/"
+
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
