@@ -52,6 +52,13 @@ const supervisor = (() => {
         console.log("supervisor error", (e as any).code);
     };
 
+
+    ws.onclose = (e) => {
+        console.log("supervisor close", e);
+        console.log(e);
+        console.log("supervisor close", (e as any).code);
+    };
+
     ws.onopen = (e) => {
         console.log("supervisor open");
     };
