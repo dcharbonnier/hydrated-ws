@@ -14,6 +14,7 @@ const reqCount = {};
 
 
 const wss = new WebSocket.Server({
+    port: 3000,
     verifyClient: (info, done) => {
         if (info.req.url === "/supervisor") {
             return done(true);
