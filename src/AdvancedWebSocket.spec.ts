@@ -50,6 +50,10 @@ const supervisor = (() => {
         console.log("supervisor error", e);
     };
 
+    ws.onopen = (e) => {
+        console.log("supervisor open");
+    };
+
     return {
         ws,
         logs: async (testCase: string) => new Promise<any>(resolve => {
@@ -81,7 +85,7 @@ const expectEventually = (f: () => boolean, message: string): Promise<void> => {
                 return;
             }
             try {
-                console.log(f());
+                console.log(f(), supervisor.ws.readyState, WebSocket.OPEN, message);
                 if (f()) {
                     done = true;
                     clearTimeout(timeout);

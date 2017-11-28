@@ -13,13 +13,14 @@ let configData: any = {
 
     },
     client: {
+        captureConsole: true,
         mocha: {
             timeout: 120000
         }
     },
     autoWatch: true,
     singleRun: false,
-    reporters: [/*"progress", "coverage", */"karma-typescript"],
+    reporters: [/*"progress", "coverage", */"helpful", "karma-typescript"],
     browsers: ["ChromeHeadless"],
     karmaTypescriptConfig: {
         coverageOptions: {
