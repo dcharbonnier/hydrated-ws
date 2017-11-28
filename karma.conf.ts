@@ -9,7 +9,7 @@ let configData: any = {
     ],
     preprocessors: {
         "src/**/*.ts'": ["karma-typescript"],
-        'src/**/*!(*.spec).ts': ["karma-typescript", "coverage"]
+        'src/**/*!(*.spec).ts': ["karma-typescript"]
 
     },
     client: {
@@ -20,11 +20,12 @@ let configData: any = {
     },
     autoWatch: true,
     singleRun: false,
-    reporters: [/*"progress",*/ "coverage", "helpful", "karma-typescript"],
+    concurrency: 4,
+    reporters: [/*"progress",*/ "helpful", "karma-typescript"],
     browsers: ["ChromeHeadless"],
     karmaTypescriptConfig: {
         coverageOptions: {
-            excludes: '**/(*.spec).ts'
+            exclude: /\.spec\.ts$/i
         }
     },
     captureTimeout: 0,
@@ -37,10 +38,10 @@ if (process.env.TRAVIS_JOB_NUMBER) {
     const customLaunchers:any = {};
 
     [
-        ["chrome", [26, 30, 40, 50, 61]],
-        ["safari", [7, 8, 9, 10, 11]],
-        ["microsoftedge", [13, 14, 15]],
-        ["firefox", [11, 20, 30, 40, 50, 55]]
+        ["chrome", [/*26, 30, 40, */50, 61]],
+        ["safari", [/*7, 8, 9,*/ 10, 11]],
+        ["microsoftedge", [/*13, 14*/, 15]],
+        ["firefox", [/*11, 20, */30, 40, 50, 55]]
     ]
         .map(([browserName, versions]) => {
             (versions as any).map((version:any) =>
