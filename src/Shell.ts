@@ -1,6 +1,6 @@
 import {Dict} from "./Dict";
 
-export class WrapperWebSocket implements WebSocket {
+export class Shell implements WebSocket {
 
     public readonly CLOSED = WebSocket.CLOSED;
     public readonly CLOSING = WebSocket.CLOSING;

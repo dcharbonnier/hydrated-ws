@@ -1,18 +1,18 @@
-import {IReconnectWebSocketOptions} from "./IReconnectWebSocketOptions";
+import {IWaterfallOptions} from "./IWaterfallOptions";
 import {exponentialTruncatedBackoff} from "./exponentialTruncatedBackoff";
-import {WrapperWebSocket} from "./WrapperWebSocket";
+import {Shell} from "./Shell";
 
-export class ReconnectWebSocket extends WrapperWebSocket {
+export class Waterfall extends Shell {
 
 
     private timeout: any;
     private connectionTimeout: number = 5000;
-    private retryPolicy: (attempt: number, ws: ReconnectWebSocket) => number;
+    private retryPolicy: (attempt: number, ws: Waterfall) => number;
 
-    public constructor(url: string, private protocols?: string | string[], options?: IReconnectWebSocketOptions) {
+    public constructor(url: string, private protocols?: string | string[], options?: IWaterfallOptions) {
         super()
         this._url = url;
-        if (this.constructor !== ReconnectWebSocket) {
+        if (this.constructor !== Waterfall) {
             throw new TypeError("Failed to construct. Please use the 'new' operator");
         }
         this.connectionTimeout = (options && options.connectionTimeout) || this.connectionTimeout;

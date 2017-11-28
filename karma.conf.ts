@@ -2,6 +2,8 @@ import * as karma from "karma";
 
 process.env.CHROME_BIN = require('puppeteer').executablePath()
 
+const TIMEOUT_FACTOR = process.env.TRAVIS_JOB_NUMBER ? 20 : 1;
+
 let configData: any = {
     frameworks: ["mocha", "chai", "karma-typescript"],
     files: [
@@ -15,7 +17,7 @@ let configData: any = {
     client: {
         captureConsole: true,
         mocha: {
-            timeout: 120000
+            timeout: TIMEOUT_FACTOR * 4000,
         }
     },
     autoWatch: true,
@@ -24,6 +26,11 @@ let configData: any = {
     reporters: [/*"progress",*/ "helpful", "karma-typescript"],
     browsers: ["ChromeHeadless"],
     karmaTypescriptConfig: {
+        bundlerOptions: {
+            constants: {
+                TIMEOUT_FACTOR: TIMEOUT_FACTOR,
+            },
+        },
         coverageOptions: {
             exclude: /\.spec\.ts$/i
         }

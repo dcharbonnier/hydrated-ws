@@ -66,7 +66,6 @@ export const supervisor = (() => {
     }
 })();
 
-
 export const expectEventually = (f: () => boolean, message: string): Promise<void> => {
     return new Promise((resolve, reject) => {
         let done = false;
@@ -76,7 +75,7 @@ export const expectEventually = (f: () => boolean, message: string): Promise<voi
             }
             done = true;
             reject(new Error(message))
-        }, 10000);
+        }, (TIMEOUT_FACTOR || 1) * 1000);
         const test = () => {
             if (done) {
                 return;

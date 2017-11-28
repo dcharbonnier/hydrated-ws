@@ -1,8 +1,9 @@
-import {WrapperWebSocket} from "./WrapperWebSocket";
+import {Shell} from "./Shell";
 
-export class MultiplexWebSocket extends WrapperWebSocket implements WebSocket {
+export class Pipe extends Shell implements WebSocket {
 
     public onMessageListener: (ev: MessageEvent) => any;
+    public onEventListener: (ev: Event) => any;
     private channel: string;
     private prefixLength = 4;
 
@@ -14,12 +15,24 @@ export class MultiplexWebSocket extends WrapperWebSocket implements WebSocket {
         }
         this.channel = `${" ".repeat(this.prefixLength)}${channel}`.slice(this.prefixLength * -1);
         this.ws = ws;
+
         this.onMessageListener = this._onMessageListener.bind(this);
+        this.onEventListener = this._onEventListener.bind(this);
+
         this.ws.addEventListener("message", this.onMessageListener);
+        this.ws.addEventListener("close", this.onEventListener);
+        this.ws.addEventListener("open", this.onEventListener);
+
     }
 
     close() {
-        this.ws.removeEventListener("message", this._onMessageListener);
+        this.ws.removeEventListener("message", this.onMessageListener);
+        this.ws.removeEventListener("close", this.onEventListener);
+        this.ws.removeEventListener("open", this.onEventListener);
+    }
+
+    private _onEventListener(e: Event) {
+        this.dispatchEvent(event);
     }
 
     send(data: any) {

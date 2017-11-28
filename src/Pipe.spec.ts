@@ -1,9 +1,8 @@
-import {ReconnectWebSocket} from "./ReconnectWebSocket";
-import {expect, expectEventually, rnd, sleep, supervisor} from "./tools.spec";
-import {MultiplexWebSocket} from "./MultiplexWebSocket";
+import {expect, expectEventually, rnd, sleep, supervisor} from "./wrench.spec";
+import {Pipe} from "./Pipe";
 
 
-describe("ReconnectWebSocket", () => {
+describe("Pipe", () => {
     let ws: WebSocket;
     let testCase: string;
 
@@ -26,20 +25,20 @@ describe("ReconnectWebSocket", () => {
     describe("constructor", () => {
         it("should throw an error if the channel parameter is invalid", () => {
             ["", 6, NaN, [], {}, "XXXXXXXXXX"].forEach(channel => {
-                expect(() => new MultiplexWebSocket(this.ws, channel as any)).to.throw();
+                expect(() => new Pipe(this.ws, channel as any)).to.throw();
             });
         });
     });
 
     describe("send", () => {
         it("should prefix messages with the channel", async () => {
-            const mp = new MultiplexWebSocket(this.ws, "a");
+            const mp = new Pipe(this.ws, "a");
             mp.send("data");
             let logs = await supervisor.logs(testCase);
             expect(logs.map(l => l[1])).to.deep.equal(["connect", "   adata"]);
         });
         it("should refuse a non string message", async () => {
-            const mp = new MultiplexWebSocket(this.ws, "a");
+            const mp = new Pipe(this.ws, "a");
             [6, NaN, [], {}].forEach(message => {
                 expect(() => mp.send(message)).to.throw();
             });
@@ -48,8 +47,8 @@ describe("ReconnectWebSocket", () => {
 
     describe("receive", () => {
         it("filter the messages", async () => {
-            const mpA = new MultiplexWebSocket(this.ws, "a");
-            const mpB = new MultiplexWebSocket(this.ws, "b");
+            const mpA = new Pipe(this.ws, "a");
+            const mpB = new Pipe(this.ws, "b");
             let messagesA = [];
             let messagesB = [];
             mpA.addEventListener("message", (e: MessageEvent) => {
