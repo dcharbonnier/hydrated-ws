@@ -19,7 +19,7 @@ let configData: any = {
     },
     autoWatch: true,
     singleRun: false,
-    reporters: ["progress", "coverage", "karma-typescript"],
+    reporters: [/*"progress", "coverage", */"karma-typescript"],
     browsers: ["ChromeHeadless"],
     karmaTypescriptConfig: {
         coverageOptions: {
@@ -69,7 +69,7 @@ if (process.env.TRAVIS_JOB_NUMBER) {
     configData.autoWatch = false;
     configData.singleRun = true;
 
-    configData.reporters.push("saucelabs");
+    configData.reporters.unshift("saucelabs");
     configData.customLaunchers = customLaunchers;
     configData.browsers = (Object as any).keys(customLaunchers);
 }

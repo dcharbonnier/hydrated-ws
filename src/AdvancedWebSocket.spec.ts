@@ -1,5 +1,6 @@
 import {AdvancedWebSocket} from "./AdvancedWebSocket";
 import {Promise} from "es6-promise";
+
 const expect = chai.expect;
 
 const captureError = (f: () => any): Error => {
@@ -69,18 +70,18 @@ const expectEventually = (f: () => boolean, message: string): Promise<void> => {
     return new Promise((resolve, reject) => {
         let done = false;
         let timeout = setTimeout(() => {
-            if(done) {
+            if (done) {
                 return;
             }
             done = true;
-            reject(new Error(message))
+            reject(new Error(message + " " + supervisor.ws.readyState))
         }, 10000);
         const test = () => {
             if (done) {
                 return;
             }
             try {
-                console.log(f(), supervisor.ws.readyState);
+                console.log(f());
                 if (f()) {
                     done = true;
                     clearTimeout(timeout);
@@ -100,12 +101,12 @@ const expectEventually = (f: () => boolean, message: string): Promise<void> => {
 
 describe("AdvancedWebSocket", () => {
     let ws: AdvancedWebSocket;
-    before(async() => {
+    before(async () => {
         await expectEventually(() => supervisor.ws.readyState === WebSocket.OPEN,
             "The supervisor failed to connect");
     });
-    afterEach(async() => {
-        if(ws) {
+    afterEach(async () => {
+        if (ws) {
             ws.close();
         }
     });
@@ -241,7 +242,7 @@ describe("AdvancedWebSocket", () => {
                 await expectEventually(() => ws.readyState === WebSocket.OPEN,
                     "The WebSocket should be open");
                 ws.close();
-                await expectEventually(() =>events.length === 3,
+                await expectEventually(() => events.length === 3,
                     "Did not received the close event");
                 clearTimeout(timeout);
                 reject = null;
