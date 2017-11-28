@@ -40,7 +40,6 @@ const supervisor = (() => {
     const ws = new WebSocket("ws://local.tawenda-tech.org:3000/supervisor");
     const rpc = [];
     ws.onmessage = (e) => {
-        console.log("supervisor", e);
         let message = JSON.parse(e.data);
         rpc[message["rpc"]].call(this, message["data"]);
         delete rpc[message["rpc"]];
@@ -48,19 +47,11 @@ const supervisor = (() => {
 
     ws.onerror = (e) => {
         console.log("supervisor error", e);
-        console.log(e);
-        console.log("supervisor error", (e as any).code);
     };
 
 
     ws.onclose = (e) => {
         console.log("supervisor close", e);
-        console.log(e);
-        console.log("supervisor close", (e as any).code);
-    };
-
-    ws.onopen = (e) => {
-        console.log("supervisor open");
     };
 
     return {
@@ -123,10 +114,10 @@ describe("AdvancedWebSocket", () => {
             ws.close();
         }
     });
-    describe.only("constructor", () => {
+    describe("constructor", () => {
         it("should throw an error when not using the new operator", () => {
             const error = captureError(() => (WebSocket as any)());
-            expect(() => (AdvancedWebSocket as any)("")).to.throw(error.constructor, error.message);
+            expect(() => (AdvancedWebSocket as any)("")).to.throw(Error, captureError(() => new WebSocket(url)).message);
         });
 
         it("should throw an error when using a bad url", () => {
