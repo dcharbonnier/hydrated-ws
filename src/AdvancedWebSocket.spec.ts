@@ -117,7 +117,7 @@ describe("AdvancedWebSocket", () => {
     describe("constructor", () => {
         it("should throw an error when not using the new operator", () => {
             const error = captureError(() => (WebSocket as any)());
-            expect(() => (AdvancedWebSocket as any)("")).to.throw(Error, error.message);
+            expect(() => (AdvancedWebSocket as any)("")).to.throw(TypeError, "Failed to construct. Please use the 'new' operator");
         });
 
         it("should throw an error when using a bad url", () => {
@@ -319,7 +319,7 @@ describe("AdvancedWebSocket", () => {
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
             let logs = await supervisor.logs(testCase);
-            expect(logs.map(l => l[1])).to.deep.equal(["connect", "connect"]);
+            expect(logs.map(l => l[1]).filter(m=>m==="connect").length).to.be.greaterThan(1);
         });
 
     });

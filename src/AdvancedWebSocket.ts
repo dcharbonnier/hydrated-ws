@@ -14,8 +14,7 @@ export class AdvancedWebSocket extends WrapperWebSocket {
         super()
         this._url = url;
         if (this.constructor !== AdvancedWebSocket) {
-            // Throw a native WebSocket error
-            (WebSocket as any)(url);
+            throw new TypeError("Failed to construct. Please use the 'new' operator");
         }
         this.connectionTimeout = (options && options.connectionTimeout) || this.connectionTimeout;
         this.retryPolicy = (options && options.retryPolicy) || exponentialTruncatedBackoff();
