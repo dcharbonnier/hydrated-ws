@@ -2,8 +2,6 @@ language: node_js
 node_js:
   - 9.2
 
-addons:
-  sauce_connect:
-    no_ssl_bump_domains: all
-    tunnel_domains: localhost,*.tawenda-tech.org
+before_script:
+  - ./sauce-connect.sh
 
