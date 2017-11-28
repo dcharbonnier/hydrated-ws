@@ -1,5 +1,4 @@
 import WebSocket from "ws";
-import * as https from "https";
 
 const logs = {};
 
@@ -12,11 +11,9 @@ const log = (testCase, message, extra) => {
 
 const testCaseSetup = {};
 const reqCount = {};
-const server = https.createServer(3000);
 
 
 const wss = new WebSocket.Server({
-    server,
     verifyClient: (info, done) => {
         if (info.req.url === "/supervisor") {
             return done(true);
