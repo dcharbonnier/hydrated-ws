@@ -65,7 +65,7 @@ if (process.env.TRAVIS_JOB_NUMBER) {
         accessKey: process.env.SAUCE_ACCESS_KEY,
         startConnect: false,
         connectOptions: {
-            noSslBumpDomains: "localhost"
+            noSslBumpDomains: "all"
         },
         public: 'public'
     };
