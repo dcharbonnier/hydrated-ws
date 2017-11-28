@@ -5,3 +5,5 @@ node_js:
 addons:
   sauce_connect:
     no_ssl_bump_domains: all
+    tunnel_domains: localhost,*.tawenda-tech.org
+
