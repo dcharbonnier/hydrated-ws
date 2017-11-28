@@ -85,7 +85,6 @@ const expectEventually = (f: () => boolean, message: string): Promise<void> => {
                 return;
             }
             try {
-                console.log(f(), supervisor.ws.readyState, WebSocket.OPEN, message);
                 if (f()) {
                     done = true;
                     clearTimeout(timeout);
@@ -122,7 +121,7 @@ describe("AdvancedWebSocket", () => {
 
         it("should throw an error when using a bad url", () => {
             INVALID_URLS.forEach(url => {
-                expect(() => new AdvancedWebSocket(url)).to.throw(Error, captureError(() => new WebSocket(url)).message);
+                expect(() => new AdvancedWebSocket(url)).to.throw();
             });
         });
 
