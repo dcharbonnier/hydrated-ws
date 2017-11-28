@@ -45,12 +45,12 @@ if (process.env.TRAVIS_JOB_NUMBER) {
         sl_macos_safari: {
             base: 'SauceLabs',
             browserName: 'safari',
-            version: '11.0'
+            version: '11'
         },
         sl_ie_11: {
             base: 'SauceLabs',
-            browserName: 'internet explorer',
-            version: '11.0'
+            browserName: 'microsoftedge',
+            version: '14'
         }
     };
 
