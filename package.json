@@ -7,18 +7,15 @@
   },
   "author": "David Charbonnier",
   "license": "ISC",
-  "dependencies": {
-    "@types/es6-collections": "^0.5.31",
-    "@types/es6-promise": "0.0.33",
-    "ws": "^3.3.2"
-  },
+  "dependencies": null,
   "devDependencies": {
     "@types/chai": "^4.0.5",
+    "@types/es6-collections": "^0.5.31",
+    "@types/es6-promise": "0.0.33",
     "@types/karma": "^1.7.2",
     "@types/mocha": "^2.2.44",
     "es6-promise": "^4.1.1",
     "forever": "^0.15.3",
-    "install": "^0.10.2",
     "karma": "^1.7.1",
     "karma-chai-plugins": "^0.9.0",
     "karma-chrome-launcher": "^2.2.0",
@@ -32,6 +29,7 @@
     "npm": "^5.5.1",
     "puppeteer": "^0.13.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.6.1"
+    "typescript": "^2.6.1",
+    "ws": "^3.3.2"
   }
 }
