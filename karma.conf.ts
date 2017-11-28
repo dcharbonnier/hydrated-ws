@@ -20,11 +20,11 @@ let configData: any = {
     },
     autoWatch: true,
     singleRun: false,
-    reporters: [/*"progress", "coverage", */"helpful", "karma-typescript"],
+    reporters: [/*"progress",*/ "coverage", "helpful", "karma-typescript"],
     browsers: ["ChromeHeadless"],
     karmaTypescriptConfig: {
         coverageOptions: {
-            excludes: 'src/**/(*.spec).ts'
+            excludes: '**/(*.spec).ts'
         }
     },
     captureTimeout: 0,

@@ -46,7 +46,6 @@ const wss = new WebSocket.Server({
 wss.on('connection', (ws, request) => {
     if (request.url === "/supervisor") {
         ws.on('message', (message) => {
-            console.log("supervisor", message);
             let data = JSON.parse(message);
             const method = data.method;
             if (method === "logs") {
@@ -68,19 +67,19 @@ wss.on('connection', (ws, request) => {
             log(testCase, "close", [code, reason]);
         });
         ws.on('message', (message) => {
-            console.log("testCase", message);
             log(testCase, message);
             if (message === "ping") {
                 try {
                     ws.send("pong");
                 } catch (e) {
                 }
-            }
-            if (message === "disconnect") {
+            } else if (message === "disconnect") {
                 try {
-                    ws.close();
+                    setTimeout(() => ws.terminate(), 100);
                 } catch (e) {
                 }
+            } else if (message.substr(4) === "ping") {
+                ws.send(message.replace("ping", "pong"));
             }
             try {
                 ws.send("hello");

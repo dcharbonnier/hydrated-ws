@@ -1,4 +1,3 @@
-import {AdvancedWebSocket} from "./AdvancedWebSocket";
 import {Dict} from "./Dict";
 
 export class WrapperWebSocket implements WebSocket {
@@ -22,13 +21,12 @@ export class WrapperWebSocket implements WebSocket {
 
     protected _readyState: number = WebSocket.CONNECTING;
 
+    public get readyState(): number {
+        return this.ws.readyState;
+    }
 
     public get url(): string {
         return this.ws.url;
-    }
-
-    public get readyState(): number {
-        return this.ws.readyState;
     }
 
     public get bufferedAmount(): number {
@@ -44,7 +42,7 @@ export class WrapperWebSocket implements WebSocket {
     }
 
     public close(code: number = 1000, reason?: string) {
-       this.ws.close(code, reason);
+        this.ws.close(code, reason);
     }
 
     public send(data: any): void {
@@ -81,14 +79,5 @@ export class WrapperWebSocket implements WebSocket {
         }
         return true;
     }
-    //
-    // constructor(private ws:WebSocket, private channel: string) {
-    //
-    // }
-    //
-    // send() {
-    //
-    // }
-
 
 }

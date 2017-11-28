@@ -1,109 +1,10 @@
-import {AdvancedWebSocket} from "./AdvancedWebSocket";
+import {ReconnectWebSocket} from "./ReconnectWebSocket";
 import {Promise} from "es6-promise";
-
-const expect = chai.expect;
-
-const captureError = (f: () => any): Error => {
-    try {
-        f();
-    } catch (e) {
-        return e;
-    }
-    throw new Error("f should throw an error");
-};
-
-const INVALID_URLS = [
-    "",
-    "http://example.com",
-    "ws://example.com:0:0"
-];
-
-const VALID_URLS = [
-    "ws://example.com",
-    "wss://example.com",
-    "ws://example.com/path",
-    "wss://example.com/path",
-    "ws://example.com:1000",
-    "wss://example.com:1000"
-];
-
-const rnd = () => {
-    const chars = '_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz';
-    let res = "";
-    for (let i = 32; i > 0; i--) {
-        res += chars[Math.floor(Math.random() * chars.length)];
-    }
-    return res;
-};
-
-const supervisor = (() => {
-    const ws = new WebSocket("ws://local.tawenda-tech.org:3000/supervisor");
-    const rpc = [];
-    ws.onmessage = (e) => {
-        let message = JSON.parse(e.data);
-        rpc[message["rpc"]].call(this, message["data"]);
-        delete rpc[message["rpc"]];
-    };
-
-    ws.onerror = (e) => {
-        console.log("supervisor error", e);
-    };
+import {expect, expectEventually, INVALID_URLS, rnd, supervisor, VALID_URLS} from "./tools.spec";
 
 
-    ws.onclose = (e) => {
-        console.log("supervisor close", e);
-    };
-
-    return {
-        ws,
-        logs: async (testCase: string) => new Promise<any>(resolve => {
-            const id = rnd();
-            rpc[id] = resolve;
-            ws.send(JSON.stringify({rpc: id, method: "logs", args: {testCase}}));
-        }),
-        setup: async (testCase: string, setup: object) => new Promise(resolve => {
-            const id = rnd();
-            rpc[id] = resolve;
-            ws.send(JSON.stringify({rpc: id, method: "setup", args: {testCase, setup}}));
-        })
-    }
-})();
-
-
-const expectEventually = (f: () => boolean, message: string): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        let done = false;
-        let timeout = setTimeout(() => {
-            if (done) {
-                return;
-            }
-            done = true;
-            reject(new Error(message + " " + supervisor.ws.readyState))
-        }, 10000);
-        const test = () => {
-            if (done) {
-                return;
-            }
-            try {
-                if (f()) {
-                    done = true;
-                    clearTimeout(timeout);
-                    resolve();
-                } else {
-                    setTimeout(() => test(), 100);
-                }
-            } catch (e) {
-                done = true;
-                clearTimeout(timeout);
-                reject(e);
-            }
-        };
-        test();
-    });
-};
-
-describe("AdvancedWebSocket", () => {
-    let ws: AdvancedWebSocket;
+describe("ReconnectWebSocket", () => {
+    let ws: ReconnectWebSocket;
     before(async () => {
         await expectEventually(() => supervisor.ws.readyState === WebSocket.OPEN,
             "The supervisor failed to connect");
@@ -115,32 +16,31 @@ describe("AdvancedWebSocket", () => {
     });
     describe("constructor", () => {
         it("should throw an error when not using the new operator", () => {
-            const error = captureError(() => (WebSocket as any)());
-            expect(() => (AdvancedWebSocket as any)("")).to.throw(TypeError, "Failed to construct. Please use the 'new' operator");
+            expect(() => (ReconnectWebSocket as any)("")).to.throw(TypeError, "Failed to construct. Please use the 'new' operator");
         });
 
         it("should throw an error when using a bad url", () => {
             INVALID_URLS.forEach(url => {
-                expect(() => new AdvancedWebSocket(url)).to.throw();
+                expect(() => new ReconnectWebSocket(url)).to.throw();
             });
         });
 
         it("should not throw when using a correct url", () => {
             VALID_URLS.forEach(url => {
-                expect(() => new AdvancedWebSocket(url)).to.not.throw();
+                expect(() => new ReconnectWebSocket(url)).to.not.throw();
             });
         });
         it("should immediately connect to the server", async () => {
-            ws = new AdvancedWebSocket("ws://local.tawenda-tech.org:3000");
+            ws = new ReconnectWebSocket("ws://local.tawenda-tech.org:3000");
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             return expectEventually(() => ws.readyState === WebSocket.OPEN, "The WebSocket should be open");
         })
     });
     describe("when connected", () => {
-        let ws: AdvancedWebSocket;
+        let ws: ReconnectWebSocket;
 
         beforeEach(async () => {
-            ws = new AdvancedWebSocket("ws://local.tawenda-tech.org:3000");
+            ws = new ReconnectWebSocket("ws://local.tawenda-tech.org:3000");
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN, "The WebSocket should be open");
             return
@@ -159,11 +59,11 @@ describe("AdvancedWebSocket", () => {
 
     });
     describe("when disconnect", () => {
-        let ws: AdvancedWebSocket;
+        let ws: ReconnectWebSocket;
         let testCase: string;
         beforeEach(async () => {
             testCase = rnd();
-            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
+            ws = new ReconnectWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -188,21 +88,21 @@ describe("AdvancedWebSocket", () => {
             await expectEventually(() => ws.readyState === WebSocket.CONNECTING,
                 "The WebSocket should be connecting");
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
-                "The WebSocket should be open");
+                "The WebSocket should be connected");
             let logs = await supervisor.logs(testCase);
             expect(logs.map(l => l[1])).to.deep.equal(["connect", "disconnect", "close", "connect"]);
         });
 
     });
     describe("events", () => {
-        let ws: AdvancedWebSocket;
+        let ws: ReconnectWebSocket;
         let testCase: string;
         beforeEach(async () => {
             testCase = rnd();
         });
         it("should dispatch the open event", async () => {
             return new Promise(async (resolve, reject) => {
-                ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
+                ws = new ReconnectWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
                 const events = [];
                 ws.onopen = (event) => {
                     expect(events.length).to.equal(0);
@@ -227,7 +127,7 @@ describe("AdvancedWebSocket", () => {
         });
         it("should dispatch the close event", async () => {
             return new Promise(async (resolve, reject) => {
-                ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
+                ws = new ReconnectWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
                 const events = [];
                 ws.onclose = (event) => {
                     expect(events.length).to.equal(0);
@@ -254,7 +154,7 @@ describe("AdvancedWebSocket", () => {
         });
         it("should remove the registered listeners", async () => {
             return new Promise(async (resolve, reject) => {
-                ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
+                ws = new ReconnectWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
                 const listener = (event) => {
                     reject(new Error("this listener should be removes"));
                 };
@@ -267,14 +167,14 @@ describe("AdvancedWebSocket", () => {
             });
         });
         it("should ignore an unexisting listener", async () => {
-            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
+            ws = new ReconnectWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
             ws.removeEventListener("ignore me" as any, () => {
             });
 
         });
         it("should stop dispatching the events if one return false", async () => {
             return new Promise(async (resolve, reject) => {
-                ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
+                ws = new ReconnectWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
                 const events = [];
                 ws.onopen = (event) => {
                     expect(events.length).to.equal(0);
@@ -303,7 +203,7 @@ describe("AdvancedWebSocket", () => {
         it("should connect after 2 failures", async () => {
             const testCase = rnd();
             await supervisor.setup(testCase, [{fail: true}, {fail: true}]);
-            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
+            ws = new ReconnectWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -313,19 +213,19 @@ describe("AdvancedWebSocket", () => {
         it("should retry if the first connection timeout", async () => {
             const testCase = rnd();
             await supervisor.setup(testCase, [{delay: 6000}]);
-            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`, null, {connectionTimeout: 3000});
+            ws = new ReconnectWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`, null, {connectionTimeout: 3000});
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
             let logs = await supervisor.logs(testCase);
-            expect(logs.map(l => l[1]).filter(m=>m==="connect").length).to.be.greaterThan(1);
+            expect(logs.map(l => l[1]).filter(m => m === "connect").length).to.be.greaterThan(1);
         });
 
     });
     describe("properties", () => {
         it("should return the socket properties", async () => {
             const testCase = rnd();
-            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
+            ws = new ReconnectWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
             expect(ws.extensions).to.equal("");
             expect(ws.protocol).to.equal("");
             expect(ws.bufferedAmount).to.equal(0);
@@ -335,7 +235,7 @@ describe("AdvancedWebSocket", () => {
     describe("when close", () => {
         it("should not reconnect", async () => {
             const testCase = rnd();
-            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
+            ws = new ReconnectWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -347,7 +247,7 @@ describe("AdvancedWebSocket", () => {
         });
         it("should pass the close reason to the server", async () => {
             const testCase = rnd();
-            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
+            ws = new ReconnectWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -361,7 +261,7 @@ describe("AdvancedWebSocket", () => {
         });
         it("should ignore a second close", async () => {
             const testCase = rnd();
-            ws = new AdvancedWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
+            ws = new ReconnectWebSocket(`ws://local.tawenda-tech.org:3000/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");

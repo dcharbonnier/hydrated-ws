@@ -1,19 +1,18 @@
-import {IAdvancedWebSocketOptions} from "./IAdvancedWebSocketOptions";
+import {IReconnectWebSocketOptions} from "./IReconnectWebSocketOptions";
 import {exponentialTruncatedBackoff} from "./exponentialTruncatedBackoff";
 import {WrapperWebSocket} from "./WrapperWebSocket";
 
-export class AdvancedWebSocket extends WrapperWebSocket {
+export class ReconnectWebSocket extends WrapperWebSocket {
 
 
     private timeout: any;
     private connectionTimeout: number = 5000;
-    private retryPolicy: (attempt: number, ws: AdvancedWebSocket) => number;
-    private _url: string;
+    private retryPolicy: (attempt: number, ws: ReconnectWebSocket) => number;
 
-    public constructor(url: string, private protocols?: string | string[], options?: IAdvancedWebSocketOptions) {
+    public constructor(url: string, private protocols?: string | string[], options?: IReconnectWebSocketOptions) {
         super()
         this._url = url;
-        if (this.constructor !== AdvancedWebSocket) {
+        if (this.constructor !== ReconnectWebSocket) {
             throw new TypeError("Failed to construct. Please use the 'new' operator");
         }
         this.connectionTimeout = (options && options.connectionTimeout) || this.connectionTimeout;
@@ -21,6 +20,8 @@ export class AdvancedWebSocket extends WrapperWebSocket {
         this.open();
         this._readyState = WebSocket.CONNECTING;
     }
+
+    private _url: string;
 
     public get url(): string {
         return this._url;
@@ -52,10 +53,11 @@ export class AdvancedWebSocket extends WrapperWebSocket {
     }
 
     private open(attempt: number = 0) {
-        const ws = new WebSocket(this.url, this.protocols || []);
-        if(this.binaryType) {
-            ws.binaryType = this.binaryType;
+        if (this.closing) {
+            return;
         }
+        const ws = new WebSocket(this.url, this.protocols || []);
+        ws.binaryType = this.binaryType || ws.binaryType;
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
             try {
@@ -65,7 +67,7 @@ export class AdvancedWebSocket extends WrapperWebSocket {
             const timeout = this.retryPolicy(attempt + 1, this);
             if (timeout === null) {
                 this._readyState = WebSocket.CLOSED;
-                this.dispatchEvent(new CloseEvent("close", {code:4000, reason: "Connect timeout"}));
+                this.dispatchEvent(new CloseEvent("close", {code: 4000, reason: "Connect timeout"}));
             } else {
                 setTimeout(() => this.open(attempt + 1), timeout);
             }
@@ -74,6 +76,7 @@ export class AdvancedWebSocket extends WrapperWebSocket {
         ws.onopen = (event: Event) => {
             attempt = 0;
             clearTimeout(this.timeout);
+
             this._readyState = WebSocket.OPEN;
             this.dispatchEvent(event);
         };

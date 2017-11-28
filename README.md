@@ -9,13 +9,13 @@ Support :
 - [x] Browser (WebSocket API compatible)
 - [ ] Nodejs
 - [x] Reconnect (with an exponential truncated backoff by default)
-- [ ] Multiplexing
+- [x] Multiplexing
 - [ ] Layers
 - [ ] Url change
 
 ```
 {
-  "name": "multiplex-websocket",
+  "name": "advanced-websocket",
   ...
   "dependencies": null,
   ...
