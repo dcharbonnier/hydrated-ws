@@ -48,6 +48,8 @@ const supervisor = (() => {
 
     ws.onerror = (e) => {
         console.log("supervisor error", e);
+        console.log(e);
+        console.log("supervisor error", (e as any).code);
     };
 
     ws.onopen = (e) => {
