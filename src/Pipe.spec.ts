@@ -34,6 +34,7 @@ describe("Pipe", () => {
         it("should prefix messages with the channel", async () => {
             const mp = new Pipe(this.ws, "a");
             mp.send("data");
+            await sleep((TIMEOUT_FACTOR || 1 ) * 50);
             let logs = await supervisor.logs(testCase);
             expect(logs.map(l => l[1])).to.deep.equal(["connect", "   adata"]);
         });
