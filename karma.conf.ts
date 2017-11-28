@@ -48,11 +48,11 @@ if (process.env.TRAVIS_JOB_NUMBER) {
             browserName: 'safari',
             version: '11'
         },
-        // sl_ie_11: {
-        //     base: 'SauceLabs',
-        //     browserName: 'microsoftedge',
-        //     version: '14'
-        // }
+        sl_edge: {
+            base: 'SauceLabs',
+            browserName: 'microsoftedge',
+            version: '14'
+        }
     };
 
 
