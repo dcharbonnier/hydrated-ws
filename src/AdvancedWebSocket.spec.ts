@@ -80,12 +80,13 @@ const expectEventually = (f: () => boolean, message: string): Promise<void> => {
                 return;
             }
             try {
+                console.log(f(), supervisor.ws.readyState);
                 if (f()) {
                     done = true;
                     clearTimeout(timeout);
                     resolve();
                 } else {
-                    setTimeout(() => test(), 10);
+                    setTimeout(() => test(), 100);
                 }
             } catch (e) {
                 done = true;
