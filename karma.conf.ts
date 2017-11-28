@@ -23,7 +23,7 @@ let configData: any = {
     autoWatch: true,
     singleRun: false,
     concurrency: 4,
-    reporters: [/*"progress",*/ "helpful", "karma-typescript"],
+    reporters: [/*"progress",*/ "helpful", "coverage", "karma-typescript"],
     browsers: ["Chrome"],
     karmaTypescriptConfig: {
         bundlerOptions: {
