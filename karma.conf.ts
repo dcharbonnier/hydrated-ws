@@ -31,8 +31,10 @@ let configData: any = {
     browserNoActivityTimeout: 120000,
 };
 
+
 if (process.env.TRAVIS_JOB_NUMBER) {
-    const customLaunchers = {};
+
+    const customLaunchers:any = {};
 
     [
         ["chrome", [16, 20, 30, 40, 50, 61]],
@@ -40,9 +42,10 @@ if (process.env.TRAVIS_JOB_NUMBER) {
         ["microsoftedge", [12, 13, 14, 15, 16]],
         ["firefox", [11, 20, 30, 40, 50, 57]]
     ]
-        .map(([browserName, versions]) =>
-            versions.map(version =>
-                customLaunchers[`sl_chrome_${version}`] = {base: 'SauceLabs', browserName, version}));
+        .map(([browserName, versions]) => {
+            (versions as any).map((version:any) =>
+                customLaunchers[`sl_${browserName}_${version}`] = {base: 'SauceLabs', browserName, version})}
+        );
 
     configData.sauceLabs = {
         testName: "Advanced WebSocket",
