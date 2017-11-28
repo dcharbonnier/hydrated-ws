@@ -54,7 +54,9 @@ export class AdvancedWebSocket extends WrapperWebSocket {
 
     private open(attempt: number = 0) {
         const ws = new WebSocket(this.url, this.protocols || []);
-        ws.binaryType = this.binaryType;
+        if(this.binaryType) {
+            ws.binaryType = this.binaryType;
+        }
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
             try {
