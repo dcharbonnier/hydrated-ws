@@ -32,26 +32,26 @@ let configData: any = {
 
 if (process.env.TRAVIS_JOB_NUMBER) {
     const customLaunchers = {
-        sl_chrome: {
-            base: 'SauceLabs',
-            browserName: 'chrome',
-            version: '61'
-        },
-        sl_firefox: {
-            base: 'SauceLabs',
-            browserName: 'firefox',
-            version: '55'
-        },
+        // sl_chrome: {
+        //     base: 'SauceLabs',
+        //     browserName: 'chrome',
+        //     version: '61'
+        // },
+        // sl_firefox: {
+        //     base: 'SauceLabs',
+        //     browserName: 'firefox',
+        //     version: '55'
+        // },
         sl_macos_safari: {
             base: 'SauceLabs',
             browserName: 'safari',
             version: '11'
         },
-        sl_ie_11: {
-            base: 'SauceLabs',
-            browserName: 'microsoftedge',
-            version: '14'
-        }
+        // sl_ie_11: {
+        //     base: 'SauceLabs',
+        //     browserName: 'microsoftedge',
+        //     version: '14'
+        // }
     };
 
 

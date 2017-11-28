@@ -1,4 +1,5 @@
 import {AdvancedWebSocket} from "./AdvancedWebSocket";
+import {Promise} from "es6-promise";
 const expect = chai.expect;
 
 const captureError = (f: () => any): Error => {
@@ -38,9 +39,14 @@ const supervisor = (() => {
     const ws = new WebSocket("ws://localhost:8088/supervisor");
     const rpc = [];
     ws.onmessage = (e) => {
+        console.log("supervisor", e);
         let message = JSON.parse(e.data);
         rpc[message["rpc"]].call(this, message["data"]);
         delete rpc[message["rpc"]];
+    };
+
+    ws.onerror = (e) => {
+        console.log("supervisor error", e);
     };
 
     return {
@@ -102,7 +108,7 @@ describe("AdvancedWebSocket", () => {
             ws.close();
         }
     });
-    describe("constructor", () => {
+    describe.only("constructor", () => {
         it("should throw an error when not using the new operator", () => {
             const error = captureError(() => (WebSocket as any)());
             expect(() => (AdvancedWebSocket as any)("")).to.throw(error.constructor, error.message);
