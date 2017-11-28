@@ -48,7 +48,6 @@ ${SC_DIR}/bin/sc \
   ${SC_TUNNEL_ID} \
   -B all \
   --vm-version dev-varnish \
-  --no-proxy-caching \
   -f ${SC_READYFILE} \
   -l ${SC_LOGFILE}
   - &
