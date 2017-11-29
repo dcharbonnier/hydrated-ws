@@ -54,9 +54,11 @@ describe("Pipe", () => {
             let messagesA = [];
             let messagesB = [];
             mpA.addEventListener("message", (e: MessageEvent) => {
+                expect(e.data).to.equal("pong");
                 messagesA.push(e.data);
             });
             mpB.addEventListener("message", (e: MessageEvent) => {
+                expect(e.data).to.equal("pong");
                 messagesB.push(e.data);
             });
 
