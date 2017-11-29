@@ -6,6 +6,7 @@ export class Pipe extends Shell implements WebSocket {
     public onEventListener: (ev: Event) => any;
     private channel: string;
     private prefixLength = 4;
+    private pipeReadyState: number = null;
 
     private static repeatString(str: string, count: number): string {
         let res = "";
@@ -33,10 +34,19 @@ export class Pipe extends Shell implements WebSocket {
 
     }
 
-    close() {
+    protected getReadyState() {
+        return this.pipeReadyState || super.getReadyState();
+    }
+
+    public close(code: number = 1000, reason?: string) {
         this.ws.removeEventListener("message", this.onMessageListener);
         this.ws.removeEventListener("close", this.onEventListener);
         this.ws.removeEventListener("open", this.onEventListener);
+        this.pipeReadyState = this.CLOSING;
+        setTimeout(()=> {
+            this.pipeReadyState = this.CLOSED;
+            this.dispatchEvent(new CloseEvent("close", {code, reason, wasClean: true}))
+        }, 0);
     }
 
     private _onEventListener(e: Event) {
@@ -44,6 +54,9 @@ export class Pipe extends Shell implements WebSocket {
     }
 
     send(data: any) {
+        if(this.pipeReadyState) {
+            return;
+        }
         if (typeof(data) !== "string") {
             throw new Error(`MultiplexWebSocket only support sending string, passed a type ${typeof(data)}`);
         }

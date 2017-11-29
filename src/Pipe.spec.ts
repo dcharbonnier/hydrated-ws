@@ -13,8 +13,8 @@ describe("Pipe", () => {
     });
     beforeEach((done) => {
         testCase = rnd();
-        this.ws = new WebSocket(`ws://localtest.me:3000/${testCase}`);
-        this.ws.onopen = () => done();
+        ws = new WebSocket(`ws://localtest.me:3000/${testCase}`);
+        ws.onopen = () => done();
     });
 
     afterEach(async () => {
@@ -26,21 +26,60 @@ describe("Pipe", () => {
     describe("constructor", () => {
         it("should throw an error if the channel parameter is invalid", () => {
             ["", 6, NaN, [], {}, "XXXXXXXXXX"].forEach(channel => {
-                expect(() => new Pipe(this.ws, channel as any)).to.throw();
+                expect(() => new Pipe(ws, channel as any)).to.throw();
             });
+        });
+    });
+
+    describe("close", () => {
+        it("should dispatch a close event", (done) => {
+            const mp = new Pipe(ws, "a");
+            mp.addEventListener("close", () => {
+                done();
+            });
+            mp.close();
+
+        });
+        it("should stop listening to the message", async () => {
+            const mp = new Pipe(ws, "a");
+            let received = false;
+            mp.addEventListener("message", (e: MessageEvent) => {
+                received = true;
+            });
+            mp.close();
+
+            ws.send("   aping");
+            await sleep((TIMEOUT_FACTOR || 1 ) * 100);
+            expect(received).to.be.false;
+
+        });
+        it("should not throw an error on send", async () => {
+            const mp = new Pipe(ws, "a");
+            mp.close();
+            expect(() => mp.send("")).to.not.throw();
+            await sleep((TIMEOUT_FACTOR || 1 ) * 50);
+            let logs = await supervisor.logs(testCase);
+            expect(logs.map(l => l[1])).to.deep.equal(["connect"]);
+        });
+        it("should have a correct readyState", async () => {
+            const mp = new Pipe(ws, "a");
+            mp.close();
+            expect(mp.readyState).to.equal(mp.CLOSING);
+            await sleep((TIMEOUT_FACTOR || 1 ) * 1);
+            expect(mp.readyState).to.equal(mp.CLOSED);
         });
     });
 
     describe("send", () => {
         it("should prefix messages with the channel", async () => {
-            const mp = new Pipe(this.ws, "a");
+            const mp = new Pipe(ws, "a");
             mp.send("data");
             await sleep((TIMEOUT_FACTOR || 1 ) * 50);
             let logs = await supervisor.logs(testCase);
             expect(logs.map(l => l[1])).to.deep.equal(["connect", "   adata"]);
         });
         it("should refuse a non string message", async () => {
-            const mp = new Pipe(this.ws, "a");
+            const mp = new Pipe(ws, "a");
             [6, NaN, [], {}].forEach(message => {
                 expect(() => mp.send(message)).to.throw();
             });
@@ -49,8 +88,8 @@ describe("Pipe", () => {
 
     describe("receive", () => {
         it("filter the messages", async () => {
-            const mpA = new Pipe(this.ws, "a");
-            const mpB = new Pipe(this.ws, "b");
+            const mpA = new Pipe(ws, "a");
+            const mpB = new Pipe(ws, "b");
             let messagesA = [];
             let messagesB = [];
             mpA.addEventListener("message", (e: MessageEvent) => {
