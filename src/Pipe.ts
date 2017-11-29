@@ -53,7 +53,7 @@ export class Pipe extends Shell implements WebSocket {
     private _onMessageListener(e: MessageEvent): any {
         if (typeof( e.data) === "string" && this.channel === e.data.substr(0, this.prefixLength)) {
             this.dispatchEvent(new MessageEvent("message", {
-                data: e.data.substr(this.prefixLength - 1),
+                data: e.data.substr(this.prefixLength),
                 origin: e.origin,
                 ports: e.ports,
                 source: e.source,
