@@ -22,6 +22,10 @@ export class Shell implements WebSocket {
     protected _readyState: number = WebSocket.CONNECTING;
 
     public get readyState(): number {
+        return this.getReadyState();
+    }
+
+    protected getReadyState(): number {
         return this.ws.readyState;
     }
 
