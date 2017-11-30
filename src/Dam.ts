@@ -7,13 +7,13 @@ export class Dam extends Shell implements WebSocket {
     public static OPEN = "OPEN";
     public static CLOSED = "CLOSED";
 
+    private openSent: boolean = false;
+
     constructor(ws: WebSocket) {
         super();
         this._readyState = this.CLOSED;
         this.ws = ws;
-        this.ws.addEventListener("close", (e: Event) => this.onEventListener(e));
-        this.ws.addEventListener("message", (e: Event) => this.onEventListener(e));
-        this.ws.addEventListener("open", (e: Event) => this.onEventListener(e));
+        this.addListeners();
     }
 
     private _status: "OPEN" | "CLOSED" = "CLOSED";
@@ -46,8 +46,18 @@ export class Dam extends Shell implements WebSocket {
     }
 
     public dispatchEvent(evt: Event): boolean {
-        if (this._status === Dam.OPEN) {
+        if (evt.type === "close") {
             super.dispatchEvent(evt);
+            this.openSent = false;
+        } else if (this._status === Dam.OPEN) {
+            if (evt.type === "open") {
+                if (!this.openSent) {
+                    this.openSent = true;
+                    super.dispatchEvent(evt);
+                }
+            } else {
+                super.dispatchEvent(evt);
+            }
         }
         return true;
     }
@@ -60,12 +70,5 @@ export class Dam extends Shell implements WebSocket {
         }
     }
 
-    private onEventListener(event: Event) {
-        if (event.type === "close") {
-            super.dispatchEvent(event);
-        } else {
-            this.dispatchEvent(event);
-        }
-    }
 
 }
