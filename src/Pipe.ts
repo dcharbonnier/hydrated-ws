@@ -1,4 +1,7 @@
 import {Shell} from "./Shell";
+import WebSocket from "./WebSocket";
+import Event from "./Event";
+import MessageEvent from "./MessageEvent";
 
 export class Pipe extends Shell implements WebSocket {
 
@@ -49,7 +52,7 @@ export class Pipe extends Shell implements WebSocket {
         }, 0);
     }
 
-    private _onEventListener(e: Event) {
+    private _onEventListener(event: Event) {
         this.dispatchEvent(event);
     }
 

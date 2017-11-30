@@ -1,4 +1,5 @@
 import {Shell} from "./Shell";
+import Event from "./Event";
 
 export class Dam extends Shell implements WebSocket {
 
