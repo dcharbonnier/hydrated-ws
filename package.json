@@ -4,9 +4,11 @@
   "license": "Apache-2.0",
   "description": "",
   "scripts": {
-    "test": "npm run test-phantom",
-    "test-saucelab": "node --experimental-modules mock.mjs & karma start --single-run",
-    "test-phantom": "node --experimental-modules mock.mjs & karma start --single-run --browsers PhantomJS",
+    "test": "npm run test-node && npm run test-phantom",
+    "test-server": "node --experimental-modules mock.mjs >/dev/null 2>&1 &",
+    "test-saucelab": "npm run test-server && karma start --single-run",
+    "test-phantom": "npm run test-server && karma start --single-run --browsers PhantomJS",
+    "test-node": "npm run test-server && mocha --opts mocha.opts",
     "prepublishOnly": "tsc -p ./tsconfig.json --outDir dist/"
   },
   "main": "./dist/index.js",
@@ -19,6 +21,8 @@
     "@types/es6-promise": "0.0.33",
     "@types/karma": "^1.7.2",
     "@types/mocha": "^2.2.44",
+    "@types/node": "^8.0.53",
+    "chai": "^4.1.2",
     "es6-promise": "^4.1.1",
     "forever": "^0.15.3",
     "karma": "^1.7.1",

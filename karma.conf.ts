@@ -27,6 +27,7 @@ let configData: any = {
     browsers: ["Chrome"],
     karmaTypescriptConfig: {
         bundlerOptions: {
+            ignore: ["ws"],
             constants: {
                 TIMEOUT_FACTOR: TIMEOUT_FACTOR,
             },
@@ -42,7 +43,7 @@ let configData: any = {
 
 if (process.env.TRAVIS_JOB_NUMBER) {
 
-    const customLaunchers:any = {};
+    const customLaunchers: any = {};
 
     [
         ["chrome", [/*26, 30, 40, */50, 61]],
@@ -51,8 +52,13 @@ if (process.env.TRAVIS_JOB_NUMBER) {
         ["firefox", [/*11, 20, */30, 40, 50, 55]]
     ]
         .map(([browserName, versions]) => {
-            (versions as any).map((version:any) =>
-                customLaunchers[`sl_${browserName}_${version}`] = {base: 'SauceLabs', browserName, version: version.toString()})}
+                (versions as any).map((version: any) =>
+                    customLaunchers[`sl_${browserName}_${version}`] = {
+                        base: 'SauceLabs',
+                        browserName,
+                        version: version.toString()
+                    })
+            }
         );
 
     configData.sauceLabs = {

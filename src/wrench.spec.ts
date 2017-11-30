@@ -1,5 +1,10 @@
-export const expect = chai.expect;
+// declare const expect;
+import WebSocket from "./WebSocket";
+
 export const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+export const TIMEOUT_FACTOR = 1;
+
 export const captureError = (f: () => any): Error => {
     try {
         f();
@@ -75,7 +80,7 @@ export const expectEventually = (f: () => boolean, message: string): Promise<voi
             }
             done = true;
             reject(new Error(message))
-        }, (TIMEOUT_FACTOR || 1) * 1000);
+        }, TIMEOUT_FACTOR * 1000);
         const test = () => {
             if (done) {
                 return;
