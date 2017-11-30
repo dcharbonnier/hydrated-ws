@@ -2,6 +2,7 @@ import {Shell} from "./Shell";
 import WebSocket from "./WebSocket";
 import Event from "./Event";
 import MessageEvent from "./MessageEvent";
+import CloseEvent from "./CloseEvent";
 
 export class Pipe extends Shell implements WebSocket {
 
@@ -10,14 +11,6 @@ export class Pipe extends Shell implements WebSocket {
     private channel: string;
     private prefixLength = 4;
     private pipeReadyState: number = null;
-
-    private static repeatString(str: string, count: number): string {
-        let res = "";
-        for (let i = count; i > 0; i--) {
-            res += str;
-        }
-        return res;
-    }
 
     constructor(ws: WebSocket, channel: string) {
         super();
@@ -37,8 +30,12 @@ export class Pipe extends Shell implements WebSocket {
 
     }
 
-    protected getReadyState() {
-        return this.pipeReadyState || super.getReadyState();
+    private static repeatString(str: string, count: number): string {
+        let res = "";
+        for (let i = count; i > 0; i--) {
+            res += str;
+        }
+        return res;
     }
 
     public close(code: number = 1000, reason?: string) {
@@ -46,24 +43,28 @@ export class Pipe extends Shell implements WebSocket {
         this.ws.removeEventListener("close", this.onEventListener);
         this.ws.removeEventListener("open", this.onEventListener);
         this.pipeReadyState = this.CLOSING;
-        setTimeout(()=> {
+        setTimeout(() => {
             this.pipeReadyState = this.CLOSED;
             this.dispatchEvent(new CloseEvent("close", {code, reason, wasClean: true}))
         }, 0);
     }
 
-    private _onEventListener(event: Event) {
-        this.dispatchEvent(event);
-    }
-
     send(data: any) {
-        if(this.pipeReadyState) {
+        if (this.pipeReadyState) {
             return;
         }
         if (typeof(data) !== "string") {
             throw new Error(`MultiplexWebSocket only support sending string, passed a type ${typeof(data)}`);
         }
         super.send(this.channel + data);
+    }
+
+    protected getReadyState() {
+        return this.pipeReadyState || super.getReadyState();
+    }
+
+    private _onEventListener(event: Event) {
+        this.dispatchEvent(event);
     }
 
     private _onMessageListener(e: MessageEvent): any {

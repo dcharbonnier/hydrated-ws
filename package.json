@@ -19,6 +19,8 @@
     "@types/es6-promise": "0.0.33",
     "@types/karma": "^1.7.2",
     "@types/mocha": "^2.2.44",
+    "@types/node": "^8.0.53",
+    "chai": "^4.1.2",
     "es6-promise": "^4.1.1",
     "forever": "^0.15.3",
     "karma": "^1.7.1",

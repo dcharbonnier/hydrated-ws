@@ -21,8 +21,10 @@ class EventPolyfill implements Event {
     public readonly target: EventTarget;
     public readonly timeStamp: number;
     public readonly scoped: boolean;
+    public readonly type: string
 
-    constructor(public readonly type: string) {
+    constructor(type: string) {
+        this.type = type;
     }
 
     public initEvent(eventTypeArg: string, canBubbleArg: boolean, cancelableArg: boolean): void {

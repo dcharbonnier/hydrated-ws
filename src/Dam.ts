@@ -1,12 +1,11 @@
 import {Shell} from "./Shell";
 import Event from "./Event";
+import WebSocket from "./WebSocket";
 
 export class Dam extends Shell implements WebSocket {
 
     public static OPEN = "OPEN";
     public static CLOSED = "CLOSED";
-
-    private _status: "OPEN" | "CLOSED" = "CLOSED";
 
     constructor(ws: WebSocket) {
         super();
@@ -17,11 +16,21 @@ export class Dam extends Shell implements WebSocket {
         this.ws.addEventListener("open", (e: Event) => this.onEventListener(e));
     }
 
-    private onEventListener(event: Event) {
-        if (event.type === "close") {
-            super.dispatchEvent(event);
-        } else {
-            this.dispatchEvent(event);
+    private _status: "OPEN" | "CLOSED" = "CLOSED";
+
+    public get status() {
+        return this._status;
+    }
+
+    public set status(value: "OPEN" | "CLOSED") {
+        if (this._status === value) {
+            return;
+        }
+        this._status = value;
+        if (this._status === "OPEN") {
+            if (this.ws.readyState === this.ws.OPEN) {
+                this.dispatchEvent(new Event("open"));
+            }
         }
     }
 
@@ -51,19 +60,11 @@ export class Dam extends Shell implements WebSocket {
         }
     }
 
-    public get status() {
-        return this._status;
-    }
-
-    public set status(value: "OPEN" | "CLOSED") {
-        if (this._status === value) {
-            return;
-        }
-        this._status = value;
-        if (this._status === "OPEN") {
-            if (this.ws.readyState === this.ws.OPEN) {
-                this.dispatchEvent(new Event("open"));
-            }
+    private onEventListener(event: Event) {
+        if (event.type === "close") {
+            super.dispatchEvent(event);
+        } else {
+            this.dispatchEvent(event);
         }
     }
 

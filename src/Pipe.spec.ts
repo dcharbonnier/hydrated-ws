@@ -1,7 +1,7 @@
-import {expect, expectEventually, rnd, sleep, supervisor} from "./wrench.spec";
+import {expectEventually, rnd, sleep, supervisor, TIMEOUT_FACTOR} from "./wrench.spec";
 import {Pipe} from "./Pipe";
-import {Promise} from "es6-promise";
-
+import {expect} from "chai";
+import WebSocket from "./WebSocket";
 
 describe("Pipe", () => {
     let ws: WebSocket;
@@ -49,7 +49,7 @@ describe("Pipe", () => {
             mp.close();
 
             ws.send("   aping");
-            await sleep((TIMEOUT_FACTOR || 1 ) * 100);
+            await sleep(TIMEOUT_FACTOR * 100);
             expect(received).to.be.false;
 
         });
@@ -57,7 +57,7 @@ describe("Pipe", () => {
             const mp = new Pipe(ws, "a");
             mp.close();
             expect(() => mp.send("")).to.not.throw();
-            await sleep((TIMEOUT_FACTOR || 1 ) * 50);
+            await sleep(TIMEOUT_FACTOR * 50);
             let logs = await supervisor.logs(testCase);
             expect(logs.map(l => l[1])).to.deep.equal(["connect"]);
         });
@@ -65,7 +65,7 @@ describe("Pipe", () => {
             const mp = new Pipe(ws, "a");
             mp.close();
             expect(mp.readyState).to.equal(mp.CLOSING);
-            await sleep((TIMEOUT_FACTOR || 1 ) * 1);
+            await sleep(TIMEOUT_FACTOR * 1);
             expect(mp.readyState).to.equal(mp.CLOSED);
         });
     });
@@ -74,7 +74,7 @@ describe("Pipe", () => {
         it("should prefix messages with the channel", async () => {
             const mp = new Pipe(ws, "a");
             mp.send("data");
-            await sleep((TIMEOUT_FACTOR || 1 ) * 50);
+            await sleep(TIMEOUT_FACTOR * 50);
             let logs = await supervisor.logs(testCase);
             expect(logs.map(l => l[1])).to.deep.equal(["connect", "   adata"]);
         });

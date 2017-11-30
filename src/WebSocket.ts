@@ -1,9 +1,2 @@
-declare var require: any;
-declare var global: any;
-import isNode from "./isNode";
+export default typeof (WebSocket) !== "undefined" ? WebSocket : require("ws");
 
-if (!isNode && global) {
-    global["ws"] = null;
-}
-
-export default (isNode ? require("ws") : WebSocket) as WebSocket;
