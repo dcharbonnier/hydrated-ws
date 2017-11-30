@@ -6,13 +6,16 @@
     "outDir": "dist/",
     "target": "ES5",
     "sourceMap": true,
+    "declaration": true,
     "types": [
       "mocha",
-      "chai"
+      "chai",
+      "node"
     ],
     "lib": [
       "es5",
-      "dom"
+      "dom",
+      "es2015.promise"
     ]
   },
   "exclude": [

@@ -1,1 +1,2 @@
-declare const TIMEOUT_FACTOR: number;
+// declare const TIMEOUT_FACTOR: number;
+

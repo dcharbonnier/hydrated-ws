@@ -1,6 +1,7 @@
 import {Waterfall} from "./Waterfall";
-import {Promise} from "es6-promise";
-import {expect, expectEventually, INVALID_URLS, rnd, supervisor, VALID_URLS} from "./wrench.spec";
+import {expectEventually, INVALID_URLS, rnd, sleep, supervisor, TIMEOUT_FACTOR, VALID_URLS} from "./wrench.spec";
+import {expect} from "chai";
+import WebSocket from "./WebSocket";
 
 
 describe("Waterfall", () => {
@@ -78,15 +79,18 @@ describe("Waterfall", () => {
                 setTimeout(() => resolve(), 100);
             });
         });
-        it("should be on a connecting state", async () => {
+        // the api do not define an event, there is no way to test that on a reliable way
+        it.skip("should be on a connecting state", async () => {
             ws.send("disconnect");
             await expectEventually(() => ws.readyState === WebSocket.CONNECTING,
                 "The WebSocket should be connecting");
         });
         it("should eventually reconnect", async () => {
             ws.send("disconnect");
-            await expectEventually(() => ws.readyState === WebSocket.CONNECTING,
-                "The WebSocket should be connecting");
+            // the api do not define an event, there is no way to test that on a reliable way
+            // await expectEventually(() => ws.readyState === WebSocket.CONNECTING,
+            //     "The WebSocket should be connecting");
+            await sleep(TIMEOUT_FACTOR * 500);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be connected");
             let logs = await supervisor.logs(testCase);
@@ -212,8 +216,8 @@ describe("Waterfall", () => {
         });
         it("should retry if the first connection timeout", async () => {
             const testCase = rnd();
-            await supervisor.setup(testCase, [{delay: (TIMEOUT_FACTOR ||1) * 300}]);
-            ws = new Waterfall(`ws://localtest.me:3000/${testCase}`, null, {connectionTimeout: (TIMEOUT_FACTOR ||1) * 200});
+            await supervisor.setup(testCase, [{delay: TIMEOUT_FACTOR * 300}]);
+            ws = new Waterfall(`ws://localtest.me:3000/${testCase}`, null, {connectionTimeout: (TIMEOUT_FACTOR || 1) * 200});
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");

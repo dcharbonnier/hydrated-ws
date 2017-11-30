@@ -1,7 +1,7 @@
-import {expect, expectEventually, rnd, sleep, supervisor} from "./wrench.spec";
+import {expectEventually, rnd, sleep, supervisor, TIMEOUT_FACTOR} from "./wrench.spec";
 import {Dam} from "./Dam";
-import {Promise} from "es6-promise";
-
+import {expect} from "chai";
+import WebSocket from "./WebSocket";
 
 describe("Dam", () => {
     let ws: WebSocket;
@@ -42,21 +42,21 @@ describe("Dam", () => {
             dam.onopen = () => {
                 throw new Error("Received an open event");
             };
-            await sleep((TIMEOUT_FACTOR || 1) * 500);
+            await sleep(TIMEOUT_FACTOR * 500);
         });
         it("should never dispatch the messages event", async () => {
             ws.send("ping");
             dam.onmessage = () => {
                 throw new Error("Received a message event");
             };
-            await sleep((TIMEOUT_FACTOR || 1) * 500);
+            await sleep(TIMEOUT_FACTOR * 500);
         });
         it("should be connecting is the socket is open", async () => {
             expect(dam.readyState).to.equal(dam.CONNECTING);
         });
         it("should be closed is the socket is closed", async () => {
             ws.close();
-            await sleep((TIMEOUT_FACTOR || 1) * 100);
+            await sleep(TIMEOUT_FACTOR * 100);
             expect(dam.readyState).to.equal(dam.CLOSED);
         });
 
@@ -81,7 +81,7 @@ describe("Dam", () => {
                     received = true;
                     resolve();
                 };
-                await sleep((TIMEOUT_FACTOR || 1) * 500);
+                await sleep(TIMEOUT_FACTOR * 500);
                 if (!received) {
                     reject(new Error("Did not received the open"));
                 }
@@ -96,7 +96,7 @@ describe("Dam", () => {
                     received = true;
                     resolve();
                 };
-                await sleep((TIMEOUT_FACTOR || 1) * 500);
+                await sleep(TIMEOUT_FACTOR * 500);
                 if (!received) {
                     reject(new Error("Did not received the message"));
                 }
@@ -110,7 +110,7 @@ describe("Dam", () => {
     });
 
     describe("when changes to open", () => {
-        it("should send an open event if the ws is open", () => {
+        it("should send an open event if the ws is open", async () => {
             const dam = new Dam(ws);
             return new Promise(async (resolve, reject) => {
                 let received = false
@@ -119,13 +119,13 @@ describe("Dam", () => {
                     resolve();
                 };
                 dam.status = "OPEN";
-                await sleep((TIMEOUT_FACTOR || 1) * 500);
+                await sleep(TIMEOUT_FACTOR * 500);
                 if (!received) {
                     reject(new Error("Did not receive the open event"));
                 }
             });
         });
-        it("should do nothing if changed to the same state", () => {
+        it("should do nothing if changed to the same state", async () => {
             const dam = new Dam(ws);
             return new Promise(async (resolve, reject) => {
                 let received = 0;
@@ -134,30 +134,34 @@ describe("Dam", () => {
                 };
                 dam.status = "OPEN";
                 dam.status = "OPEN";
-                await sleep((TIMEOUT_FACTOR || 1) * 500);
+                await sleep(TIMEOUT_FACTOR * 500);
                 expect(received).to.equal(1);
                 resolve();
             });
         });
-        it("should do nothing if the socket is closed", () => {
+        it("should do nothing if the socket is closed", async () => {
             const dam = new Dam(ws);
             ws.close();
             return new Promise(async (resolve, reject) => {
-                ws.send("ping");
+                try {
+                    ws.send("ping");
+                } catch (e) {
+                }
                 let received = false
                 dam.onopen = () => {
                     received = true;
                     reject(new Error("Did receive an open event"));
                 };
                 dam.status = "OPEN";
-                await sleep((TIMEOUT_FACTOR || 1) * 500);
+                await sleep(TIMEOUT_FACTOR * 500);
                 if (!received) {
                     resolve();
                 }
+                reject();
             });
         });
     });
-    describe("when changes to close", () => {
+    describe("when changes to close", async () => {
         it("should not send a close event", () => {
             const dam = new Dam(ws);
             dam.status = "OPEN";
@@ -169,7 +173,7 @@ describe("Dam", () => {
                     reject(new Error("Received a close event"));
                 };
                 dam.status = "CLOSED";
-                await sleep((TIMEOUT_FACTOR || 1) * 500);
+                await sleep(TIMEOUT_FACTOR * 500);
                 if (!received) {
                     resolve();
                 }

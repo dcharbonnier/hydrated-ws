@@ -1,3 +1,5 @@
+# WIP, release in december
+
 [![Build Status](https://img.shields.io/travis/dcharbonnier/advanced-websocket/master.svg?style=flat-square)](https://travis-ci.org/dcharbonnier/advanced-websocket)
 [![devDependency Status](https://img.shields.io/david/dev/dcharbonnier/advanced-websocket.svg?style=flat-square)](https://david-dm.org/dcharbonnier/advanced-websocket#info=devDependencies)
 [![Build Status](https://saucelabs.com/buildstatus/dcc)](https://saucelabs.com/beta/builds/531985a1f22d43c2b80a0beb38d72b5a)
@@ -15,6 +17,8 @@ Support :
 - [ ] Url change (WIP)
 
 ### With strictly no dependencies
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/dcharbonnier/advanced-websocket.svg)](https://greenkeeper.io/)
 ```json
 {
   "name": "advanced-websocket",
