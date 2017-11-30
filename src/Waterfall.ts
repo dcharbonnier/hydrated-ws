@@ -16,9 +16,11 @@ export class Waterfall extends Shell {
 
     public constructor(url: string, private protocols?: string | string[], options?: IWaterfallOptions) {
         super();
+
         if (this.constructor !== Waterfall) {
             throw new TypeError("Failed to construct. Please use the 'new' operator");
         }
+
         if (!url.match(REGEXP_URL)) {
             throw new TypeError("Invalid url");
         }
@@ -82,12 +84,12 @@ export class Waterfall extends Shell {
             }
         }, this.connectionTimeout);
 
-        ws.onopen = (event: Event) => {
+        ws.onopen = (evt: Event) => {
             attempt = 0;
             clearTimeout(this.timeout);
 
             this._readyState = WebSocket.OPEN;
-            this.dispatchEvent(event);
+            this.dispatchEvent(evt);
         };
         ws.onclose = (event) => {
             clearTimeout(this.timeout);

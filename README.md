@@ -10,11 +10,18 @@
 Support :
 
 - [x] Browser (WebSocket API compatible)
-- [x] Nodejs with ws (To be tested)
-- [x] Reconnect (with an exponential truncated backoff by default)
-- [x] Multiplexing
-- [x] Layers
+- [x] Nodejs with ws (WebSocket API compatible)
+
+- [x] Waterfall - Reconnect (exponential truncated backoff by default, fully configurable)
+- [x] Pipe - Fake multiplexing, based on a string prefix - fake but working
+- [x] Dam - Simulate open / close based on your logic, open a pipe after the authentication on an other one for example 
+- [x] Tank - No need to monitor the state of the communication the sent messages with be flushed when it open
+- [ ] Fizz - Wrap your WebSocket interface for more fun with `once`, `on`, `Promises`
+- [ ] Boat - Rpc transport 
+- [ ] Bottling - A json stream with filtering 
 - [ ] Url change (WIP)
+- [ ] 100% test coverage
+- [ ] Your idea here, send an issue, provide a PR 
 
 ### With strictly no dependencies
 

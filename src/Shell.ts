@@ -11,9 +11,19 @@ export class Shell implements WebSocket {
     public binaryType: "blob" | "arraybuffer";
     protected closing: boolean = false;
     protected ws: WebSocket;
+    private eventListener: (evt: Event) => boolean;
+
     private listeners: Dict<keyof WebSocketEventMap,
         { listener: (this: WebSocket, ev: WebSocketEventMap[keyof WebSocketEventMap]) => any, useCapture?: boolean }[]>
         = new Dict();
+
+
+    constructor() {
+        if (!this.dispatchEvent) {
+            throw new TypeError("Failed to construct. Please use the 'new' operator");
+        }
+        this.eventListener = this.dispatchEvent.bind(this);
+    }
 
     private _onclose: (ev: CloseEvent) => any;
 
@@ -114,6 +124,18 @@ export class Shell implements WebSocket {
             }
         }
         return true;
+    }
+
+    protected addListeners() {
+        this.ws.addEventListener("close", this.eventListener);
+        this.ws.addEventListener("message", this.eventListener);
+        this.ws.addEventListener("open", this.eventListener);
+    }
+
+    protected removeListeners() {
+        this.ws.removeEventListener("close", this.eventListener);
+        this.ws.removeEventListener("message", this.eventListener);
+        this.ws.removeEventListener("open", this.eventListener);
     }
 
     protected getReadyState(): number {

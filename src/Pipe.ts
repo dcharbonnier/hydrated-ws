@@ -6,8 +6,6 @@ import CloseEvent from "./CloseEvent";
 
 export class Pipe extends Shell implements WebSocket {
 
-    public onMessageListener: (ev: MessageEvent) => any;
-    public onEventListener: (ev: Event) => any;
     private channel: string;
     private prefixLength = 4;
     private pipeReadyState: number = null;
@@ -20,14 +18,7 @@ export class Pipe extends Shell implements WebSocket {
         }
         this.channel = `${Pipe.repeatString(" ", this.prefixLength)}${channel}`.slice(this.prefixLength * -1);
         this.ws = ws;
-
-        this.onMessageListener = this._onMessageListener.bind(this);
-        this.onEventListener = this._onEventListener.bind(this);
-
-        this.ws.addEventListener("message", this.onMessageListener);
-        this.ws.addEventListener("close", this.onEventListener);
-        this.ws.addEventListener("open", this.onEventListener);
-
+        this.addListeners();
     }
 
     private static repeatString(str: string, count: number): string {
@@ -39,9 +30,7 @@ export class Pipe extends Shell implements WebSocket {
     }
 
     public close(code: number = 1000, reason?: string) {
-        this.ws.removeEventListener("message", this.onMessageListener);
-        this.ws.removeEventListener("close", this.onEventListener);
-        this.ws.removeEventListener("open", this.onEventListener);
+        this.removeListeners();
         this.pipeReadyState = this.CLOSING;
         setTimeout(() => {
             this.pipeReadyState = this.CLOSED;
@@ -59,23 +48,24 @@ export class Pipe extends Shell implements WebSocket {
         super.send(this.channel + data);
     }
 
+    public dispatchEvent(evt: Event): any {
+        if (evt.type === "message") {
+            const e: MessageEvent = evt as any;
+            if (typeof(e.data) === "string" && this.channel === e.data.substr(0, this.prefixLength)) {
+                super.dispatchEvent(new MessageEvent("message", {
+                    data: e.data.substr(this.prefixLength),
+                    origin: e.origin,
+                    ports: e.ports,
+                    source: e.source,
+                }));
+                return false;
+            }
+        } else {
+            super.dispatchEvent(evt);
+        }
+    }
+
     protected getReadyState() {
         return this.pipeReadyState || super.getReadyState();
-    }
-
-    private _onEventListener(event: Event) {
-        this.dispatchEvent(event);
-    }
-
-    private _onMessageListener(e: MessageEvent): any {
-        if (typeof( e.data) === "string" && this.channel === e.data.substr(0, this.prefixLength)) {
-            this.dispatchEvent(new MessageEvent("message", {
-                data: e.data.substr(this.prefixLength),
-                origin: e.origin,
-                ports: e.ports,
-                source: e.source,
-            }));
-            return false;
-        }
     }
 }
