@@ -14,7 +14,7 @@ export class Waterfall extends Shell {
     private connectionTimeout: number = 5000;
     private retryPolicy: (attempt: number, ws: Waterfall) => number;
 
-    public constructor(url: string, private protocols?: string | string[], options?: IWaterfallOptions) {
+    public constructor(url: string, private protocols?: string | string[], private options?: IWaterfallOptions) {
         super();
 
         if (this.constructor !== Waterfall) {
@@ -63,11 +63,18 @@ export class Waterfall extends Shell {
         this.ws.close(code, reason);
     }
 
+    private webSocketFactory(): WebSocket {
+        return this.options && this.options.factory
+            ? this.options.factory(this.url, this.protocols || [])
+            : new WebSocket(this.url, this.protocols || []);
+
+    }
+
     private open(attempt: number = 0) {
         if (this.closing) {
             return;
         }
-        const ws = new WebSocket(this.url, this.protocols || []);
+        const ws = this.webSocketFactory();
         ws.binaryType = this.binaryType || ws.binaryType;
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
