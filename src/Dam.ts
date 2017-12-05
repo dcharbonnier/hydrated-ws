@@ -1,5 +1,5 @@
-import {Shell} from "./Shell";
 import Event from "./Event";
+import {Shell} from "./Shell";
 import WebSocket from "./WebSocket";
 
 export class Dam extends Shell implements WebSocket {
@@ -8,6 +8,7 @@ export class Dam extends Shell implements WebSocket {
     public static CLOSED = "CLOSED";
 
     private openSent: boolean = false;
+    private _status: "OPEN" | "CLOSED" = "CLOSED";
 
     constructor(ws: WebSocket) {
         super();
@@ -15,8 +16,6 @@ export class Dam extends Shell implements WebSocket {
         this.ws = ws;
         this.addListeners();
     }
-
-    private _status: "OPEN" | "CLOSED" = "CLOSED";
 
     public get status() {
         return this._status;
@@ -69,6 +68,5 @@ export class Dam extends Shell implements WebSocket {
             throw new Error("WebSocket is closed");
         }
     }
-
 
 }

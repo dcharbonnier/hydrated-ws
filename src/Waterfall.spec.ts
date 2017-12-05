@@ -1,8 +1,7 @@
-import {Waterfall} from "./Waterfall";
-import {expectEventually, INVALID_URLS, rnd, sleep, supervisor, TIMEOUT_FACTOR, VALID_URLS} from "./wrench.spec";
 import {expect} from "chai";
+import {Waterfall} from "./Waterfall";
 import WebSocket from "./WebSocket";
-
+import {expectEventually, INVALID_URLS, rnd, sleep, supervisor, TIMEOUT_FACTOR, VALID_URLS} from "./wrench.spec";
 
 describe("Waterfall", () => {
     let ws: Waterfall;
@@ -17,34 +16,36 @@ describe("Waterfall", () => {
     });
     describe("constructor", () => {
         it("should throw an error when not using the new operator", () => {
-            expect(() => (Waterfall as any)("")).to.throw(TypeError, "Failed to construct. Please use the 'new' operator");
+            expect(() => (Waterfall as any)("")).to.throw(TypeError,
+                "Failed to construct. Please use the 'new' operator");
         });
 
         it("should throw an error when using a bad url", () => {
-            INVALID_URLS.forEach(url => {
+            INVALID_URLS.forEach((url) => {
                 expect(() => new Waterfall(url)).to.throw();
             });
         });
 
         it("should not throw when using a correct url", () => {
-            VALID_URLS.forEach(url => {
+            VALID_URLS.forEach((url) => {
                 expect(() => new Waterfall(url)).to.not.throw();
             });
         });
         it("should immediately connect to the server", async () => {
             ws = new Waterfall("ws://localtest.me:3000");
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
-            return expectEventually(() => ws.readyState === WebSocket.OPEN, "The WebSocket should be open");
-        })
+            return expectEventually(() => ws.readyState === WebSocket.OPEN,
+                "The WebSocket should be open");
+        });
     });
     describe("when connected", () => {
-        let ws: Waterfall;
 
         beforeEach(async () => {
             ws = new Waterfall("ws://localtest.me:3000");
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
-            await expectEventually(() => ws.readyState === WebSocket.OPEN, "The WebSocket should be open");
-            return
+            await expectEventually(() => ws.readyState === WebSocket.OPEN,
+                "The WebSocket should be open");
+            return;
         });
 
         it("should send a message to the server", async () => {
@@ -60,7 +61,6 @@ describe("Waterfall", () => {
 
     });
     describe("when disconnect", () => {
-        let ws: Waterfall;
         let testCase: string;
         beforeEach(async () => {
             testCase = rnd();
@@ -74,7 +74,7 @@ describe("Waterfall", () => {
             return new Promise((resolve, reject) => {
                 ws.onclose = () => {
                     reject(new Error("Received a close event"));
-                }
+                };
                 ws.send("disconnect");
                 setTimeout(() => resolve(), 100);
             });
@@ -93,13 +93,12 @@ describe("Waterfall", () => {
             await sleep(TIMEOUT_FACTOR * 500);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be connected");
-            let logs = await supervisor.logs(testCase);
-            expect(logs.map(l => l[1])).to.deep.equal(["connect", "disconnect", "close", "connect"]);
+            const logs = await supervisor.logs(testCase);
+            expect(logs.map((l) => l[1])).to.deep.equal(["connect", "disconnect", "close", "connect"]);
         });
 
     });
     describe("events", () => {
-        let ws: Waterfall;
         let testCase: string;
         beforeEach(async () => {
             testCase = rnd();
@@ -111,7 +110,7 @@ describe("Waterfall", () => {
                 ws.onopen = (event) => {
                     expect(events.length).to.equal(0);
                     events.push(event);
-                }
+                };
                 ws.addEventListener("open", (event) => {
                     expect(events.length).to.equal(1);
                     events.push(event);
@@ -120,7 +119,8 @@ describe("Waterfall", () => {
                     expect(events.length).to.equal(2);
                     events.push(event);
                 });
-                const timeout = setTimeout(() => reject && reject(new Error("did not received the open event")), 5000);
+                const timeout = setTimeout(() => reject &&
+                    reject(new Error("did not received the open event")), 5000);
                 await expectEventually(() => ws.readyState === WebSocket.OPEN,
                     "The WebSocket should be open");
                 expect(events.length).to.equal(3);
@@ -136,7 +136,7 @@ describe("Waterfall", () => {
                 ws.onclose = (event) => {
                     expect(events.length).to.equal(0);
                     events.push(event);
-                }
+                };
                 ws.addEventListener("close", (event) => {
                     expect(events.length).to.equal(1);
                     events.push(event);
@@ -145,7 +145,8 @@ describe("Waterfall", () => {
                     expect(events.length).to.equal(2);
                     events.push(event);
                 });
-                const timeout = setTimeout(() => reject && reject(new Error("did not received the close event")), 5000);
+                const timeout = setTimeout(() => reject &&
+                    reject(new Error("did not received the close event")), 5000);
                 await expectEventually(() => ws.readyState === WebSocket.OPEN,
                     "The WebSocket should be open");
                 ws.close();
@@ -173,6 +174,7 @@ describe("Waterfall", () => {
         it("should ignore an unexisting listener", async () => {
             ws = new Waterfall(`ws://localtest.me:3000/${testCase}`);
             ws.removeEventListener("ignore me" as any, () => {
+                // ignore
             });
 
         });
@@ -183,7 +185,7 @@ describe("Waterfall", () => {
                 ws.onopen = (event) => {
                     expect(events.length).to.equal(0);
                     events.push(event);
-                }
+                };
                 ws.addEventListener("open", (event) => {
                     expect(events.length).to.equal(1);
                     events.push(event);
@@ -193,7 +195,8 @@ describe("Waterfall", () => {
                     reject(new Error("this listener not be call"));
                     events.push(event);
                 });
-                const timeout = setTimeout(() => reject && reject(new Error("did not received the open event")), 5000);
+                const timeout = setTimeout(() => reject &&
+                    reject(new Error("did not received the open event")), 5000);
                 await expectEventually(() => ws.readyState === WebSocket.OPEN,
                     "The WebSocket should be open");
                 expect(events.length).to.equal(2);
@@ -211,18 +214,21 @@ describe("Waterfall", () => {
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
-            let logs = await supervisor.logs(testCase);
-            expect(logs.map(l => l[1])).to.deep.equal(["connect", "connect", "connect"]);
+            const logs = await supervisor.logs(testCase);
+            expect(logs.map((l) => l[1])).to.deep.equal(["connect", "connect", "connect"]);
         });
         it("should retry if the first connection timeout", async () => {
             const testCase = rnd();
             await supervisor.setup(testCase, [{delay: TIMEOUT_FACTOR * 300}]);
-            ws = new Waterfall(`ws://localtest.me:3000/${testCase}`, null, {connectionTimeout: (TIMEOUT_FACTOR || 1) * 200});
+            ws = new Waterfall(
+                `ws://localtest.me:3000/${testCase}`,
+                null,
+                {connectionTimeout: (TIMEOUT_FACTOR || 1) * 200});
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
-            let logs = await supervisor.logs(testCase);
-            expect(logs.map(l => l[1]).filter(m => m === "connect").length).to.be.greaterThan(1);
+            const logs = await supervisor.logs(testCase);
+            expect(logs.map((l) => l[1]).filter((m) => m === "connect").length).to.be.greaterThan(1);
         });
 
     });
@@ -247,7 +253,6 @@ describe("Waterfall", () => {
             await expectEventually(() => ws.readyState === WebSocket.CLOSED,
                 "The WebSocket should be closed");
 
-
         });
         it("should pass the close reason to the server", async () => {
             const testCase = rnd();
@@ -258,8 +263,8 @@ describe("Waterfall", () => {
             ws.close(3001, "because I wan't");
             await expectEventually(() => ws.readyState === WebSocket.CLOSED,
                 "The WebSocket should be closed");
-            let logs = await supervisor.logs(testCase);
-            expect(logs.map(l => l[1])).to.deep.equal(["connect", "close"]);
+            const logs = await supervisor.logs(testCase);
+            expect(logs.map((l) => l[1])).to.deep.equal(["connect", "close"]);
             expect(logs[1].slice(1)).to.deep.equal(["close", [3001, "because I wan't"]]);
 
         });

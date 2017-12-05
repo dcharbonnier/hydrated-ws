@@ -1,7 +1,7 @@
-import {expectEventually, rnd, sleep, supervisor, TIMEOUT_FACTOR} from "./wrench.spec";
-import {Dam} from "./Dam";
 import {expect} from "chai";
+import {Dam} from "./Dam";
 import WebSocket from "./WebSocket";
+import {expectEventually, rnd, sleep, supervisor, TIMEOUT_FACTOR} from "./wrench.spec";
 
 describe("Dam", () => {
     let ws: WebSocket;
@@ -113,7 +113,7 @@ describe("Dam", () => {
         it("should send an open event if the ws is open", async () => {
             const dam = new Dam(ws);
             return new Promise(async (resolve, reject) => {
-                let received = false
+                let received = false;
                 dam.onopen = () => {
                     received = true;
                     resolve();
@@ -145,9 +145,10 @@ describe("Dam", () => {
             return new Promise(async (resolve, reject) => {
                 try {
                     ws.send("ping");
-                } catch (e) {
+                } catch {
+                    // ignore
                 }
-                let received = false
+                let received = false;
                 dam.onopen = () => {
                     received = true;
                     reject(new Error("Did receive an open event"));
@@ -167,7 +168,7 @@ describe("Dam", () => {
             dam.status = "OPEN";
 
             return new Promise(async (resolve, reject) => {
-                let received = false
+                let received = false;
                 dam.onclose = () => {
                     received = true;
                     reject(new Error("Received a close event"));

@@ -1,10 +1,18 @@
-import {Shell} from "./Shell";
-import WebSocket from "./WebSocket";
+import CloseEvent from "./CloseEvent";
 import Event from "./Event";
 import MessageEvent from "./MessageEvent";
-import CloseEvent from "./CloseEvent";
+import {Shell} from "./Shell";
+import WebSocket from "./WebSocket";
 
 export class Pipe extends Shell implements WebSocket {
+
+    private static repeatString(str: string, count: number): string {
+        let res = "";
+        for (let i = count; i > 0; i--) {
+            res += str;
+        }
+        return res;
+    }
 
     private channel: string;
     private prefixLength = 4;
@@ -21,24 +29,16 @@ export class Pipe extends Shell implements WebSocket {
         this.addListeners();
     }
 
-    private static repeatString(str: string, count: number): string {
-        let res = "";
-        for (let i = count; i > 0; i--) {
-            res += str;
-        }
-        return res;
-    }
-
     public close(code: number = 1000, reason?: string) {
         this.removeListeners();
         this.pipeReadyState = this.CLOSING;
         setTimeout(() => {
             this.pipeReadyState = this.CLOSED;
-            this.dispatchEvent(new CloseEvent("close", {code, reason, wasClean: true}))
+            this.dispatchEvent(new CloseEvent("close", {code, reason, wasClean: true}));
         }, 0);
     }
 
-    send(data: any) {
+    public send(data: any) {
         if (this.pipeReadyState) {
             return;
         }

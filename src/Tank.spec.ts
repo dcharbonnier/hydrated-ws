@@ -1,8 +1,8 @@
-import {expectEventually, rnd, sleep, supervisor, TIMEOUT_FACTOR} from "./wrench.spec";
-import WebSocket from "./WebSocket";
-import {Tank} from "./Tank";
-import {Dam} from "./Dam";
 import {expect} from "chai";
+import {Dam} from "./Dam";
+import {Tank} from "./Tank";
+import WebSocket from "./WebSocket";
+import {expectEventually, rnd, sleep, supervisor, TIMEOUT_FACTOR} from "./wrench.spec";
 
 describe("Tank", () => {
     let ws: WebSocket;
@@ -29,8 +29,8 @@ describe("Tank", () => {
         tank.send("before open");
         dam.status = "OPEN";
         await sleep(TIMEOUT_FACTOR * 100);
-        let logs = await supervisor.logs(testCase);
-        expect(logs.map(l => l[1])).to.deep.equal(["connect", "before open"]);
+        const logs = await supervisor.logs(testCase);
+        expect(logs.map((l) => l[1])).to.deep.equal(["connect", "before open"]);
     });
 
     it("should let the messages pass when open", async () => {
@@ -39,8 +39,8 @@ describe("Tank", () => {
         dam.status = "OPEN";
         tank.send("after open");
         await sleep(TIMEOUT_FACTOR * 100);
-        let logs = await supervisor.logs(testCase);
-        expect(logs.map(l => l[1])).to.deep.equal(["connect", "after open"]);
+        const logs = await supervisor.logs(testCase);
+        expect(logs.map((l) => l[1])).to.deep.equal(["connect", "after open"]);
     });
 
 });

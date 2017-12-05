@@ -1,9 +1,7 @@
-import isNode from "./isNode";
 import Event from "./Event";
-
+import isNode from "./isNode";
 
 class CloseEventPolyfill extends Event implements CloseEvent {
-
 
     public readonly code: number;
     public readonly reason: string;
@@ -16,13 +14,17 @@ class CloseEventPolyfill extends Event implements CloseEvent {
         this.wasClean = eventInitDict.wasClean;
     }
 
-
-    initCloseEvent(typeArg: string, canBubbleArg: boolean, cancelableArg: boolean, wasCleanArg: boolean, codeArg: number, reasonArg: string): void {
-        throw new Error("initCloseEvent is deprecated")
+    public initCloseEvent(typeArg: string,
+                          canBubbleArg: boolean,
+                          cancelableArg: boolean,
+                          wasCleanArg: boolean,
+                          codeArg: number,
+                          reasonArg: string): void {
+        throw new Error("initCloseEvent is deprecated");
 
     }
 
-
 }
 
-export default (isNode ? CloseEventPolyfill : CloseEvent) as { new(type: string, eventInitDict?: CloseEventInit): CloseEvent };
+export default (isNode ? CloseEventPolyfill : CloseEvent) as
+    { new(type: string, eventInitDict?: CloseEventInit): CloseEvent };
