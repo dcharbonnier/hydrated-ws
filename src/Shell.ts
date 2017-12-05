@@ -1,6 +1,6 @@
 import {Dict} from "./Dict";
-import WebSocket from "./WebSocket";
 import Event from "./Event";
+import WebSocket from "./WebSocket";
 
 export class Shell implements WebSocket {
 
@@ -9,14 +9,22 @@ export class Shell implements WebSocket {
     public readonly CONNECTING = WebSocket.CONNECTING;
     public readonly OPEN = WebSocket.OPEN;
     public binaryType: "blob" | "arraybuffer";
+
     protected closing: boolean = false;
     protected ws: WebSocket;
+    protected _readyState: number = WebSocket.CONNECTING;
+
     private eventListener: (evt: Event) => boolean;
-
+    private _onerror: (ev: Event) => any;
+    private _onmessage: (ev: MessageEvent) => any;
+    private _onopen: (ev: Event) => any;
+    private _onclose: (ev: CloseEvent) => any;
     private listeners: Dict<keyof WebSocketEventMap,
-        { listener: (this: WebSocket, ev: WebSocketEventMap[keyof WebSocketEventMap]) => any, useCapture?: boolean }[]>
-        = new Dict();
-
+        Array<{
+            listener: (this: WebSocket,
+                       ev: WebSocketEventMap[keyof WebSocketEventMap]) => any,
+            useCapture?: boolean,
+        }>> = new Dict();
 
     constructor() {
         if (!this.dispatchEvent) {
@@ -24,8 +32,6 @@ export class Shell implements WebSocket {
         }
         this.eventListener = this.dispatchEvent.bind(this);
     }
-
-    private _onclose: (ev: CloseEvent) => any;
 
     public get onclose(): (ev: CloseEvent) => any {
         return this._onclose;
@@ -35,8 +41,6 @@ export class Shell implements WebSocket {
         this._onclose = f;
     }
 
-    private _onerror: (ev: Event) => any;
-
     public get onerror(): (ev: Event) => any {
         return this._onerror;
     }
@@ -44,8 +48,6 @@ export class Shell implements WebSocket {
     public set onerror(f: (ev: Event) => any) {
         this._onerror = f;
     }
-
-    private _onmessage: (ev: MessageEvent) => any;
 
     public get onmessage(): (ev: MessageEvent) => any {
         return this._onmessage;
@@ -55,8 +57,6 @@ export class Shell implements WebSocket {
         this._onmessage = f;
     }
 
-    private _onopen: (ev: Event) => any;
-
     public get onopen(): (ev: Event) => any {
         return this._onopen;
     }
@@ -64,8 +64,6 @@ export class Shell implements WebSocket {
     public set onopen(f: (ev: Event) => any) {
         this._onopen = f;
     }
-
-    protected _readyState: number = WebSocket.CONNECTING;
 
     public get readyState(): number {
         return this.getReadyState();
@@ -95,7 +93,10 @@ export class Shell implements WebSocket {
         this.ws.send(data);
     }
 
-    public addEventListener<K extends keyof WebSocketEventMap>(type: K, listener: (this: WebSocket, ev: WebSocketEventMap[K]) => any, useCapture?: boolean): void {
+    public addEventListener<K extends keyof WebSocketEventMap>(type: K,
+                                                               listener: (this: WebSocket,
+                                                                          ev: WebSocketEventMap[K]) => any,
+                                                               useCapture?: boolean): void {
         let listeners = this.listeners.get(type);
         if (!listeners) {
             listeners = [];
@@ -104,10 +105,16 @@ export class Shell implements WebSocket {
         listeners.push({listener, useCapture});
     }
 
-    public removeEventListener<K extends keyof WebSocketEventMap>(type: K, listener: (this: WebSocket, ev: WebSocketEventMap[K]) => any, useCapture?: boolean): void {
-        let listeners = this.listeners.get(type);
+    public removeEventListener<K extends keyof WebSocketEventMap>(type: K,
+                                                                  listener: (this: WebSocket,
+                                                                             ev: WebSocketEventMap[K]) => any,
+                                                                  useCapture?: boolean): void {
+        const listeners = this.listeners.get(type);
         if (listeners) {
-            this.listeners.set(type, listeners.filter(l => l.listener !== listener || l.useCapture !== useCapture));
+            this.listeners.set(
+                type,
+                listeners.filter((l) => l.listener !== listener || l.useCapture !== useCapture),
+            );
         }
     }
 
@@ -115,9 +122,9 @@ export class Shell implements WebSocket {
         if (typeof (this as any)[`_on${evt.type}`] === "function") {
             (this as any)[`_on${evt.type}`].call(this, evt);
         }
-        let listeners = this.listeners.get(evt.type as keyof WebSocketEventMap);
+        const listeners = this.listeners.get(evt.type as keyof WebSocketEventMap);
         if (listeners) {
-            for (let {listener, useCapture} of listeners) {
+            for (const {listener, useCapture} of listeners) {
                 if (listener.call(this, evt) === false) {
                     return false;
                 }

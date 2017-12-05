@@ -1,11 +1,10 @@
 declare var global: any;
 
-let isNode = false;
+let isNode: boolean;
 try {
-    Object.prototype.toString.call(global.process) === '[object process]';
-    isNode = true;
-} catch (e) {
+    isNode = Object.prototype.toString.call(global.process) === "[object process]";
+} catch {
+    isNode = false;
 }
 
 export default isNode;
-

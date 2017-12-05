@@ -21,7 +21,7 @@ class EventPolyfill implements Event {
     public readonly target: EventTarget;
     public readonly timeStamp: number;
     public readonly scoped: boolean;
-    public readonly type: string
+    public readonly type: string;
 
     constructor(type: string) {
         this.type = type;
@@ -32,15 +32,15 @@ class EventPolyfill implements Event {
     }
 
     public preventDefault(): void {
-
+        // unimplemented
     }
 
     public stopImmediatePropagation(): void {
-
+        // unimplemented
     }
 
     public stopPropagation(): void {
-
+// unimplemented
     }
 
     public deepPath(): EventTarget[] {
@@ -49,4 +49,4 @@ class EventPolyfill implements Event {
 
 }
 
-export default (<any>(isNode ? EventPolyfill : Event)) as { new(type: string): Event };
+export default ((isNode ? EventPolyfill : Event) as any) as { new(type: string): Event };

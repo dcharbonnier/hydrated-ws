@@ -17,11 +17,10 @@ export class Tank extends Shell implements WebSocket {
         setInterval(() => this.flush(), 100);
     }
 
-
     public send(data: any) {
-        if (!data) return;
+        if (!data) { return; }
         this.buffer.unshift(data);
-        this.flush()
+        this.flush();
     }
 
     private flush() {

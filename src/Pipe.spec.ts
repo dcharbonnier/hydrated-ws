@@ -1,7 +1,7 @@
-import {expectEventually, rnd, sleep, supervisor, TIMEOUT_FACTOR} from "./wrench.spec";
-import {Pipe} from "./Pipe";
 import {expect} from "chai";
+import {Pipe} from "./Pipe";
 import WebSocket from "./WebSocket";
+import {expectEventually, rnd, sleep, supervisor, TIMEOUT_FACTOR} from "./wrench.spec";
 
 describe("Pipe", () => {
     let ws: WebSocket;
@@ -25,7 +25,7 @@ describe("Pipe", () => {
 
     describe("constructor", () => {
         it("should throw an error if the channel parameter is invalid", () => {
-            ["", 6, NaN, [], {}, "XXXXXXXXXX"].forEach(channel => {
+            ["", 6, NaN, [], {}, "XXXXXXXXXX"].forEach((channel) => {
                 expect(() => new Pipe(ws, channel as any)).to.throw();
             });
         });
@@ -50,16 +50,15 @@ describe("Pipe", () => {
 
             ws.send("   aping");
             await sleep(TIMEOUT_FACTOR * 100);
-            expect(received).to.be.false;
-
+            return expect(received).to.be.false;
         });
         it("should not throw an error on send", async () => {
             const mp = new Pipe(ws, "a");
             mp.close();
             expect(() => mp.send("")).to.not.throw();
             await sleep(TIMEOUT_FACTOR * 50);
-            let logs = await supervisor.logs(testCase);
-            expect(logs.map(l => l[1])).to.deep.equal(["connect"]);
+            const logs = await supervisor.logs(testCase);
+            expect(logs.map((l) => l[1])).to.deep.equal(["connect"]);
         });
         it("should have a correct readyState", async () => {
             const mp = new Pipe(ws, "a");
@@ -75,12 +74,12 @@ describe("Pipe", () => {
             const mp = new Pipe(ws, "a");
             mp.send("data");
             await sleep(TIMEOUT_FACTOR * 50);
-            let logs = await supervisor.logs(testCase);
-            expect(logs.map(l => l[1])).to.deep.equal(["connect", "   adata"]);
+            const logs = await supervisor.logs(testCase);
+            expect(logs.map((l) => l[1])).to.deep.equal(["connect", "   adata"]);
         });
         it("should refuse a non string message", async () => {
             const mp = new Pipe(ws, "a");
-            [6, NaN, [], {}].forEach(message => {
+            [6, NaN, [], {}].forEach((message) => {
                 expect(() => mp.send(message)).to.throw();
             });
         });
@@ -90,8 +89,8 @@ describe("Pipe", () => {
         it("filter the messages", async () => {
             const mpA = new Pipe(ws, "a");
             const mpB = new Pipe(ws, "b");
-            let messagesA = [];
-            let messagesB = [];
+            const messagesA = [];
+            const messagesB = [];
             mpA.addEventListener("message", (e: MessageEvent) => {
                 expect(e.data).to.equal("pong");
                 messagesA.push(e.data);
@@ -108,7 +107,6 @@ describe("Pipe", () => {
             await sleep(2000);
             expect(messagesA.length).to.equal(1);
             expect(messagesB.length).to.equal(2);
-
 
         });
     });

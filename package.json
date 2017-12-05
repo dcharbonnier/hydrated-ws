@@ -9,6 +9,7 @@
     "test-saucelab": "npm run test-server && karma start --single-run",
     "test-phantom": "npm run test-server && karma start --single-run --browsers PhantomJS",
     "test-node": "npm run test-server && mocha --opts mocha.opts",
+    "lint": "tslint -c tslint.json --fix 'src/**/*.ts'",
     "prepublishOnly": "tsc -p ./tsconfig.json --outDir dist/"
   },
   "main": "./dist/index.js",
@@ -41,6 +42,7 @@
     "npm": "^5.5.1",
     "puppeteer": "^0.13.0",
     "ts-node": "^3.3.0",
+    "tslint": "^5.8.0",
     "typescript": "^2.6.1",
     "ws": "^3.3.2"
   }
