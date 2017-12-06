@@ -1,6 +1,6 @@
-import {Dict} from "./Dict";
-import Event from "./Event";
-import WebSocket from "./WebSocket";
+import {Dict} from "./polyfill/Dict";
+import Event from "./polyfill/Event";
+import WebSocket from "./polyfill/WebSocket";
 
 export class Shell implements WebSocket {
 
@@ -14,7 +14,7 @@ export class Shell implements WebSocket {
     protected ws: WebSocket;
     protected _readyState: number = WebSocket.CONNECTING;
 
-    private eventListener: (evt: Event) => boolean;
+    private forwardListener: (evt: Event) => boolean;
     private _onerror: (ev: Event) => any;
     private _onmessage: (ev: MessageEvent) => any;
     private _onopen: (ev: Event) => any;
@@ -30,7 +30,7 @@ export class Shell implements WebSocket {
         if (!this.dispatchEvent) {
             throw new TypeError("Failed to construct. Please use the 'new' operator");
         }
-        this.eventListener = this.dispatchEvent.bind(this);
+        this.forwardListener = this.dispatchEvent.bind(this);
     }
 
     public get onclose(): (ev: CloseEvent) => any {
@@ -133,16 +133,16 @@ export class Shell implements WebSocket {
         return true;
     }
 
-    protected addListeners() {
-        this.ws.addEventListener("close", this.eventListener);
-        this.ws.addEventListener("message", this.eventListener);
-        this.ws.addEventListener("open", this.eventListener);
+    protected forwardEvents<K extends keyof WebSocketEventMap>(list?: K[]) {
+        (list || ["close", "message", "open"] as K[]).forEach((event: K): void =>
+            this.ws.addEventListener(event, this.forwardListener),
+        );
     }
 
-    protected removeListeners() {
-        this.ws.removeEventListener("close", this.eventListener);
-        this.ws.removeEventListener("message", this.eventListener);
-        this.ws.removeEventListener("open", this.eventListener);
+    protected stopForwardingEvents() {
+        this.ws.removeEventListener("close", this.forwardListener);
+        this.ws.removeEventListener("message", this.forwardListener);
+        this.ws.removeEventListener("open", this.forwardListener);
     }
 
     protected getReadyState(): number {

@@ -1,6 +1,6 @@
-import Event from "./Event";
-import {Shell} from "./Shell";
-import WebSocket from "./WebSocket";
+import Event from "../polyfill/Event";
+import WebSocket from "../polyfill/WebSocket";
+import {Shell} from "../Shell";
 
 export class Dam extends Shell implements WebSocket {
 
@@ -14,7 +14,7 @@ export class Dam extends Shell implements WebSocket {
         super();
         this._readyState = this.CLOSED;
         this.ws = ws;
-        this.addListeners();
+        this.forwardEvents();
     }
 
     public get status() {

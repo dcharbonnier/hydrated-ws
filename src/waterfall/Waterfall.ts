@@ -1,8 +1,8 @@
-import CloseEvent from "./CloseEvent";
+import CloseEvent from "../polyfill/CloseEvent";
+import WebSocket from "../polyfill/WebSocket";
+import {Shell} from "../Shell";
 import {exponentialTruncatedBackoff} from "./exponentialTruncatedBackoff";
 import {IWaterfallOptions} from "./IWaterfallOptions";
-import {Shell} from "./Shell";
-import WebSocket from "./WebSocket";
 
 // https://gist.github.com/hansifer/32bcba48c24621c2da78
 /* tslint:disable-next-line */
