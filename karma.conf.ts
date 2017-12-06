@@ -77,7 +77,6 @@ if (process.env.TRAVIS_JOB_NUMBER) {
     configData.singleRun = true;
 
     configData.reporters.unshift("saucelabs");
-    configData.reporters.push("coveralls");
     configData.customLaunchers = customLaunchers;
     configData.browsers = (Object as any).keys(customLaunchers);
 }
