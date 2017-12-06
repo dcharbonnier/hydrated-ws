@@ -4,3 +4,4 @@ export {exponentialTruncatedBackoff} from "./waterfall/exponentialTruncatedBacko
 export {Pipe} from "./pipe/Pipe";
 export {Dam} from "./dam/Dam";
 export {Tank} from "./tank/Tank";
+export {Cable} from "./cable/Cable";
