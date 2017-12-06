@@ -10,6 +10,7 @@
     "test-phantom": "npm run test-server && karma start --single-run --browsers PhantomJS",
     "test-node": "npm run test-server && mocha --opts mocha.opts",
     "lint": "tslint -c tslint.json --fix 'src/**/*.ts'",
+    "codecov": "codecov",
     "prepublishOnly": "tsc -p ./tsconfig.json --outDir dist/"
   },
   "main": "./dist/index.js",
@@ -24,6 +25,7 @@
     "@types/mocha": "^2.2.44",
     "@types/node": "^8.0.55",
     "chai": "^4.1.2",
+    "codecov": "^3.0.0",
     "es6-promise": "^4.1.1",
     "forever": "^0.15.3",
     "karma": "^1.7.1",

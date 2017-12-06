@@ -62,7 +62,11 @@ if (process.env.TRAVIS_JOB_NUMBER) {
                     })
             }
         );
-
+    configData.karmaTypescriptConfig.reports = {
+        "lcovonly": "lcovonly",
+        "html": "coverage",
+        "text-summary": ""
+    };
     configData.sauceLabs = {
         testName: "Advanced WebSocket",
         recordScreenshots: false,
