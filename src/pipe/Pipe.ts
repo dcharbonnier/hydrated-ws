@@ -30,6 +30,9 @@ export class Pipe extends Shell implements WebSocket {
     }
 
     public close(code: number = 1000, reason?: string) {
+        if(this.pipeReadyState === this.CLOSING || this.pipeReadyState === this.CLOSED) {
+            return;
+        }
         this.stopForwardingEvents();
         this.pipeReadyState = this.CLOSING;
         setTimeout(() => {
@@ -43,7 +46,7 @@ export class Pipe extends Shell implements WebSocket {
             return;
         }
         if (typeof(data) !== "string") {
-            throw new Error(`MultiplexWebSocket only support sending string, passed a type ${typeof(data)}`);
+            throw new Error(`Pipe only support sending string, you passed a type ${typeof(data)}`);
         }
         super.send(this.channel + data);
     }

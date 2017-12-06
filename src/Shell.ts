@@ -26,11 +26,15 @@ export class Shell implements WebSocket {
             useCapture?: boolean,
         }>> = new Dict();
 
-    constructor() {
+    constructor(ws?: WebSocket) {
         if (!this.dispatchEvent) {
             throw new TypeError("Failed to construct. Please use the 'new' operator");
         }
         this.forwardListener = this.dispatchEvent.bind(this);
+        if (ws) {
+            this.ws = ws;
+            this.forwardEvents();
+        }
     }
 
     public get onclose(): (ev: CloseEvent) => any {

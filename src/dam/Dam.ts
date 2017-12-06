@@ -4,10 +4,11 @@ import {Shell} from "../Shell";
 
 export class Dam extends Shell implements WebSocket {
 
-    public static OPEN = "OPEN";
-    public static CLOSED = "CLOSED";
+    public static OPEN:string = "OPEN";
+    public static CLOSED:string = "CLOSED";
 
     private openSent: boolean = false;
+    private buffer: any[] = [];
     private _status: "OPEN" | "CLOSED" = "CLOSED";
 
     constructor(ws: WebSocket) {
@@ -26,10 +27,11 @@ export class Dam extends Shell implements WebSocket {
             return;
         }
         this._status = value;
-        if (this._status === "OPEN") {
+        if (this._status === Dam.OPEN) {
             if (this.ws.readyState === this.ws.OPEN) {
                 this.dispatchEvent(new Event("open"));
             }
+            this.flush();
         }
     }
 
@@ -57,6 +59,8 @@ export class Dam extends Shell implements WebSocket {
             } else {
                 super.dispatchEvent(evt);
             }
+        } else if (evt.type === "message") {
+            this.buffer.unshift(evt);
         }
         return true;
     }
@@ -66,6 +70,15 @@ export class Dam extends Shell implements WebSocket {
             super.send(data);
         } else {
             throw new Error("WebSocket is closed");
+        }
+    }
+
+    private flush() {
+        if (this._status === Dam.OPEN) {
+            let evt: any;
+            while (evt = this.buffer.pop()) { // tslint:disable-line:no-conditional-assignment
+                super.dispatchEvent(evt);
+            }
         }
     }
 

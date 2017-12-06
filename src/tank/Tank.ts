@@ -25,9 +25,9 @@ export class Tank extends Shell implements WebSocket {
 
     private flush() {
         if (this.ws.readyState === this.OPEN) {
-            let d: any;
-            while (d = this.buffer.pop()) { // tslint:disable-line:no-conditional-assignment
-                this.ws.send(d);
+            let data: any;
+            while (data = this.buffer.pop()) { // tslint:disable-line:no-conditional-assignment
+                this.ws.send(data);
             }
         }
     }
