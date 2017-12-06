@@ -42,7 +42,6 @@ let configData: any = {
     browserNoActivityTimeout: 120000,
 };
 
-
 if (process.env.TRAVIS_JOB_NUMBER) {
 
     const customLaunchers: any = {};
@@ -63,7 +62,9 @@ if (process.env.TRAVIS_JOB_NUMBER) {
             }
         );
     configData.karmaTypescriptConfig.reports = {
-        "lcovonly": "lcovonly",
+        "lcovonly": {
+            "filename": "report.lcov"
+        },
         "html": "coverage",
         "text-summary": ""
     };
