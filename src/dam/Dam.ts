@@ -14,7 +14,7 @@ export class Dam extends Shell implements WebSocket {
         super();
         this._readyState = this.CLOSED;
         this.ws = ws;
-        this.addListeners();
+        this.forwardEvents();
     }
 
     public get status() {

@@ -23,11 +23,13 @@ let configData: any = {
     autoWatch: true,
     singleRun: false,
     concurrency: 4,
-    reporters: [/*"progress",*/ "helpful", "coverage", "karma-typescript"],
+    reporters: [/*"progress",*/ "helpful", "karma-typescript"],
     browsers: ["Chrome"],
     karmaTypescriptConfig: {
         bundlerOptions: {
+            addNodeGlobals: false,
             ignore: ["ws"],
+            sourceMap: true,
             constants: {
                 TIMEOUT_FACTOR: TIMEOUT_FACTOR,
             },

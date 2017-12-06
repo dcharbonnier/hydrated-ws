@@ -26,11 +26,11 @@ export class Pipe extends Shell implements WebSocket {
         }
         this.channel = `${Pipe.repeatString(" ", this.prefixLength)}${channel}`.slice(this.prefixLength * -1);
         this.ws = ws;
-        this.addListeners();
+        this.forwardEvents();
     }
 
     public close(code: number = 1000, reason?: string) {
-        this.removeListeners();
+        this.stopForwardingEvents();
         this.pipeReadyState = this.CLOSING;
         setTimeout(() => {
             this.pipeReadyState = this.CLOSED;
