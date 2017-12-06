@@ -1,8 +1,8 @@
-import CloseEvent from "./CloseEvent";
-import Event from "./Event";
-import MessageEvent from "./MessageEvent";
-import {Shell} from "./Shell";
-import WebSocket from "./WebSocket";
+import CloseEvent from "../polyfill/CloseEvent";
+import Event from "../polyfill/Event";
+import MessageEvent from "../polyfill/MessageEvent";
+import WebSocket from "../polyfill/WebSocket";
+import {Shell} from "../Shell";
 
 export class Pipe extends Shell implements WebSocket {
 
@@ -26,11 +26,11 @@ export class Pipe extends Shell implements WebSocket {
         }
         this.channel = `${Pipe.repeatString(" ", this.prefixLength)}${channel}`.slice(this.prefixLength * -1);
         this.ws = ws;
-        this.addListeners();
+        this.forwardEvents();
     }
 
     public close(code: number = 1000, reason?: string) {
-        this.removeListeners();
+        this.stopForwardingEvents();
         this.pipeReadyState = this.CLOSING;
         setTimeout(() => {
             this.pipeReadyState = this.CLOSED;

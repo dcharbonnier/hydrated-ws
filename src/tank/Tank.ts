@@ -1,5 +1,5 @@
-import {Shell} from "./Shell";
-import WebSocket from "./WebSocket";
+import WebSocket from "../polyfill/WebSocket";
+import {Shell} from "../Shell";
 
 export class Tank extends Shell implements WebSocket {
 
@@ -8,7 +8,7 @@ export class Tank extends Shell implements WebSocket {
     constructor(ws: WebSocket) {
         super();
         this.ws = ws;
-        this.addListeners();
+        this.forwardEvents();
         this.addEventListener("open", () => this.flush());
         // @todo
         // The tank do not send twice an open event so the readyState can

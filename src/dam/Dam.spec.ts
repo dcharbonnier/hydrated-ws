@@ -1,7 +1,7 @@
 import {expect} from "chai";
+import WebSocket from "../polyfill/WebSocket";
+import {expectEventually, rnd, sleep, supervisor, TIMEOUT_FACTOR} from "../wrench.spec";
 import {Dam} from "./Dam";
-import WebSocket from "./WebSocket";
-import {expectEventually, rnd, sleep, supervisor, TIMEOUT_FACTOR} from "./wrench.spec";
 
 describe("Dam", () => {
     let ws: WebSocket;
