@@ -4,8 +4,8 @@ import {Shell} from "../Shell";
 
 export class Dam extends Shell implements WebSocket {
 
-    public static OPEN:string = "OPEN";
-    public static CLOSED:string = "CLOSED";
+    public static OPEN: string = "OPEN";
+    public static CLOSED: string = "CLOSED";
 
     private openSent: boolean = false;
     private buffer: any[] = [];
