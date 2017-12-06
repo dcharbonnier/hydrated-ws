@@ -1,6 +1,6 @@
-import {Dict} from "./Dict";
-import Event from "./Event";
-import WebSocket from "./WebSocket";
+import {Dict} from "./polyfill/Dict";
+import Event from "./polyfill/Event";
+import WebSocket from "./polyfill/WebSocket";
 
 export class Shell implements WebSocket {
 

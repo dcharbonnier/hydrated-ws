@@ -1,5 +1,5 @@
-import {Shell} from "./Shell";
-import WebSocket from "./WebSocket";
+import WebSocket from "../polyfill/WebSocket";
+import {Shell} from "../Shell";
 
 export class Tank extends Shell implements WebSocket {
 

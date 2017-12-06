@@ -1,6 +1,6 @@
-import Event from "./Event";
-import {Shell} from "./Shell";
-import WebSocket from "./WebSocket";
+import Event from "../polyfill/Event";
+import WebSocket from "../polyfill/WebSocket";
+import {Shell} from "../Shell";
 
 export class Dam extends Shell implements WebSocket {
 

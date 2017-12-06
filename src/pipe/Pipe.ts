@@ -1,8 +1,8 @@
-import CloseEvent from "./CloseEvent";
-import Event from "./Event";
-import MessageEvent from "./MessageEvent";
-import {Shell} from "./Shell";
-import WebSocket from "./WebSocket";
+import CloseEvent from "../polyfill/CloseEvent";
+import Event from "../polyfill/Event";
+import MessageEvent from "../polyfill/MessageEvent";
+import WebSocket from "../polyfill/WebSocket";
+import {Shell} from "../Shell";
 
 export class Pipe extends Shell implements WebSocket {
 

@@ -1,5 +1,5 @@
 // declare const expect;
-import WebSocket from "./WebSocket";
+import WebSocket from "./polyfill/WebSocket";
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
