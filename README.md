@@ -4,7 +4,7 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/dcharbonnier/advanced-websocket.svg)](https://greenkeeper.io/)
 [![devDependency Status](https://img.shields.io/david/dev/dcharbonnier/advanced-websocket.svg?style=flat-square)](https://david-dm.org/dcharbonnier/advanced-websocket#info=devDependencies)
 [![Build Status](https://saucelabs.com/buildstatus/dcc)](https://saucelabs.com/beta/builds/531985a1f22d43c2b80a0beb38d72b5a)
-[![Coveralls github branch](https://img.shields.io/coveralls/github/dcharbonnier/advanced-websocket/master.svg)]()
+[![Codecov](https://img.shields.io/codecov/c/github/dcharbonnier/advanced-websocket/develop.svg)]()
 [![Npm version](https://img.shields.io/npm/v/advanced-websocket.svg)](https://www.npmjs.com/package/advanced-websocket)
 [![Build Status](https://saucelabs.com/browser-matrix/dcc.svg)](https://saucelabs.com/beta/builds/531985a1f22d43c2b80a0beb38d72b5a)
 
