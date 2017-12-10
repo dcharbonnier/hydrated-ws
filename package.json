@@ -43,7 +43,7 @@
     "mock-socket": "^7.1.0",
     "npm": "^5.5.1",
     "puppeteer": "^0.13.0",
-    "ts-node": "^3.3.0",
+    "ts-node": "^4.0.0",
     "tslint": "^5.8.0",
     "typescript": "^2.6.2",
     "ws": "^3.3.2"
