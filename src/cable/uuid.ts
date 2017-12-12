@@ -1,15 +1,8 @@
-let uuid: () => string;
+
+let rnd = Math.random() * 16 | 0;
 
 if (typeof crypto !== "undefined") {
-    uuid = (): string => "10000000-1000-4000-8000-100000000000"
-        .replace(/[018]/g, (c: any) => (parseInt(c,10) ^ crypto
-            .getRandomValues(new Uint8Array(1)) as any[0] & 15 >> (c as any) / 4).toString(16));
-} else {
-    uuid = (): string => "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c: any) => {
-        const r = Math.random() * 16 | 0;
-        const v = c === "x" ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
+    rnd = crypto.getRandomValues(new Uint8Array(1))[0] % 16;
 }
-
-export { uuid };
+export const uuid = () => ([1e7] + -1e3 + -4e3 + -8e3 + -1e11)
+    .replace(/[018]/g, (c) => (c ^ Math.random() * 16 >> c / 4).toString(16));

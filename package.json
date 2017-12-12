@@ -21,6 +21,7 @@
     "test": "npm run test-node && npm run test-saucelab",
     "test-server": "node --experimental-modules mock.mjs >/dev/null 2>&1 &",
     "test-saucelab": "npm run test-server && karma start --single-run",
+    "test-chrome": "npm run test-server && karma start --single-run --browsers Chrome",
     "test-phantom": "npm run test-server && karma start --single-run --browsers PhantomJS",
     "test-node": "npm run test-server && mocha --opts mocha.opts",
     "lint": "tslint -c tslint.json --fix 'src/**/*.ts'",
