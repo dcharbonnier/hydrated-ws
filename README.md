@@ -1,5 +1,7 @@
 # WIP, release in december
 
+[![Join the chat at https://gitter.im/advanced-websocket/Lobby](https://badges.gitter.im/advanced-websocket/Lobby.svg)](https://gitter.im/advanced-websocket/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://img.shields.io/travis/dcharbonnier/advanced-websocket/master.svg?style=flat-square)](https://travis-ci.org/dcharbonnier/advanced-websocket)
 [![Greenkeeper badge](https://badges.greenkeeper.io/dcharbonnier/advanced-websocket.svg)](https://greenkeeper.io/)
 [![devDependency Status](https://img.shields.io/david/dev/dcharbonnier/advanced-websocket.svg?style=flat-square)](https://david-dm.org/dcharbonnier/advanced-websocket#info=devDependencies)
