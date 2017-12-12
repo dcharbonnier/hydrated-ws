@@ -56,7 +56,7 @@ describe("Dam", () => {
         });
         it("should be closed is the socket is closed", async () => {
             ws.close();
-            await sleep(TIMEOUT_FACTOR * 100);
+            await sleep(TIMEOUT_FACTOR * 500);
             expect(dam.readyState).to.equal(dam.CLOSED);
         });
 
