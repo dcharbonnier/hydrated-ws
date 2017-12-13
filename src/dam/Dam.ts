@@ -49,7 +49,7 @@ export class Dam extends Shell implements WebSocket {
     public dispatchEvent(evt: Event): boolean {
         if (evt.type === "close") {
             this.dispatchCloseEvent(evt);
-        } else if (evt.type === "close") {
+        } else if (evt.type === "open") {
             this.dispatchOpenEvent(evt);
         } else {
             this.dispatchOrBuffer(evt);
@@ -86,11 +86,9 @@ export class Dam extends Shell implements WebSocket {
     }
 
     private flush() {
-        if (this._status === Dam.OPEN) {
-            let evt: any;
-            while (evt = this.buffer.pop()) { // tslint:disable-line:no-conditional-assignment
-                super.dispatchEvent(evt);
-            }
+        let evt: any;
+        while (evt = this.buffer.pop()) { // tslint:disable-line:no-conditional-assignment
+            super.dispatchEvent(evt);
         }
     }
 
