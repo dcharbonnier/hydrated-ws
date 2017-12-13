@@ -1,12 +1,13 @@
 # WIP, release in december
 
-[![Join the chat at https://gitter.im/advanced-websocket/Lobby](https://badges.gitter.im/advanced-websocket/Lobby.svg)](https://gitter.im/advanced-websocket/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Gitter](https://img.shields.io/gitter/room/advanced-websocket/Lobby.svg?style=flat-square)](https://gitter.im/advanced-websocket/Lobby)
 
 [![Build Status](https://img.shields.io/travis/dcharbonnier/advanced-websocket/master.svg?style=flat-square)](https://travis-ci.org/dcharbonnier/advanced-websocket)
 [![Greenkeeper badge](https://badges.greenkeeper.io/dcharbonnier/advanced-websocket.svg)](https://greenkeeper.io/)
 [![devDependency Status](https://img.shields.io/david/dev/dcharbonnier/advanced-websocket.svg?style=flat-square)](https://david-dm.org/dcharbonnier/advanced-websocket#info=devDependencies)
-[![Codecov](https://img.shields.io/codecov/c/github/dcharbonnier/advanced-websocket/develop.svg)]()
-[![Npm version](https://img.shields.io/npm/v/advanced-websocket.svg)](https://www.npmjs.com/package/advanced-websocket)
+[![Codecov](https://img.shields.io/codecov/c/github/dcharbonnier/advanced-websocket/develop.svg?style=flat-square)](https://codecov.io/gh/dcharbonnier/advanced-websocket)
+[![Npm version](https://img.shields.io/npm/v/advanced-websocket.svg?style=flat-square)](https://www.npmjs.com/package/advanced-websocket)
+[![Code Climate](https://img.shields.io/codeclimate/maintainability/dcharbonnier/advanced-websocket.svg?style=flat-square)](https://codeclimate.com/github/dcharbonnier/advanced-websocket/)
 
 Support :
 
