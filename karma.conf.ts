@@ -1,6 +1,6 @@
 import * as karma from "karma";
 
-process.env.CHROME_BIN = require('puppeteer').executablePath()
+process.env.CHROME_BIN = require('puppeteer').executablePath();
 
 const TIMEOUT_FACTOR = process.env.TRAVIS_JOB_NUMBER ? 20 : 1;
 
@@ -24,7 +24,7 @@ let configData: any = {
     singleRun: false,
     concurrency: 4,
     reporters: [/*"progress",*/ "helpful", "karma-typescript"],
-    browsers: ["Chrome"],
+    browsers: ["ChromeHeadless", "PhantomJS"],
     karmaTypescriptConfig: {
         bundlerOptions: {
             addNodeGlobals: false,

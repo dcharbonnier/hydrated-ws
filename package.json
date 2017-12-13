@@ -4,10 +4,11 @@
   "license": "Apache-2.0",
   "description": "",
   "scripts": {
-    "test": "npm run test-node && npm run test-phantom",
+    "test": "npm run test-node && npm run test-karma",
     "test-server": "node --experimental-modules mock.mjs >/dev/null 2>&1 &",
-    "test-saucelab": "npm run test-server && karma start --single-run",
+    "test-karma": "npm run test-server && karma start --single-run",
     "test-phantom": "npm run test-server && karma start --single-run --browsers PhantomJS",
+    "test-chrome": "npm run test-server && karma start --single-run --browsers Chrome",
     "test-node": "npm run test-server && mocha --opts mocha.opts",
     "lint": "tslint -c tslint.json --fix 'src/**/*.ts'",
     "codecov": "codecov",
