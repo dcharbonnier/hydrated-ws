@@ -49,8 +49,8 @@ if (process.env.TRAVIS_JOB_NUMBER) {
     [
         // ["chrome", [26, 30, 40, 50, 61]],
         // ["safari", [7, 8, 9, 10, 11]],
-        // ["microsoftedge", [13, 14, 15]],
-        ["firefox", [11, 20, 30, 40, 50, 55]]
+        ["microsoftedge", [13, 14, 15]],
+        //["firefox", [/*11, */20, 30, 40, 50, 55]]
     ]
         .map(([browserName, versions]) => {
                 (versions as any).map((version: any) =>
