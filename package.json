@@ -4,10 +4,17 @@
   "license": "Apache-2.0",
   "description": "The toolbox for websockets clients, reconnecting websockets, channels muxing websockets, authentication, json-rpc over websockets",
   "keywords": [
-    "websockets", "websocket",
-    "json-rpc", "json-rpc2", "rpc",
-    "reconnecting", "reconnection", "reconnect",
-    "muxing", "muxer", "demuxer",
+    "websockets",
+    "websocket",
+    "json-rpc",
+    "json-rpc2",
+    "rpc",
+    "reconnecting",
+    "reconnection",
+    "reconnect",
+    "muxing",
+    "muxer",
+    "demuxer",
     "authentication"
   ],
   "repository": {

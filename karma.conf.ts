@@ -23,7 +23,7 @@ let configData: any = {
     autoWatch: true,
     singleRun: false,
     concurrency: 2,
-    reporters: [/*"progress",*/ "helpful"/*, "karma-typescript"*/],
+    reporters: [/*"progress",*/ "helpful", "karma-typescript"],
     browsers: ["Chrome"],
     karmaTypescriptConfig: {
         bundlerOptions: {
@@ -39,10 +39,7 @@ let configData: any = {
         }
     },
     captureTimeout: 0,
-    browserDisconnectTimeout: 10000,
-    browserNoActivityTimeout: 4*60*1000,
-    browserDisconnectTolerance: 1,
-    captureTimeout : 4*60*1000
+    browserNoActivityTimeout: 120000,
 };
 
 if (process.env.TRAVIS_JOB_NUMBER) {
@@ -50,10 +47,10 @@ if (process.env.TRAVIS_JOB_NUMBER) {
     const customLaunchers: any = {};
 
     [
-        // ["chrome", [26, 30, 40, 50, 61]],
+        ["chrome", [26, 30, 40, 50, 61]],
         // ["safari", [7, 8, 9, 10, 11]],
-        ["microsoftedge", [13, 14, 15]],
-        //["firefox", [/*11, */20, 30, 40, 50, 55]]
+        //["microsoftedge", [13, 14, 15]],
+        ["firefox", [/*11, */20, 30, 40, 50, 55]]
     ]
         .map(([browserName, versions]) => {
                 (versions as any).map((version: any) =>
@@ -64,13 +61,13 @@ if (process.env.TRAVIS_JOB_NUMBER) {
                     })
             }
         );
-    // configData.karmaTypescriptConfig.reports = {
-    //     "lcovonly": {
-    //         "filename": "report.lcov"
-    //     },
-    //     "html": "coverage",
-    //     "text-summary": ""
-    // };
+    configData.karmaTypescriptConfig.reports = {
+        "lcovonly": {
+            "filename": "report.lcov"
+        },
+        "html": "coverage",
+        "text-summary": ""
+    };
     configData.sauceLabs = {
         testName: "Advanced WebSocket",
         recordScreenshots: false,
