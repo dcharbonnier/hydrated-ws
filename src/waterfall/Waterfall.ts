@@ -46,7 +46,7 @@ export class Waterfall extends Shell {
     }
 
     public get extensions(): string {
-        // https://github.com/websockets/WebSocket/issues/1244
+        // https://github.com/websockets/ws/issues/1244
         return typeof(this.ws.extensions) === "string" ? this.ws.extensions : "";
     }
 
