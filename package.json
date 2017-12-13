@@ -2,7 +2,28 @@
   "name": "advanced-websocket",
   "version": "0.2.2",
   "license": "Apache-2.0",
-  "description": "",
+  "description": "The toolbox for websockets clients, reconnecting websockets, channels muxing websockets, authentication, json-rpc over websockets",
+  "keywords": [
+    "websockets",
+    "websocket",
+    "json-rpc",
+    "json-rpc2",
+    "rpc",
+    "reconnecting",
+    "reconnection",
+    "reconnect",
+    "muxing",
+    "muxer",
+    "demuxer",
+    "authentication"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dcharbonnier/advanced-websocket.git"
+  },
+  "bugs": {
+    "url": "http://github.com/dcharbonnier/advanced-websocket/issues"
+  },
   "scripts": {
     "test": "yarn run test-node && yarn run test-karma",
     "test-server": "node --experimental-modules mock.mjs >/dev/null 2>&1 &",
