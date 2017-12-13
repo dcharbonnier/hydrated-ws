@@ -31,11 +31,8 @@ export class Cable extends Shell implements WebSocket {
     }
 
     public async request(method: string, params?: object | any[], timeout?: number) {
+        this.guardParameters(params);
         Cable.index++;
-        if (params === null || (typeof params !== "undefined" && typeof params !== "object")) {
-            throw new Error(
-                `params accept an array or an object, provided a ${params === null ? null : typeof params}`);
-        }
         const id = `${Cable.id}-${Cable.index}`;
         const p = new Promise((resolve, reject) => this.calls.set(id, {
             reject,
@@ -47,11 +44,15 @@ export class Cable extends Shell implements WebSocket {
     }
 
    public notify(method: string, params?: object | any[]) {
+        this.guardParameters(params);
+        this.sendMessage(null, {method, params});
+    }
+
+    private guardParameters(params?: object | any[]): void {
         if (params === null || (typeof params !== "undefined" && typeof params !== "object")) {
             throw new Error(
                 `params accept an array or an object, provided a ${params === null ? null : typeof params}`);
         }
-        this.sendMessage(null, {method, params});
     }
 
     private timeout(id: string): void {
