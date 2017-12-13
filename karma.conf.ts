@@ -39,7 +39,10 @@ let configData: any = {
         }
     },
     captureTimeout: 0,
-    browserNoActivityTimeout: 120000,
+    browserDisconnectTimeout: 10000,
+    browserNoActivityTimeout: 4*60*1000,
+    browserDisconnectTolerance: 1,
+    captureTimeout : 4*60*1000
 };
 
 if (process.env.TRAVIS_JOB_NUMBER) {
