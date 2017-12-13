@@ -34,6 +34,13 @@ let configData: any = {
                 TIMEOUT_FACTOR: TIMEOUT_FACTOR,
             },
         },
+        reports: {
+            "lcovonly": {
+                "filename": "report.lcov"
+            },
+            "html": "coverage",
+            "text-summary": ""
+        },
         coverageOptions: {
             exclude: /\.spec\.ts$/i
         }
@@ -41,16 +48,6 @@ let configData: any = {
     captureTimeout: 0,
     browserNoActivityTimeout: 120000,
 };
-
-if (process.env.TRAVIS_JOB_NUMBER) {
-    configData.karmaTypescriptConfig.reports = {
-        "lcovonly": {
-            "filename": "report.lcov"
-        },
-        "html": "coverage",
-        "text-summary": ""
-    };
-}
 
 const karmaConfig = (config: karma.Config): void => {
     config.set(configData as any);

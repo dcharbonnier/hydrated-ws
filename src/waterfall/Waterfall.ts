@@ -12,22 +12,23 @@ export class Waterfall extends Shell {
 
     private timeout: any;
     private connectionTimeout: number = 5000;
-    private retryPolicy: (attempt: number, ws: Waterfall) => number;
+    private retryPolicy: (attempt: number, ws: Waterfall) => number = exponentialTruncatedBackoff();
     private _url: string;
+    private attempts: number = -1;
 
     public constructor(url: string, private protocols?: string | string[], private options?: IWaterfallOptions) {
         super();
-
         if (this.constructor !== Waterfall) {
             throw new TypeError("Failed to construct. Please use the 'new' operator");
         }
-
         if (!url.match(REGEXP_URL)) {
             throw new TypeError("Invalid url");
         }
         this._url = url;
-        this.connectionTimeout = (options && options.connectionTimeout) || this.connectionTimeout;
-        this.retryPolicy = (options && options.retryPolicy) || exponentialTruncatedBackoff();
+        if (options) {
+            this.connectionTimeout = options.connectionTimeout || this.connectionTimeout;
+            this.retryPolicy = options.retryPolicy || this.retryPolicy;
+        }
         this.open();
         this._readyState = WebSocket.CONNECTING;
     }
@@ -69,59 +70,78 @@ export class Waterfall extends Shell {
 
     }
 
-    private open(attempt: number = 0) {
+    private onOpenWebSocket(evt: Event) {
+        this.attempts = -1;
+        clearTimeout(this.timeout);
+        this._readyState = WebSocket.OPEN;
+        this.dispatchEvent(evt);
+    }
+
+    private onCloseWebSocket(evt: CloseEvent) {
+        clearTimeout(this.timeout);
         if (this.closing) {
-            return;
+            this._readyState = WebSocket.CLOSED;
+            this.dispatchEvent(evt);
+        } else {
+            const timeout = this.retryPolicy(this.attempts + 1, this);
+            if (timeout === null) {
+                this._readyState = WebSocket.CLOSED;
+                this.dispatchEvent(evt);
+            } else {
+                this._readyState = WebSocket.CONNECTING;
+                setTimeout(() => this.open(), timeout);
+            }
         }
-        const ws = this.webSocketFactory();
-        ws.binaryType = this.binaryType || ws.binaryType;
+    }
+
+    private unbindWebSocket() {
+        if (this.ws) {
+            this.ws.onopen = null;
+            this.ws.onclose = null;
+            this.ws.onmessage = null;
+            this.ws.onerror = null;
+        }
+    }
+
+    private bindWebSocket() {
+        this.ws.onopen = this.onOpenWebSocket.bind(this);
+        this.ws.onclose = this.onCloseWebSocket.bind(this);
+        this.ws.onmessage = this.dispatchEvent.bind(this);
+        this.ws.onerror = this.dispatchEvent.bind(this);
+    }
+
+    private forceClose(): void {
+        try {
+            this.ws.close();
+        } catch {
+            // ignore
+        }
+    }
+
+    private setupWebSocketTimeout(): void {
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
-            try {
-                ws.close();
-            } catch {
-                // ignore
-            }
-            const timeout = this.retryPolicy(attempt + 1, this);
+            this.forceClose();
+            const timeout = this.retryPolicy(this.attempts + 1, this);
             if (timeout === null) {
                 this._readyState = WebSocket.CLOSED;
                 this.dispatchEvent(new CloseEvent("close", {code: 4000, reason: "Connect timeout"}));
             } else {
-                setTimeout(() => this.open(attempt + 1), timeout);
+                setTimeout(() => this.open(), timeout);
             }
         }, this.connectionTimeout);
+    }
 
-        ws.onopen = (evt: Event) => {
-            attempt = 0;
-            clearTimeout(this.timeout);
-
-            this._readyState = WebSocket.OPEN;
-            this.dispatchEvent(evt);
-        };
-        ws.onclose = (event) => {
-            clearTimeout(this.timeout);
-            if (this.closing) {
-                this._readyState = WebSocket.CLOSED;
-                this.dispatchEvent(event);
-            } else {
-                const timeout = this.retryPolicy(attempt + 1, this);
-                if (timeout === null) {
-                    this._readyState = WebSocket.CLOSED;
-                    this.dispatchEvent(event);
-                } else {
-                    this._readyState = WebSocket.CONNECTING;
-                    setTimeout(() => this.open(attempt + 1), timeout);
-                }
-
-            }
-        };
-        ws.onmessage = (event) => {
-            this.dispatchEvent(event);
-        };
-        ws.onerror = (event) => {
-            this.dispatchEvent(event);
-        };
-        this.ws = ws;
+    private open() {
+        if (this.closing) {
+            return;
+        }
+        this.attempts++;
+        this.unbindWebSocket();
+        this.ws = this.webSocketFactory();
+        (this.ws as any).binaryType = this.binaryType || this.ws.binaryType;
+        this.setupWebSocketTimeout();
+        this.bindWebSocket();
 
     }
 

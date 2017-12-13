@@ -35,10 +35,14 @@ describe("Dam", () => {
         beforeEach(() => {
             dam = new Dam(ws);
         });
+
         it("should throw on send", () => {
             expect(() => dam.send("test")).to.throw();
         });
         it("should never dispatch the open event", async () => {
+            ws.close();
+            ws = new WebSocket(`ws://localtest.me:3000/${testCase}`);
+            dam = new Dam(ws);
             dam.onopen = () => {
                 throw new Error("Received an open event");
             };
@@ -122,6 +126,30 @@ describe("Dam", () => {
                 await sleep(TIMEOUT_FACTOR * 500);
                 if (!received) {
                     reject(new Error("Did not receive the open event"));
+                }
+            });
+        });
+        it("should send the buffered messages", async () => {
+            const dam = new Dam(ws);
+            return new Promise(async (resolve, reject) => {
+                let received = false;
+
+                dam.onmessage = (evt: MessageEvent) => {
+                    if (received) {
+                        return;
+                    }
+                    received = true;
+                    resolve();
+                };
+                ws.addEventListener("message", () => {
+                     dam.status = "OPEN";
+                });
+                ws.send("ping");
+
+                await sleep(TIMEOUT_FACTOR * 500);
+
+                if (!received) {
+                    reject(new Error("Did not receive the message"));
                 }
             });
         });

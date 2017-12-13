@@ -3,6 +3,9 @@ import ErrorEvent from "../polyfill/ErrorEvent";
 import {Shell} from "../Shell";
 import {uuid} from "./uuid";
 
+const isVoid = (v: any): boolean => v === void 0;
+const voidNull = (v: any): any => v === null ? void 0 : v;
+
 export class Cable extends Shell implements WebSocket {
 
     public static readonly PARSE_ERROR = -32700;
@@ -31,11 +34,8 @@ export class Cable extends Shell implements WebSocket {
     }
 
     public async request(method: string, params?: object | any[], timeout?: number) {
+        this.guardParameters(params);
         Cable.index++;
-        if (params === null || (typeof params !== "undefined" && typeof params !== "object")) {
-            throw new Error(
-                `params accept an array or an object, provided a ${params === null ? null : typeof params}`);
-        }
         const id = `${Cable.id}-${Cable.index}`;
         const p = new Promise((resolve, reject) => this.calls.set(id, {
             reject,
@@ -46,12 +46,16 @@ export class Cable extends Shell implements WebSocket {
         return p;
     }
 
-   public notify(method: string, params?: object | any[]) {
-        if (params === null || (typeof params !== "undefined" && typeof params !== "object")) {
+    public notify(method: string, params?: object | any[]) {
+        this.guardParameters(params);
+        this.sendMessage(null, {method, params});
+    }
+
+    private guardParameters(params?: object | any[]): void {
+        if (params === null || (!isVoid(params) && typeof params !== "object")) {
             throw new Error(
                 `params accept an array or an object, provided a ${params === null ? null : typeof params}`);
         }
-        this.sendMessage(null, {method, params});
     }
 
     private timeout(id: string): void {
@@ -62,7 +66,7 @@ export class Cable extends Shell implements WebSocket {
     }
 
     private sendMessage(id: string, message: any) {
-        if (id === void 0) {
+        if (isVoid(id)) {
             return;
         }
         message.jsonrpc = "2.0";
@@ -79,29 +83,35 @@ export class Cable extends Shell implements WebSocket {
             });
     }
 
-    private receivedMessage(message: string) {
-        let data: any;
+    private parseMessage(message: string): any {
         try {
-            data = JSON.parse(message);
+            const data: any = JSON.parse(message);
+            data.id = voidNull(data.id);
+            return data;
         } catch (e) {
-            return this.sendError(null, Cable.PARSE_ERROR, e);
+            this.sendError(null, Cable.PARSE_ERROR, e);
+            return;
         }
 
-        data.id = data.id === null ? void 0 : data.id;
-
-        if (data.error !== void 0) {
-            return this.rpcError(data.id, data.error.code, data.error.message);
-        }
-        if (data.result !== void 0) {
-            return this.rpcResult(data.id, data.result);
-        }
-        if (data.method !== void 0) {
-            return this.rpcCall(data.id, data.method, data.params);
-        }
-        return this.sendError(data.id, Cable.INVALID_PARAMS, "Unknown message type");
     }
 
-    private rpcCall(id: string, method: string, params: any) {
+    private receivedMessage(message: string): void {
+        const data = this.parseMessage(message);
+        if (!data) {
+            return;
+        }
+        if (!isVoid(data.error)) {
+            this.rpcError(data.id, data.error.code, data.error.message);
+        } else if (!isVoid(data.result)) {
+            this.rpcResult(data.id, data.result);
+        } else if (!isVoid(data.method)) {
+            this.rpcCall(data.id, data.method, data.params);
+        } else {
+            this.sendError(data.id, Cable.INVALID_PARAMS, "Unknown message type");
+        }
+    }
+
+    private rpcCall(id: string, method: string, params: any): void {
         if (this.methods.has(method)) {
             this.methods.get(method).call(this, params)
                 .then((res) => {
@@ -113,7 +123,7 @@ export class Cable extends Shell implements WebSocket {
         }
     }
 
-    private rpcResult(id: string, results: any) {
+    private rpcResult(id: string, results: any): void {
         if (this.calls.has(id)) {
             clearTimeout(this.calls.get(id).timeout);
             this.calls.get(id).resolve(results);
@@ -124,7 +134,7 @@ export class Cable extends Shell implements WebSocket {
         }
     }
 
-    private rpcError(id: string, code: number, message: string) {
+    private rpcError(id: string, code: number, message: string): void {
         if (this.calls.has(id)) {
             clearTimeout(this.calls.get(id).timeout);
             this.calls.get(id).reject(new Error(`${code}, ${message}`));

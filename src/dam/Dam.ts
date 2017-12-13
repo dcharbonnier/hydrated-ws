@@ -48,19 +48,11 @@ export class Dam extends Shell implements WebSocket {
 
     public dispatchEvent(evt: Event): boolean {
         if (evt.type === "close") {
-            super.dispatchEvent(evt);
-            this.openSent = false;
-        } else if (this._status === Dam.OPEN) {
-            if (evt.type === "open") {
-                if (!this.openSent) {
-                    this.openSent = true;
-                    super.dispatchEvent(evt);
-                }
-            } else {
-                super.dispatchEvent(evt);
-            }
-        } else if (evt.type === "message") {
-            this.buffer.unshift(evt);
+            this.dispatchCloseEvent(evt);
+        } else if (evt.type === "open") {
+            this.dispatchOpenEvent(evt);
+        } else {
+            this.dispatchOrBuffer(evt);
         }
         return true;
     }
@@ -73,12 +65,30 @@ export class Dam extends Shell implements WebSocket {
         }
     }
 
-    private flush() {
+    private dispatchCloseEvent(evt: Event) {
+        super.dispatchEvent(evt);
+        this.openSent = false;
+    }
+
+    private dispatchOpenEvent(evt: Event) {
         if (this._status === Dam.OPEN) {
-            let evt: any;
-            while (evt = this.buffer.pop()) { // tslint:disable-line:no-conditional-assignment
-                super.dispatchEvent(evt);
-            }
+            super.dispatchEvent(evt);
+            this.openSent = true;
+        }
+    }
+
+    private dispatchOrBuffer(evt: Event) {
+        if (this._status === Dam.OPEN) {
+            super.dispatchEvent(evt);
+        } else {
+            this.buffer.unshift(evt);
+        }
+    }
+
+    private flush() {
+        let evt: any;
+        while (evt = this.buffer.pop()) { // tslint:disable-line:no-conditional-assignment
+            super.dispatchEvent(evt);
         }
     }
 
