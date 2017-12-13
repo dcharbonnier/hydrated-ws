@@ -12,23 +12,23 @@ export class Waterfall extends Shell {
 
     private timeout: any;
     private connectionTimeout: number = 5000;
-    private retryPolicy: (attempt: number, ws: Waterfall) => number;
+    private retryPolicy: (attempt: number, ws: Waterfall) => number = exponentialTruncatedBackoff();
     private _url: string;
     private attempts: number = -1;
 
     public constructor(url: string, private protocols?: string | string[], private options?: IWaterfallOptions) {
         super();
-
         if (this.constructor !== Waterfall) {
             throw new TypeError("Failed to construct. Please use the 'new' operator");
         }
-
         if (!url.match(REGEXP_URL)) {
             throw new TypeError("Invalid url");
         }
         this._url = url;
-        this.connectionTimeout = (options && options.connectionTimeout) || this.connectionTimeout;
-        this.retryPolicy = (options && options.retryPolicy) || exponentialTruncatedBackoff();
+        if (options) {
+            this.connectionTimeout = options.connectionTimeout || this.connectionTimeout;
+            this.retryPolicy = options.retryPolicy || this.retryPolicy;
+        }
         this.open();
         this._readyState = WebSocket.CONNECTING;
     }
@@ -139,7 +139,7 @@ export class Waterfall extends Shell {
         this.attempts++;
         this.unbindWebSocket();
         this.ws = this.webSocketFactory();
-        this.ws.binaryType = this.binaryType || WebSocket.binaryType;
+        (this.ws as any).binaryType = this.binaryType || this.ws.binaryType;
         this.setupWebSocketTimeout();
         this.bindWebSocket();
 
