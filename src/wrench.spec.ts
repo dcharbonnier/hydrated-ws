@@ -79,7 +79,7 @@ export const expectEventually = (f: () => boolean, message: string): Promise<voi
             }
             done = true;
             reject(new Error(message));
-        }, TIMEOUT_FACTOR * 1000);
+        }, TIMEOUT_FACTOR * 2000);
         const test = () => {
             if (done) {
                 return;

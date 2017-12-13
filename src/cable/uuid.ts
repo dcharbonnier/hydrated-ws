@@ -1,15 +1,13 @@
-let uuid: () => string;
 
-if (typeof crypto !== "undefined") {
-    uuid = (): string => "00000000-1000-4000-8000-100000000000"
-        .replace(/[018]/g, (c: any) => (c as any ^ crypto
-            .getRandomValues(new Uint8Array(1)) as any[0] & 15 >> (c as any) / 4).toString(16) as string);
-} else {
-    uuid = (): string => "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c: any) => {
-        const r = Math.random() * 16 | 0;
-        const v = c === "x" ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
+let rnd = Math.random() * 16 | 0;
+
+let crypto: any = void 0;
+if (typeof window !== "undefined") {
+    crypto = window ? window.crypto || (window as any).msCrypto : void 0;
 }
 
-export { uuid };
+if (typeof crypto === "object" && typeof crypto.getRandomValues === "function") {
+    rnd = crypto.getRandomValues(new Uint8Array(1))[0] % 16;
+}
+export const uuid = () => (`${1e7}-${1e3}-${4e3}-${8e3}-${1e11}`)
+    .replace(/[018]/g, (c: any) => (c ^ Math.random() * 16 >> c / 4).toString(16));
