@@ -80,7 +80,7 @@ export class Cable extends Shell implements WebSocket {
             });
     }
 
-    private receivedMessage(message: string) {
+    private receivedMessage(message: string): void {
         let data: any;
         try {
             data = JSON.parse(message);
@@ -91,18 +91,17 @@ export class Cable extends Shell implements WebSocket {
         data.id = data.id === null ? void 0 : data.id;
 
         if (data.error !== void 0) {
-            return this.rpcError(data.id, data.error.code, data.error.message);
+            this.rpcError(data.id, data.error.code, data.error.message);
+        } else if (data.result !== void 0) {
+            this.rpcResult(data.id, data.result);
+        } else if (data.method !== void 0) {
+            this.rpcCall(data.id, data.method, data.params);
+        } else {
+            this.sendError(data.id, Cable.INVALID_PARAMS, "Unknown message type");
         }
-        if (data.result !== void 0) {
-            return this.rpcResult(data.id, data.result);
-        }
-        if (data.method !== void 0) {
-            return this.rpcCall(data.id, data.method, data.params);
-        }
-        return this.sendError(data.id, Cable.INVALID_PARAMS, "Unknown message type");
     }
 
-    private rpcCall(id: string, method: string, params: any) {
+    private rpcCall(id: string, method: string, params: any): void {
         if (this.methods.has(method)) {
             this.methods.get(method).call(this, params)
                 .then((res) => {
@@ -114,7 +113,7 @@ export class Cable extends Shell implements WebSocket {
         }
     }
 
-    private rpcResult(id: string, results: any) {
+    private rpcResult(id: string, results: any): void {
         if (this.calls.has(id)) {
             clearTimeout(this.calls.get(id).timeout);
             this.calls.get(id).resolve(results);
@@ -125,7 +124,7 @@ export class Cable extends Shell implements WebSocket {
         }
     }
 
-    private rpcError(id: string, code: number, message: string) {
+    private rpcError(id: string, code: number, message: string): void {
         if (this.calls.has(id)) {
             clearTimeout(this.calls.get(id).timeout);
             this.calls.get(id).reject(new Error(`${code}, ${message}`));
