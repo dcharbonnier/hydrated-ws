@@ -23,7 +23,7 @@ let configData: any = {
     autoWatch: true,
     singleRun: false,
     concurrency: 2,
-    reporters: [/*"progress",*/ "helpful", "karma-typescript"],
+    reporters: [/*"progress",*/ "helpful"/*, "karma-typescript"*/],
     browsers: ["Chrome"],
     karmaTypescriptConfig: {
         bundlerOptions: {
@@ -61,13 +61,13 @@ if (process.env.TRAVIS_JOB_NUMBER) {
                     })
             }
         );
-    configData.karmaTypescriptConfig.reports = {
-        "lcovonly": {
-            "filename": "report.lcov"
-        },
-        "html": "coverage",
-        "text-summary": ""
-    };
+    // configData.karmaTypescriptConfig.reports = {
+    //     "lcovonly": {
+    //         "filename": "report.lcov"
+    //     },
+    //     "html": "coverage",
+    //     "text-summary": ""
+    // };
     configData.sauceLabs = {
         testName: "Advanced WebSocket",
         recordScreenshots: false,
