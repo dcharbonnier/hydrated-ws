@@ -1,9 +1,6 @@
 language: node_js
 node_js:
   - 9.2
-#
-#before_script:
-#  - ./sauce-connect.sh
 
 after_success:
   - npm run codecov
