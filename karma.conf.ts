@@ -20,8 +20,8 @@ let configData: any = {
             timeout: TIMEOUT_FACTOR * 4000,
         }
     },
-    autoWatch: true,
-    singleRun: false,
+    autoWatch: false,
+    singleRun: true,
     concurrency: 4,
     reporters: [/*"progress",*/ "helpful", "karma-typescript"],
     browsers: ["ChromeHeadless", "PhantomJS"],
@@ -41,6 +41,16 @@ let configData: any = {
     captureTimeout: 0,
     browserNoActivityTimeout: 120000,
 };
+
+if (process.env.TRAVIS_JOB_NUMBER) {
+    configData.karmaTypescriptConfig.reports = {
+        "lcovonly": {
+            "filename": "report.lcov"
+        },
+        "html": "coverage",
+        "text-summary": ""
+    };
+}
 
 const karmaConfig = (config: karma.Config): void => {
     config.set(configData as any);
