@@ -3,6 +3,9 @@ import ErrorEvent from "../polyfill/ErrorEvent";
 import {Shell} from "../Shell";
 import {uuid} from "./uuid";
 
+const isVoid = (v: any): boolean => v === void 0;
+const voidNull = (v: any): any => v === null ? void 0 : v;
+
 export class Cable extends Shell implements WebSocket {
 
     public static readonly PARSE_ERROR = -32700;
@@ -43,13 +46,13 @@ export class Cable extends Shell implements WebSocket {
         return p;
     }
 
-   public notify(method: string, params?: object | any[]) {
+    public notify(method: string, params?: object | any[]) {
         this.guardParameters(params);
         this.sendMessage(null, {method, params});
     }
 
     private guardParameters(params?: object | any[]): void {
-        if (params === null || (typeof params !== "undefined" && typeof params !== "object")) {
+        if (params === null || (!isVoid(params) && typeof params !== "object")) {
             throw new Error(
                 `params accept an array or an object, provided a ${params === null ? null : typeof params}`);
         }
@@ -63,7 +66,7 @@ export class Cable extends Shell implements WebSocket {
     }
 
     private sendMessage(id: string, message: any) {
-        if (id === void 0) {
+        if (isVoid(id)) {
             return;
         }
         message.jsonrpc = "2.0";
@@ -80,21 +83,28 @@ export class Cable extends Shell implements WebSocket {
             });
     }
 
-    private receivedMessage(message: string): void {
-        let data: any;
+    private parseMessage(message: string): any {
         try {
-            data = JSON.parse(message);
+            const data: any = JSON.parse(message);
+            data.id = voidNull(data.id);
+            return data;
         } catch (e) {
-            return this.sendError(null, Cable.PARSE_ERROR, e);
+            this.sendError(null, Cable.PARSE_ERROR, e);
+            return;
         }
 
-        data.id = data.id === null ? void 0 : data.id;
+    }
 
-        if (data.error !== void 0) {
+    private receivedMessage(message: string): void {
+        const data = this.parseMessage(message);
+        if (!data) {
+            return;
+        }
+        if (!isVoid(data.error)) {
             this.rpcError(data.id, data.error.code, data.error.message);
-        } else if (data.result !== void 0) {
+        } else if (!isVoid(data.result)) {
             this.rpcResult(data.id, data.result);
-        } else if (data.method !== void 0) {
+        } else if (!isVoid(data.method)) {
             this.rpcCall(data.id, data.method, data.params);
         } else {
             this.sendError(data.id, Cable.INVALID_PARAMS, "Unknown message type");
