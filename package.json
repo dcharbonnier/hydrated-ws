@@ -63,7 +63,7 @@
     "karma-typescript-es6-transform": "^1.0.2",
     "mocha": "^4.0.1",
     "mock-socket": "^7.1.0",
-    "puppeteer": "^0.13.0",
+    "puppeteer": "^1.0.0",
     "ts-node": "^4.0.1",
     "tslint": "^5.8.0",
     "typescript": "^2.6.2",
