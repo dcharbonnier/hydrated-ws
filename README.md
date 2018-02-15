@@ -1,5 +1,3 @@
-# WIP, release in december
-
 [![Gitter](https://img.shields.io/gitter/room/advanced-websocket/Lobby.svg?style=flat-square)](https://gitter.im/advanced-websocket/Lobby)
 
 [![Build Status](https://img.shields.io/travis/dcharbonnier/advanced-websocket/master.svg?style=flat-square)](https://travis-ci.org/dcharbonnier/advanced-websocket)
