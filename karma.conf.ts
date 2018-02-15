@@ -43,7 +43,15 @@ let configData: any = {
         },
         coverageOptions: {
             exclude: /\.spec\.ts$/i
-        }
+        },
+        compilerOptions: {
+            "lib": [
+                "es5",
+                "dom",
+                "es2015.promise"
+        
+            ]
+        },
     },
     captureTimeout: 0,
     browserNoActivityTimeout: 120000,
