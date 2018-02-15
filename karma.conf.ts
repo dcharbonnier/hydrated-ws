@@ -25,6 +25,12 @@ let configData: any = {
     concurrency: 4,
     reporters: [/*"progress",*/ "helpful", "karma-typescript"],
     browsers: ["ChromeHeadless", "PhantomJS"],
+    customLaunchers: {
+        Chrome_without_security: {
+            base: 'ChromeHeadless',
+            flags: ['--no-sandbox']
+        }
+    },
     karmaTypescriptConfig: {
         bundlerOptions: {
             addNodeGlobals: false,
