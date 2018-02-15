@@ -24,9 +24,9 @@ let configData: any = {
     singleRun: true,
     concurrency: 4,
     reporters: [/*"progress",*/ "helpful", "karma-typescript"],
-    browsers: ["ChromeHeadless", "PhantomJS"],
+    browsers: ["ChromeHeadlessNoSandbox", "PhantomJS"],
     customLaunchers: {
-        Chrome_without_security: {
+        ChromeHeadlessNoSandbox: {
             base: 'ChromeHeadless',
             flags: ['--no-sandbox']
         }
