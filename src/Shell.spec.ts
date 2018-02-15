@@ -1,7 +1,7 @@
 import {expect} from "chai";
+import WebSocket from "./polyfill/WebSocket";
 import {Shell} from "./Shell";
 import {rnd} from "./wrench.spec";
-import WebSocket from "./polyfill/WebSocket";
 
 describe("Shell", () => {
     describe("constructor", () => {
@@ -13,7 +13,7 @@ describe("Shell", () => {
     describe("event functions", () => {
         let shell: Shell;
         let ws: WebSocket;
-        let url:string;
+        let url: string;
         beforeEach(() => {
             url = `ws://localtest.me:3000/${rnd()}`;
             ws = new WebSocket(url);
@@ -83,7 +83,7 @@ describe("Shell", () => {
             };
             shell.onopen = () => {
                 shell.send("ping");
-            }
+            };
         });
         it("should emit an open event", (done) => {
             shell.addEventListener("open", () => {
@@ -100,17 +100,17 @@ describe("Shell", () => {
         });
         it("should emit a message event", (done) => {
             shell.addEventListener("message", (e) => {
-                if(e.data === "pong") {
+                if (e.data === "pong") {
                     done();
                 }
             });
             shell.onopen = () => {
                 shell.send("ping");
-            }
+            };
         });
         it("should remove a listener", (done) => {
             const listener = () => {
-                throw new Error("lister still attached")
+                throw new Error("lister still attached");
             };
             shell.addEventListener("message", listener);
             shell.removeEventListener("message", listener);
@@ -127,7 +127,7 @@ describe("Shell", () => {
             let i = 0;
             const listener = () => {
                 i++;
-                if(i === 2) {
+                if (i === 2) {
                     done();
                 }
             };
@@ -136,7 +136,7 @@ describe("Shell", () => {
 
             shell.onopen = () => {
                 shell.send("ping");
-            }
+            };
         });
         it("should close the websocket", (done) => {
             shell.onopen = () => {
@@ -145,7 +145,7 @@ describe("Shell", () => {
                     expect(shell.readyState).to.equal(WebSocket.CLOSED);
                     done();
                 }, 100);
-            }
+            };
         });
     });
 });

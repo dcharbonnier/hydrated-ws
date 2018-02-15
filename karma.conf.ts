@@ -24,7 +24,13 @@ let configData: any = {
     singleRun: true,
     concurrency: 4,
     reporters: [/*"progress",*/ "helpful", "karma-typescript"],
-    browsers: ["ChromeHeadless", "PhantomJS"],
+    browsers: ["ChromeHeadlessNoSandbox", "PhantomJS"],
+    customLaunchers: {
+        ChromeHeadlessNoSandbox: {
+            base: 'ChromeHeadless',
+            flags: ['--no-sandbox']
+        }
+    },
     karmaTypescriptConfig: {
         bundlerOptions: {
             addNodeGlobals: false,
@@ -43,7 +49,15 @@ let configData: any = {
         },
         coverageOptions: {
             exclude: /\.spec\.ts$/i
-        }
+        },
+        compilerOptions: {
+            "lib": [
+                "es5",
+                "dom",
+                "es2015.promise"
+        
+            ]
+        },
     },
     captureTimeout: 0,
     browserNoActivityTimeout: 120000,
