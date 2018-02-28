@@ -94,6 +94,12 @@ export class Shell implements WebSocket {
     }
 
     public send(data: any): void {
+        if (this.ws.readyState !== WebSocket.OPEN) {
+            const err = new Error(
+                `WebSocket is not open ws is ${this.ws.readyState}, local is ${this.readyState}`,
+            );
+            throw err;
+        }
         this.ws.send(data);
     }
 
