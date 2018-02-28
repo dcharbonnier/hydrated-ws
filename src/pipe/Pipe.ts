@@ -30,7 +30,7 @@ export class Pipe extends Shell implements WebSocket {
     }
 
     public close(code: number = 1000, reason?: string) {
-        if (this.pipeReadyState === this.CLOSING || this.pipeReadyState === this.CLOSED) {
+        if (this.pipeReadyState) {
             return;
         }
         this.stopForwardingEvents();
