@@ -22,7 +22,7 @@ export class Pipe extends Shell implements WebSocket {
         super();
 
         if (typeof(channel) !== "string" || !channel.length || channel.length > this.prefixLength) {
-            throw new Error("Channel should be a string between 1 and 4 characters");
+            throw new Error(`Channel should be a string between 1 and ${this.prefixLength} characters`);
         }
         this.channel = `${Pipe.repeatString(" ", this.prefixLength)}${channel}`.slice(this.prefixLength * -1);
         this.ws = ws;
@@ -30,7 +30,7 @@ export class Pipe extends Shell implements WebSocket {
     }
 
     public close(code: number = 1000, reason?: string) {
-        if (this.pipeReadyState === this.CLOSING || this.pipeReadyState === this.CLOSED) {
+        if (this.pipeReadyState) {
             return;
         }
         this.stopForwardingEvents();
