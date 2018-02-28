@@ -22,7 +22,7 @@ export class Pipe extends Shell implements WebSocket {
         super();
 
         if (typeof(channel) !== "string" || !channel.length || channel.length > this.prefixLength) {
-            throw new Error("Channel should be a string between 1 and 4 characters");
+            throw new Error(`Channel should be a string between 1 and ${this.prefixLength} characters`);
         }
         this.channel = `${Pipe.repeatString(" ", this.prefixLength)}${channel}`.slice(this.prefixLength * -1);
         this.ws = ws;
