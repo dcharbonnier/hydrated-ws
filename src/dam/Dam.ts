@@ -36,10 +36,10 @@ export class Dam extends Shell implements WebSocket {
     }
 
     public get readyState() {
-        if (this.ws.readyState === this.CLOSED) {
+        if (this.ws.readyState === this.ws.CLOSED) {
             return this.CLOSED;
         }
-        if (this._status === "CLOSED") {
+        if (this._status === Dam.CLOSED) {
             return this.CONNECTING;
         } else {
             return this.OPEN;
