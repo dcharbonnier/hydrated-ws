@@ -81,6 +81,16 @@ try {
 } catch {
     // the auth failed
 }
-
 ```
+
+### FAQ
+#### Webpack
+Webpack complain about the `ws` implementation of WebSocket, the errors are :
+`Can't resolve 'net'` and `Can't resolve 'tls'`.
+
+The solution consist in ignoring the ws module that can't be used in a browser (and not required), the polyfill will detect the browser implementation of the WebSocket and use it.
+To ignore the module, add a rule to your webpack config file :
+ `{test: /[\/\\]node_modules[\/\\]ws[\/\\].+\.js$/, use: 'null-loader'},`
+ 
+ 
  
