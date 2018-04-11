@@ -92,5 +92,6 @@ The solution consist in ignoring the ws module that can't be used in a browser (
 To ignore the module, add a rule to your webpack config file :
  `{test: /[\/\\]node_modules[\/\\]ws[\/\\].+\.js$/, use: 'null-loader'},`
  
- 
+#### Can't resolve 'ws' 
+If you're using this module on the client side webpack will warn you with this message when you pack the module, if you're using this module on the server side you need to install `ws`
  
