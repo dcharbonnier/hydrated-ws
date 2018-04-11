@@ -1,6 +1,6 @@
 {
   "name": "advanced-websocket",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "license": "Apache-2.0",
   "description": "The toolbox for websockets clients, reconnecting websockets, channels muxing websockets, authentication, json-rpc over websockets",
   "keywords": [
