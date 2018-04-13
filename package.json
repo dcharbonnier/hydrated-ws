@@ -25,20 +25,24 @@
     "url": "http://github.com/dcharbonnier/advanced-websocket/issues"
   },
   "scripts": {
-    "test": "yarn run test-node && yarn run test-karma",
+    "doc": "typedoc --excludePrivate --excludeProtected --excludeNotExported  --excludeExternals --exclude \"**/*.spec.ts,**/polyfill/*\" --mode file --out docs/ src/",
+    "build": "tsc -p ./tsconfig.json --outDir dist/",
+    "test": "yarn test-node && yarn test-karma",
     "test-server": "node --experimental-modules mock.mjs >/dev/null 2>&1 &",
-    "test-karma": "yarn run test-server && karma start --single-run",
-    "test-phantom": "yarn run test-server && karma start --single-run --browsers PhantomJS",
-    "test-chrome": "yarn run test-server && karma start --single-run --browsers Chrome",
-    "test-node": "yarn run test-server && mocha --opts mocha.opts",
+    "test-karma": "yarn test-server && karma start --single-run",
+    "test-phantom": "yarn test-server && karma start --single-run --browsers PhantomJS",
+    "test-chrome": "yarn test-server && karma start --single-run --browsers Chrome",
+    "test-node": "yarn test-server && mocha --opts mocha.opts",
     "lint": "tslint -c tslint.json --fix 'src/**/*.ts'",
     "codecov": "codecov",
-    "prepublishOnly": "tsc -p ./tsconfig.json --outDir dist/"
+    "prepublishOnly": "yarn build"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "author": "David Charbonnier",
-  "dependencies": null,
+  "dependencies": {
+    "typedoc": "^0.11.1"
+  },
   "devDependencies": {
     "@types/chai": "^4.1.2",
     "@types/es6-collections": "^0.5.31",

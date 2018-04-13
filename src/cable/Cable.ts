@@ -6,6 +6,11 @@ import {uuid} from "./uuid";
 const isVoid = (v: any): boolean => v === void 0;
 const voidNull = (v: any): any => v === null ? void 0 : v;
 
+/**
+ * RPC over websocket, using the JSON-RPC 2.0 Specification
+ * http://www.jsonrpc.org/specification
+ */
+
 export class Cable extends Shell implements WebSocket {
 
     public static readonly PARSE_ERROR = -32700;
@@ -22,6 +27,9 @@ export class Cable extends Shell implements WebSocket {
         { resolve: (value?: any) => void, reject: (error?: any) => void, timeout: any }> = new Dict();
     private methods: Dict<string, (params) => Promise<any>> = new Dict();
 
+    /**
+     * @param ws  An object compatible with the WebSocket interface.
+     */
     constructor(ws: WebSocket) {
         super();
         this.ws = ws;

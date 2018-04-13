@@ -58,7 +58,7 @@ export class Pipe extends Shell implements WebSocket {
                 super.dispatchEvent(new MessageEvent("message", {
                     data: e.data.substr(this.prefixLength),
                     origin: e.origin,
-                    ports: e.ports,
+                    ports: e.ports as any,
                     source: e.source,
                 }));
                 return false;

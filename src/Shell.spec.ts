@@ -3,6 +3,10 @@ import WebSocket from "./polyfill/WebSocket";
 import {Shell} from "./Shell";
 import {rnd} from "./wrench.spec";
 
+class ShellCls extends Shell {
+    
+}
+
 describe("Shell", () => {
     describe("constructor", () => {
         it("should throw an error when not using the new operator", () => {
@@ -17,7 +21,7 @@ describe("Shell", () => {
         beforeEach(() => {
             url = `ws://localtest.me:3000/${rnd()}`;
             ws = new WebSocket(url);
-            shell = new Shell(ws);
+            shell = new ShellCls(ws);
         });
         it("should return the url", () => {
             expect(shell.url).to.equal(url);
@@ -59,7 +63,7 @@ describe("Shell", () => {
         let shell: Shell;
 
         beforeEach(() => {
-            shell = new Shell(new WebSocket(`ws://localtest.me:3000/${rnd()}`));
+            shell = new ShellCls(new WebSocket(`ws://localtest.me:3000/${rnd()}`));
         });
         it("should call the onopen function", (done) => {
             shell.onopen = () => {
