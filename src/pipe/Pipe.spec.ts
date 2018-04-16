@@ -80,7 +80,7 @@ describe("Pipe", () => {
         it("should refuse a non string message", async () => {
             const mp = new Pipe(ws, "a");
             [6, NaN, [], {}].forEach((message) => {
-                expect(() => mp.send(message)).to.throw();
+                expect(() => mp.send(message as any)).to.throw();
             });
         });
     });
