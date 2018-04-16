@@ -4,7 +4,7 @@ import {Shell} from "./Shell";
 import {rnd} from "./wrench.spec";
 
 class ShellCls extends Shell {
-    
+
 }
 
 describe("Shell", () => {

@@ -9,15 +9,68 @@ const voidNull = (v: any): any => v === null ? void 0 : v;
 /**
  * RPC over websocket, using the JSON-RPC 2.0 Specification
  * http://www.jsonrpc.org/specification
+ *
+ * A `Cable` establish an RPC communication over a websocket, there is no server/client role, the same cable can
+ * you can define methods on both sides of the cable and call the remote methods
+ *
+ * @example
+ * ```typescript
+ *
+ * // Client 1
+ * const cable = new Cable(ws);
+ * cable.register("ping", async () => {
+ *   return "pong";
+ * });
+ * cable.notify("hello", {name:"client 1"});
+ *
+ * // Client 2
+ * const cable = new Cable(ws);
+ * cable.register("hello", async ({name:string}) => {
+ *   console.log(`${name} said hello`);
+ *  });
+ * try {
+ *   const res = await cable.request("ping");
+ *   assert.equal(res,"pong");
+ * } catch(e) {
+ *   if(e.code === Cable.SERVER_ERROR) {
+ *     console.log("Implementation error on the server");
+ *   }
+ *   throw e;
+ * }
+ * ```
  */
 
-export class Cable extends Shell implements WebSocket {
+export class Cable extends Shell {
 
+    /**
+     *  Invalid JSON was received by the server.
+     *  An error occurred on the server while parsing the JSON text.
+     */
     public static readonly PARSE_ERROR = -32700;
+
+    /**
+     * The JSON sent is not a valid Request object.
+     */
     public static readonly INVALID_REQUEST = -32600;
+
+    /**
+     *  The method does not exist / is not available.
+     */
     public static readonly METHOD_NOT_FOUND = -32601;
+
+    /**
+     *  Invalid method parameter(s).
+     */
     public static readonly INVALID_PARAMS = -32602;
+
+    /**
+     *  Internal JSON-RPC error.
+     */
     public static readonly INTERNAL_ERROR = -32603;
+
+    /**
+     * Generic server-errors
+     */
     public static readonly SERVER_ERROR = -32000;
 
     private static readonly id = uuid();
@@ -37,10 +90,22 @@ export class Cable extends Shell implements WebSocket {
         this.ws.addEventListener("message", (e: MessageEvent) => this.receivedMessage(e.data));
     }
 
+    /**
+     * Register a new method on the websocket
+     * @param {string} method name
+     * @param {(params: any) => Promise<any>} method handler
+     */
     public register(name: string, method: (params: any) => Promise<any>) {
         this.methods.set(name, method);
     }
 
+    /**
+     * Make a Rpc call
+     * @param {string} method name
+     * @param {object | any[]} params
+     * @param {number} if set will reject if no response is received after `timeout` ms
+     * @returns {Promise<any>}
+     */
     public async request(method: string, params?: object | any[], timeout?: number) {
         this.guardParameters(params);
         Cable.index++;
@@ -54,6 +119,12 @@ export class Cable extends Shell implements WebSocket {
         return p;
     }
 
+    /**
+     * Unlike the _request_, notify will not wait for the server to reply
+     * @param {string} method name
+     * @param {object | any[]} params
+     * @returns {Promise<any>}
+     */
     public notify(method: string, params?: object | any[]) {
         this.guardParameters(params);
         this.sendMessage(null, {method, params});

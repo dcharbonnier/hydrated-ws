@@ -68,6 +68,35 @@
 						<p>RPC over websocket, using the JSON-RPC 2.0 Specification
 						<a href="http://www.jsonrpc.org/specification">http://www.jsonrpc.org/specification</a></p>
 					</div>
+					<p>A <code>Cable</code> establish an RPC communication over a websocket, there is no server/client role, the same cable can
+					you can define methods on both sides of the cable and call the remote methods</p>
+					<dl class="tsd-comment-tags">
+						<dt>example</dt>
+						<dd><pre><code class="lang-typescript">
+<span class="hljs-comment">// Client 1</span>
+<span class="hljs-keyword">const</span> cable = <span class="hljs-keyword">new</span> Cable(ws);
+cable.register(<span class="hljs-string">"ping"</span>, <span class="hljs-keyword">async</span> () =&gt; {
+  <span class="hljs-keyword">return</span> <span class="hljs-string">"pong"</span>;
+});
+cable.notify(<span class="hljs-string">"hello"</span>, {name:<span class="hljs-string">"client 1"</span>});
+
+<span class="hljs-comment">// Client 2</span>
+<span class="hljs-keyword">const</span> cable = <span class="hljs-keyword">new</span> Cable(ws);
+cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keyword">async</span> ({name:<span class="hljs-built_in">string</span>}) =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> said hello`</span>);
+ });
+<span class="hljs-keyword">try</span> {
+  <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> cable.request(<span class="hljs-string">"ping"</span>);
+  assert.equal(res,<span class="hljs-string">"pong"</span>);
+} <span class="hljs-keyword">catch</span>(e) {
+  <span class="hljs-keyword">if</span>(e.code === Cable.SERVER_ERROR) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Implementation error on the server"</span>);
+  }
+  <span class="hljs-keyword">throw</span> e;
+}
+</code></pre>
+						</dd>
+					</dl>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
@@ -86,7 +115,6 @@
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><span class="tsd-signature-type">WebSocket</span></li>
 					<li><span class="tsd-signature-type">WebSocket</span></li>
 				</ul>
 			</section>
@@ -159,7 +187,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="shell.html">Shell</a>.<a href="shell.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/cable/Cable.ts#L28">cable/Cable.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/cable/Cable.ts#L81">cable/Cable.ts:81</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -189,12 +217,12 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#closed">CLOSED</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L14">Shell.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L14">Shell.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The connection is closed or couldn&#39;t be opened. s</p>
+							<p>The connection is closed or couldn&#39;t be opened.</p>
 						</div>
 					</div>
 				</section>
@@ -205,7 +233,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#closing">CLOSING</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L12">Shell.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L12">Shell.ts:12</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -221,7 +249,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#connecting">CONNECTING</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L8">Shell.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L8">Shell.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -237,7 +265,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#open">OPEN</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L10">Shell.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L10">Shell.ts:10</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -253,7 +281,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#binarytype">binaryType</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L21">Shell.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L21">Shell.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -270,9 +298,14 @@
 					<div class="tsd-signature tsd-kind-icon">INTERNAL_<wbr>ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32603</span><span class="tsd-signature-symbol"> =&nbsp;-32603</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/cable/Cable.ts#L20">cable/Cable.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/cable/Cable.ts#L69">cable/Cable.ts:69</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p> Internal JSON-RPC error.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 					<a name="invalid_params" class="tsd-anchor"></a>
@@ -280,9 +313,14 @@
 					<div class="tsd-signature tsd-kind-icon">INVALID_<wbr>PARAMS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32602</span><span class="tsd-signature-symbol"> =&nbsp;-32602</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/cable/Cable.ts#L19">cable/Cable.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/cable/Cable.ts#L64">cable/Cable.ts:64</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p> Invalid method parameter(s).</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 					<a name="invalid_request" class="tsd-anchor"></a>
@@ -290,9 +328,14 @@
 					<div class="tsd-signature tsd-kind-icon">INVALID_<wbr>REQUEST<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32600</span><span class="tsd-signature-symbol"> =&nbsp;-32600</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/cable/Cable.ts#L17">cable/Cable.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/cable/Cable.ts#L54">cable/Cable.ts:54</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The JSON sent is not a valid Request object.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 					<a name="method_not_found" class="tsd-anchor"></a>
@@ -300,9 +343,14 @@
 					<div class="tsd-signature tsd-kind-icon">METHOD_<wbr>NOT_<wbr>FOUND<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32601</span><span class="tsd-signature-symbol"> =&nbsp;-32601</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/cable/Cable.ts#L18">cable/Cable.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/cable/Cable.ts#L59">cable/Cable.ts:59</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p> The method does not exist / is not available.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 					<a name="parse_error" class="tsd-anchor"></a>
@@ -310,9 +358,15 @@
 					<div class="tsd-signature tsd-kind-icon">PARSE_<wbr>ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32700</span><span class="tsd-signature-symbol"> =&nbsp;-32700</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/cable/Cable.ts#L16">cable/Cable.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/cable/Cable.ts#L49">cable/Cable.ts:49</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p> Invalid JSON was received by the server.
+							An error occurred on the server while parsing the JSON text.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 					<a name="server_error" class="tsd-anchor"></a>
@@ -320,9 +374,14 @@
 					<div class="tsd-signature tsd-kind-icon">SERVER_<wbr>ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32000</span><span class="tsd-signature-symbol"> =&nbsp;-32000</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/cable/Cable.ts#L21">cable/Cable.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/cable/Cable.ts#L74">cable/Cable.ts:74</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Generic server-errors</p>
+						</div>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
@@ -338,7 +397,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#bufferedamount">bufferedAmount</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L119">Shell.ts:119</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L117">Shell.ts:117</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -363,7 +422,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#extensions">extensions</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L127">Shell.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L125">Shell.ts:125</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -388,7 +447,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onclose">onclose</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L55">Shell.ts:55</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L54">Shell.ts:54</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -421,7 +480,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onclose">onclose</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L59">Shell.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L58">Shell.ts:58</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -470,7 +529,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onerror">onerror</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L66">Shell.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L65">Shell.ts:65</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -502,7 +561,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onerror">onerror</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L70">Shell.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L69">Shell.ts:69</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -550,7 +609,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onmessage">onmessage</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L78">Shell.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L77">Shell.ts:77</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -583,7 +642,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onmessage">onmessage</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L82">Shell.ts:82</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L81">Shell.ts:81</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -632,7 +691,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onopen">onopen</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L91">Shell.ts:91</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L90">Shell.ts:90</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -666,7 +725,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onopen">onopen</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L95">Shell.ts:95</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L94">Shell.ts:94</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -715,7 +774,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#protocol">protocol</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L131">Shell.ts:131</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L129">Shell.ts:129</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -733,7 +792,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#readystate">readyState</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L102">Shell.ts:102</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L101">Shell.ts:101</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -756,7 +815,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#url">url</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L109">Shell.ts:109</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L108">Shell.ts:108</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -782,7 +841,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#addeventlistener">addEventListener</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L189">Shell.ts:189</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L191">Shell.ts:191</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -844,7 +903,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#close">close</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L145">Shell.ts:145</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L143">Shell.ts:143</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -877,7 +936,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#dispatchevent">dispatchEvent</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L229">Shell.ts:229</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L230">Shell.ts:230</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -907,13 +966,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/cable/Cable.ts#L57">cable/Cable.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/cable/Cable.ts#L128">cable/Cable.ts:128</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Unlike the <em>request</em>, notify will not wait for the server to reply</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>method: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>name</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> params: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
@@ -933,9 +1000,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/cable/Cable.ts#L40">cable/Cable.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/cable/Cable.ts#L98">cable/Cable.ts:98</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Register a new method on the websocket</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -943,6 +1015,9 @@
 								</li>
 								<li>
 									<h5>method: <span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>name</p>
+									</div>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter-siganture">
 											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
@@ -950,6 +1025,9 @@
 											</ul>
 											<ul class="tsd-descriptions">
 												<li class="tsd-description">
+													<div class="tsd-comment tsd-typography">
+														<p>handler</p>
+													</div>
 													<h4 class="tsd-parameters-title">Parameters</h4>
 													<ul class="tsd-parameters">
 														<li>
@@ -978,7 +1056,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#removeeventlistener">removeEventListener</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L210">Shell.ts:210</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L211">Shell.ts:211</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1039,13 +1117,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/cable/Cable.ts#L44">cable/Cable.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/cable/Cable.ts#L109">cable/Cable.ts:109</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Make a Rpc call</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>method: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>name</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> params: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
@@ -1069,7 +1155,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#send">send</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/a780557/src/Shell.ts#L164">Shell.ts:164</a></li>
+									<li>Defined in <a href="https://github.com/dcharbonnier/advanced-websocket/blob/3e62c9b/src/Shell.ts#L166">Shell.ts:166</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1088,13 +1174,17 @@
 										<p>The data to send to the server. It may be one of the following types:</p>
 										<ul>
 											<li><strong>USVString</strong>
-											A text string. The string is added to the buffer in UTF-8 format, and the value of bufferedAmount is increased by the number of bytes required to represent the UTF-8 string.</li>
+												A text string. The string is added to the buffer in UTF-8 format, and the value of bufferedAmount is increased
+											by the number of bytes required to represent the UTF-8 string.</li>
 											<li><strong>ArrayBuffer</strong>
-											You can send the underlying binary data used by a typed array object; its binary data contents are queued in the buffer, increasing the value of bufferedAmount by the requisite number of bytes.</li>
+												You can send the underlying binary data used by a typed array object; its binary data contents are queued in the
+											buffer, increasing the value of bufferedAmount by the requisite number of bytes.</li>
 											<li><strong>Blob</strong>
-											Specifying a Blob enqueues the blob&#39;s raw data to be transmitted in a binary frame. The value of bufferedAmount is increased by the byte size of that raw data.</li>
+												Specifying a Blob enqueues the blob&#39;s raw data to be transmitted in a binary frame. The value of bufferedAmount
+											is increased by the byte size of that raw data.</li>
 											<li><strong>ArrayBufferView</strong>
-											You can send any JavaScript typed array object as a binary frame; its binary data contents are queued in the buffer, increasing the value of bufferedAmount by the requisite number of bytes.</li>
+												You can send any JavaScript typed array object as a binary frame; its binary data contents are queued in the
+											buffer, increasing the value of bufferedAmount by the requisite number of bytes.</li>
 										</ul>
 									</div>
 								</li>

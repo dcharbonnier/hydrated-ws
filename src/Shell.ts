@@ -10,7 +10,7 @@ export abstract class Shell implements WebSocket {
     public readonly OPEN = WebSocket.OPEN;
     /**  The connection is in the process of closing. */
     public readonly CLOSING = WebSocket.CLOSING;
-    /**  The connection is closed or couldn't be opened. s*/
+    /**  The connection is closed or couldn't be opened. */
     public readonly CLOSED = WebSocket.CLOSED;
 
     /**
@@ -51,7 +51,6 @@ export abstract class Shell implements WebSocket {
      * An event listener to be called when the WebSocket connection's **readyState** changes to **CLOSED**.
      * The listener receives a _CloseEvent_ named "close".
      */
-
     public get onclose(): (ev: CloseEvent) => any {
         return this._onclose;
     }
@@ -115,7 +114,6 @@ export abstract class Shell implements WebSocket {
      * This value resets to zero once all queued data has been sent. This value does not reset to zero when the
      * connection is closed; if you keep calling _send()_, this will continue to climb. **Read only**
      */
-
     public get bufferedAmount(): number {
         return this.ws.bufferedAmount;
     }
@@ -147,19 +145,23 @@ export abstract class Shell implements WebSocket {
     }
 
     /**
-     Enqueues the specified data to be transmitted to the server over the WebSocket connection,
-     increasing the value of bufferedAmount by the number of bytes needed to contain the data.
-     If the data can't be sent (for example, because it needs to be buffered but the buffer is full), t
-     he socket is closed automatically.
+     * Enqueues the specified data to be transmitted to the server over the WebSocket connection,
+     * increasing the value of bufferedAmount by the number of bytes needed to contain the data.
+     * If the data can't be sent (for example, because it needs to be buffered but the buffer is full), t
+     * he socket is closed automatically.
      * @param data The data to send to the server. It may be one of the following types:
-     - **USVString**
-     A text string. The string is added to the buffer in UTF-8 format, and the value of bufferedAmount is increased by the number of bytes required to represent the UTF-8 string.
-     - **ArrayBuffer**
-     You can send the underlying binary data used by a typed array object; its binary data contents are queued in the buffer, increasing the value of bufferedAmount by the requisite number of bytes.
-     - **Blob**
-     Specifying a Blob enqueues the blob's raw data to be transmitted in a binary frame. The value of bufferedAmount is increased by the byte size of that raw data.
-     - **ArrayBufferView**
-     You can send any JavaScript typed array object as a binary frame; its binary data contents are queued in the buffer, increasing the value of bufferedAmount by the requisite number of bytes.
+     * - **USVString**
+     * A text string. The string is added to the buffer in UTF-8 format, and the value of bufferedAmount is increased
+     * by the number of bytes required to represent the UTF-8 string.
+     * - **ArrayBuffer**
+     * You can send the underlying binary data used by a typed array object; its binary data contents are queued in the
+     * buffer, increasing the value of bufferedAmount by the requisite number of bytes.
+     * - **Blob**
+     * Specifying a Blob enqueues the blob's raw data to be transmitted in a binary frame. The value of bufferedAmount
+     * is increased by the byte size of that raw data.
+     * - **ArrayBufferView**
+     * You can send any JavaScript typed array object as a binary frame; its binary data contents are queued in the
+     * buffer, increasing the value of bufferedAmount by the requisite number of bytes.
      */
     public send(data: USVString| ArrayBuffer | Blob | ArrayBufferView ): void {
         if (this.ws.readyState !== WebSocket.OPEN) {
@@ -205,7 +207,6 @@ export abstract class Shell implements WebSocket {
      * function of the event handler to remove from the event target.
      * @param {boolean} Specifies whether the EventListener to be removed is registered as a capturing
      * listener or not. If this parameter is absent, a default value of false is assumed.
-
      */
     public removeEventListener<K extends keyof WebSocketEventMap>(type: K,
                                                                   listener: (this: WebSocket,
