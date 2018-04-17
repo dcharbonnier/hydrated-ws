@@ -25,7 +25,7 @@
     "url": "http://github.com/dcharbonnier/advanced-websocket/issues"
   },
   "scripts": {
-    "doc": "typedoc --excludePrivate --excludeProtected --excludeNotExported  --excludeExternals --exclude \"**/*.spec.ts,**/polyfill/*\" --mode file --out docs/ src/",
+    "doc": "typedoc",
     "build": "tsc -p ./tsconfig.json --outDir dist/",
     "test": "yarn test-node && yarn test-karma",
     "test-server": "node --experimental-modules mock.mjs >/dev/null 2>&1 &",

@@ -14,14 +14,14 @@ Support :
 
 - [x] Waterfall - Reconnect (exponential truncated backoff by default, fully configurable)
 - [x] Pipe - Fake multiplexing, based on a string prefix - fake but working
-- [x] Dam - Simulate open / close based on your logic, open a pipe after the authentication on an other one for example 
+- [x] Dam - Simulate open / close based on your logic, open a pipe after the authentication on an other one for example
 - [x] Tank - No need to monitor the state of the communication the sent messages with be flushed when it open
 - [x] Cable - Json rpc2 transport
 - [ ] Fizz - Wrap your WebSocket interface for more fun with `once`, `on`, `Promises`
-- [ ] Bottling - A json stream with filtering 
+- [ ] Bottling - A json stream with filtering
 - [ ] Url change (WIP)
 - [ ] 100% test coverage
-- [ ] Your idea here, send an issue, provide a PR 
+- [ ] Your idea here, send an issue, provide a PR
 
 ### With strictly no dependencies
 
