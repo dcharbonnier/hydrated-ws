@@ -1,7 +1,11 @@
 import WebSocket from "../polyfill/WebSocket";
 import {Shell} from "../Shell";
 
-export class Tank extends Shell implements WebSocket {
+/**
+ * The Tank allow you to send message without checking the state of the connection, the messages will be delayed until
+ * the connection is open.
+ */
+export class Tank extends Shell {
 
     private buffer: any[] = [];
 
@@ -17,7 +21,25 @@ export class Tank extends Shell implements WebSocket {
         setInterval(() => this.flush(), 100);
     }
 
-    public send(data: any) {
+    /**
+     * Unlike the regular _send_ command of a WebSocket the messages are stored until the connection is **OPEN** and
+     * will
+     * be flushed automatically
+     * @param data The data to send to the server. It may be one of the following types:
+     * - **USVString**
+     * A text string. The string is added to the buffer in UTF-8 format, and the value of bufferedAmount is increased
+     * by the number of bytes required to represent the UTF-8 string.
+     * - **ArrayBuffer**
+     * You can send the underlying binary data used by a typed array object; its binary data contents are queued in
+     * the buffer, increasing the value of bufferedAmount by the requisite number of bytes.
+     * - **Blob**
+     * Specifying a Blob enqueues the blob's raw data to be transmitted in a binary frame. The value of bufferedAmount
+     * is increased by the byte size of that raw data.
+     * - **ArrayBufferView**
+     * You can send any JavaScript typed array object as a binary frame; its binary data contents are queued in the
+     * buffer, increasing the value of bufferedAmount by the requisite number of bytes.
+     */
+    public send(data: USVString| ArrayBuffer | Blob | ArrayBufferView) {
         if (!data) { return; }
         this.buffer.unshift(data);
         this.flush();

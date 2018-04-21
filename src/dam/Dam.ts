@@ -2,15 +2,37 @@ import Event from "../polyfill/Event";
 import WebSocket from "../polyfill/WebSocket";
 import {Shell} from "../Shell";
 
-export class Dam extends Shell implements WebSocket {
+/**
+ * The Dam simulate a Websocket Opening and Closing
+ * Example of use include simulating a connection opening after an authentication
+ *
+ * @example
+ * ```typescript
+ *
+ * const dam = new Dam(ws);
+ * expect(dam.send("test")).to.throw;
+ * dam.status = Dam.OPEN;
+ * \// the open event is also dispatched
+ * expect(dam.send("test")).to.not.throw;
+ * ```
+ */
 
+export class Dam extends Shell {
+
+    /**  The dam is open and will let messages pass through */
     public static OPEN: string = "OPEN";
+
+    /**  The dam is closed and will stop the messages */
     public static CLOSED: string = "CLOSED";
 
     private openSent: boolean = false;
     private buffer: any[] = [];
     private _status: "OPEN" | "CLOSED" = "CLOSED";
 
+    /**
+     * The created Dam will be *CLOSED*
+     * @param ws  An object compatible with the WebSocket interface.
+     */
     constructor(ws: WebSocket) {
         super();
         this._readyState = this.CLOSED;
@@ -35,6 +57,11 @@ export class Dam extends Shell implements WebSocket {
         }
     }
 
+    /**
+     * Compatible with the WebSocket readyState, combining the _status_ of the _Dam_ and the ready state
+     * of the underlying WebSocket
+     * @returns {number} WebSocket constants (CONNECTING, OPEN, CLOSING, CLOSED)
+     */
     public get readyState() {
         if (this._status === Dam.CLOSED &&
             (this.ws.readyState === this.ws.CONNECTING || this.ws.readyState === this.ws.OPEN) ) {
@@ -44,6 +71,12 @@ export class Dam extends Shell implements WebSocket {
         }
     }
 
+    /**
+     * Dispatch an event, some event are delayed if the Dam is CLOSED
+     * @param {} The Event object to be dispatched.
+     * @returns {boolean} The return value is **false** if event is cancelable and at least one of the event
+     * handlers which handled this event called Event.preventDefault(). Otherwise it returns true.
+     */
     public dispatchEvent(evt: Event): boolean {
         if (evt.type === "close") {
             this.dispatchCloseEvent(evt);
@@ -55,7 +88,23 @@ export class Dam extends Shell implements WebSocket {
         return true;
     }
 
-    public send(data: any) {
+    /**
+     * Same as the send method of the WebSocket except that this will throw an error if the Dam is closed
+     * @param data The data to send to the server. It may be one of the following types:
+     * - **USVString**
+     * A text string. The string is added to the buffer in UTF-8 format, and the value of bufferedAmount is increased
+     * by the number of bytes required to represent the UTF-8 string.
+     * - **ArrayBuffer**
+     * You can send the underlying binary data used by a typed array object; its binary data contents are queued in
+     * the buffer, increasing the value of bufferedAmount by the requisite number of bytes.
+     * - **Blob**
+     * Specifying a Blob enqueues the blob's raw data to be transmitted in a binary frame. The value of bufferedAmount
+     * is increased by the byte size of that raw data.
+     * - **ArrayBufferView**
+     * You can send any JavaScript typed array object as a binary frame; its binary data contents are queued in the
+     * buffer, increasing the value of bufferedAmount by the requisite number of bytes.
+     */
+    public send(data: USVString| ArrayBuffer | Blob | ArrayBufferView ): void {
         if (this._status === Dam.OPEN) {
             super.send(data);
         } else {

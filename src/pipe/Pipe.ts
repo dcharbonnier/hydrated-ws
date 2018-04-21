@@ -4,7 +4,26 @@ import MessageEvent from "../polyfill/MessageEvent";
 import WebSocket from "../polyfill/WebSocket";
 import {Shell} from "../Shell";
 
-export class Pipe extends Shell implements WebSocket {
+/**
+ * The Pipe create a simple multiplexing for string messages
+ *
+ * @example
+ * ```typescript
+ *
+ * Client 1
+ * const pipeA = new Pipe(ws, "A");
+ * pipeA.send("message sent on pipe A")
+ * const pipeB = new Pipe(ws, "B");
+ *
+ * Client 2
+ * const pipeA = new Pipe(ws, "A");
+ * pipeA.on("message", (str)=> console.log(`received ${str} on pipeA`)
+ * const pipeB = new Pipe(ws, "B");
+ * pipeB.on("message", (str)=> console.log(`received ${str} on pipeB`)
+ * ```
+ */
+
+export class Pipe extends Shell {
 
     private static repeatString(str: string, count: number): string {
         let res = "";
@@ -14,10 +33,14 @@ export class Pipe extends Shell implements WebSocket {
         return res;
     }
 
-    private channel: string;
-    private prefixLength = 4;
+    private readonly channel: string;
+    private readonly prefixLength = 4;
     private pipeReadyState: number = null;
 
+    /**
+     * @param {} ws
+     * @param {string} a string used to mark the messages channel, transparent for the user
+     */
     constructor(ws: WebSocket, channel: string) {
         super();
 
@@ -29,6 +52,16 @@ export class Pipe extends Shell implements WebSocket {
         this.forwardEvents();
     }
 
+    /**
+     * Closes the WebSocket connection or connection attempt, if any.
+     * If the connection is already CLOSED, this method does nothing.
+     * @param {number} A numeric value indicating the status code explaining why the connection is being closed.
+     * If this parameter is not specified, a default value of 1005 is assumed.
+     * See the list of status codes https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent#Status_codes
+     * on the CloseEvent page for permitted values.
+     * @param {string} A human-readable string explaining why the connection is closing.
+     * This string must be no longer than 123 bytes of UTF-8 text (not characters).
+     */
     public close(code: number = 1000, reason?: string) {
         if (this.pipeReadyState) {
             return;
@@ -41,7 +74,11 @@ export class Pipe extends Shell implements WebSocket {
         }, 0);
     }
 
-    public send(data: any) {
+    /**
+     * Send a message through the pipe, unlike regular _send_ method, a pipe only accept string messages
+     * @param {string} data
+     */
+    public send(data: string) {
         if (this.pipeReadyState) {
             return;
         }
@@ -51,6 +88,12 @@ export class Pipe extends Shell implements WebSocket {
         super.send(this.channel + data);
     }
 
+    /**
+     * Dispatch an event to this EventTarget.
+     * @param {} The Event object to be dispatched.
+     * @returns {boolean} The return value is **false** if event is cancelable and at least one of the event
+     * handlers which handled this event called Event.preventDefault(). Otherwise it returns true.
+     */
     public dispatchEvent(evt: Event): any {
         if (evt.type === "message") {
             const e: MessageEvent = evt as any;
@@ -58,7 +101,7 @@ export class Pipe extends Shell implements WebSocket {
                 super.dispatchEvent(new MessageEvent("message", {
                     data: e.data.substr(this.prefixLength),
                     origin: e.origin,
-                    ports: e.ports,
+                    ports: e.ports as any,
                     source: e.source,
                 }));
                 return false;

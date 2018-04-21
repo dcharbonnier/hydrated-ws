@@ -24,5 +24,26 @@
   ],
   "include": [
     "src/**/*.ts"
-  ]
+  ],
+  "typedocOptions": {
+    "excludePrivate": true,
+    "excludeNotExported": true,
+    "excludeExternals": true,
+    "exclude": [
+      "**/*.spec.ts",
+      "**/polyfill/*"
+    ],
+    "mode": "file",
+    "out": "docs",
+    "theme": "minimal",
+    "ignoreCompilerErrors": true,
+    "target": "ES5",
+    "moduleResolution": "node",
+    "preserveConstEnums": true,
+    "stripInternal": true,
+    "suppressExcessPropertyErrors": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "module": "commonjs",
+    "readme": "none"
+  }
 }
