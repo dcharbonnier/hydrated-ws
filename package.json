@@ -26,6 +26,7 @@
   },
   "scripts": {
     "doc": "typedoc",
+    "toc": "markdown-toc README.md -i --maxdepth 3",
     "build": "tsc -p ./tsconfig.json --outDir dist/",
     "test": "yarn test-node && yarn test-karma",
     "test-server": "node --experimental-modules mock.mjs >/dev/null 2>&1 &",
@@ -35,12 +36,11 @@
     "test-node": "yarn test-server && mocha --opts mocha.opts",
     "lint": "tslint -c tslint.json --fix 'src/**/*.ts'",
     "codecov": "codecov",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build && yarn toc && yarn doc"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "author": "David Charbonnier",
-  "dependencies": null,
   "devDependencies": {
     "@types/chai": "^4.1.2",
     "@types/es6-collections": "^0.5.31",
@@ -63,6 +63,7 @@
     "karma-sauce-launcher": "^1.2.0",
     "karma-typescript": "^3.0.12",
     "karma-typescript-es6-transform": "^1.0.3",
+    "markdown-toc": "^1.2.0",
     "mocha": "^5.0.1",
     "mock-socket": "^7.1.0",
     "puppeteer": "^1.0.0",
