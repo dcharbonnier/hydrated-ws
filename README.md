@@ -25,7 +25,7 @@ you to integrate is on any existing project.
     + [Cable](#cable)
     + [Advanced](#advanced)
 - [Roadmap](#roadmap)
-    + [FAQ](#faq)
+- [FAQ](#faq)
 
 <!-- tocstop -->
 
@@ -168,7 +168,9 @@ lerna
 - [ ] Your idea here, send an issue, provide a PR
 
 
-### FAQ
+FAQ
+=======
+
 #### Webpack
 Webpack complain about the `ws` implementation of WebSocket, the errors
 are :
