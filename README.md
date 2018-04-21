@@ -8,7 +8,7 @@
 [![Code Climate](https://img.shields.io/codeclimate/maintainability/dcharbonnier/advanced-websocket.svg?style=flat-square)](https://codeclimate.com/github/dcharbonnier/advanced-websocket/)
 
 
-Advanced WebSocket is a connection of lightweight (no dependencies) and
+Advanced WebSocket is a collection of lightweight (no dependencies) and
 simple components to build complex communication
 path over Websocket on the server and the browser.
 
