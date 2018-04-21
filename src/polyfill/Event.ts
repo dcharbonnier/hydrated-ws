@@ -2,10 +2,12 @@ import isNode from "./isNode";
 
 class EventPolyfill implements Event {
 
+    public static NONE: 0;
     public static CAPTURING_PHASE: 1;
     public static AT_TARGET: 2;
     public static BUBBLING_PHASE: 3;
 
+    public readonly NONE: 0;
     public readonly CAPTURING_PHASE: 1;
     public readonly AT_TARGET: 2;
     public readonly BUBBLING_PHASE: 3;
