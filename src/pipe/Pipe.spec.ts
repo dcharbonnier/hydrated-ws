@@ -40,6 +40,21 @@ describe("Pipe", () => {
             mp.close();
 
         });
+
+        it("should dispatch a single close event if closed twice", (done) => {
+            const mp = new Pipe(ws, "a");
+            let events = 0;
+            mp.addEventListener("close", () => {
+                events ++;
+            });
+            mp.close();
+            mp.close();
+            setTimeout(() => {
+                expect(events).to.equal(1);
+                done();
+            }, 5);
+
+        });
         it("should stop listening to the message", async () => {
             const mp = new Pipe(ws, "a");
             let received = false;
@@ -62,6 +77,7 @@ describe("Pipe", () => {
         });
         it("should have a correct readyState", async () => {
             const mp = new Pipe(ws, "a");
+            expect(mp.readyState).to.equal(mp.OPEN);
             mp.close();
             expect(mp.readyState).to.equal(mp.CLOSING);
             await sleep(TIMEOUT_FACTOR * 1);

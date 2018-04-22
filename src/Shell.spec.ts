@@ -71,6 +71,17 @@ describe("Shell", () => {
                 done();
             };
         });
+
+        it("should throw if we attempt to send a message on a closes websocket", (done) => {
+            shell.onclose = () => {
+                expect(() => shell.send("fail")).to.throw();
+                done();
+            };
+            shell.onopen = () => {
+                shell.send("disconnect");
+            };
+        });
+
         it("should call the onclose function", (done) => {
             shell.onclose = () => {
                 done();
