@@ -4,7 +4,7 @@ import {Cable} from "./Cable";
 
 const URL = "ws://localhost:8080";
 
-describe("cable", () => {
+describe.only("cable", () => {
 
     let mockServer: any;
     let clientWebSocket: any;
@@ -102,6 +102,7 @@ describe("cable", () => {
         it("reject if the request timeout", (done) => {
             cable.request("methodName", undefined, 1).catch(() => done());
         });
+
         it("should resolve with the response", (done) => {
             cable.request("resolveMe")
                 .then((res: any) => {
@@ -158,6 +159,14 @@ describe("cable", () => {
                 done();
             });
             serverWebSocket.send(JSON.stringify({jsonrpc: "2.0", method: "update", params: [1, 2, 3, 4, 5]}));
+        });
+        it("return an error if the method is not registered", async () => {
+            serverWebSocket.send(JSON.stringify({id: 4, jsonrpc: "2.0", method: "unknown", params: [1, 2, 3, 4, 5]}));
+            const data = JSON.parse(await waitForMessage());
+            expect(data).to.deep.equal({ error: { code: -32601, message: "Method not found" },
+                jsonrpc: "2.0",
+                id: 4 },
+            );
         });
     });
     describe("errors", () => {
