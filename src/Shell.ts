@@ -1,8 +1,6 @@
-import {polyfill} from "./polyfill/ArrayFind";
 import {Dict} from "./polyfill/Dict";
 import Event from "./polyfill/Event";
 import WebSocket from "./polyfill/WebSocket";
-polyfill();
 
 export abstract class Shell implements WebSocket {
 
@@ -235,7 +233,7 @@ export abstract class Shell implements WebSocket {
             method.call(this, evt);
         }
         return (this.listeners.get(evt.type as keyof WebSocketEventMap) || [])
-            .find(({listener}) => listener.call(this, evt) === false) === void 0;
+            .some(({listener}) => listener.call(this, evt) === false) === void 0;
     }
 
     protected forwardEvents<K extends keyof WebSocketEventMap>(list?: K[]) {
