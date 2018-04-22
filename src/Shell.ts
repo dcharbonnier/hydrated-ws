@@ -1,6 +1,8 @@
+import {polyfill} from "./polyfill/ArrayFind";
 import {Dict} from "./polyfill/Dict";
 import Event from "./polyfill/Event";
 import WebSocket from "./polyfill/WebSocket";
+polyfill();
 
 export abstract class Shell implements WebSocket {
 
@@ -163,7 +165,7 @@ export abstract class Shell implements WebSocket {
      * You can send any JavaScript typed array object as a binary frame; its binary data contents are queued in the
      * buffer, increasing the value of bufferedAmount by the requisite number of bytes.
      */
-    public send(data: USVString| ArrayBuffer | Blob | ArrayBufferView ): void {
+    public send(data: USVString | ArrayBuffer | Blob | ArrayBufferView): void {
         if (this.ws.readyState !== WebSocket.OPEN) {
             const err = new Error(
                 `WebSocket is not open ws is ${this.ws.readyState}, local is ${this.readyState}`,
@@ -228,18 +230,12 @@ export abstract class Shell implements WebSocket {
      * handlers which handled this event called Event.preventDefault(). Otherwise it returns true.
      */
     public dispatchEvent(evt: Event): boolean {
-        if (typeof (this as any)[`_on${evt.type}`] === "function") {
-            (this as any)[`_on${evt.type}`].call(this, evt);
+        const method = this[`_on${evt.type}`];
+        if (typeof method === "function") {
+            method.call(this, evt);
         }
-        const listeners = this.listeners.get(evt.type as keyof WebSocketEventMap);
-        if (listeners) {
-            for (const {listener, useCapture} of listeners) {
-                if (listener.call(this, evt) === false) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return (this.listeners.get(evt.type as keyof WebSocketEventMap) || [])
+            .find(({listener}) => listener.call(this, evt) === false) === void 0;
     }
 
     protected forwardEvents<K extends keyof WebSocketEventMap>(list?: K[]) {
