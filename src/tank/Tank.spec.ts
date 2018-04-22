@@ -33,6 +33,16 @@ describe("Tank", () => {
         expect(logs.map((l) => l[1])).to.deep.equal(["connect", "before open"]);
     });
 
+    it("should skip an empty message", async () => {
+        const dam = new Dam(ws);
+        const tank = new Tank(dam);
+        tank.send("");
+        dam.status = "OPEN";
+        await sleep(TIMEOUT_FACTOR * 100);
+        const logs = await supervisor.logs(testCase);
+        expect(logs.map((l) => l[1])).to.deep.equal(["connect"]);
+    });
+
     it("should let the messages pass when open", async () => {
         const dam = new Dam(ws);
         const tank = new Tank(dam);
