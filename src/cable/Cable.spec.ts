@@ -4,7 +4,7 @@ import {Cable} from "./Cable";
 
 const URL = "ws://localhost:8080";
 
-describe.only("cable", () => {
+describe("cable", () => {
 
     let mockServer: any;
     let clientWebSocket: any;
