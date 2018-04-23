@@ -1,4 +1,6 @@
-![Logo](./logo.png)
+<p align="center">
+  <img src="./logo.png">
+</p>
 
 [![Gitter](https://img.shields.io/gitter/room/hydraded-ws/Lobby.svg?style=flat-square)](https://gitter.im/hydraded-ws/Lobby)
 
