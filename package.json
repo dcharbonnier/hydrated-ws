@@ -48,6 +48,7 @@
     ],
     "exclude": [
       "**/*.d.ts",
+      "**/*.spec.ts",
       "coverage/"
     ],
     "reporter": [
