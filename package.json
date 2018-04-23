@@ -1,5 +1,5 @@
 {
-  "name": "advanced-websocket",
+  "name": "hydradex-ws",
   "version": "0.3.5",
   "license": "Apache-2.0",
   "description": "The toolbox for websockets clients, reconnecting websockets, channels muxing websockets, authentication, json-rpc over websockets",
@@ -19,10 +19,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dcharbonnier/advanced-websocket.git"
+    "url": "https://github.com/dcharbonnier/hydradex-ws.git"
   },
   "bugs": {
-    "url": "http://github.com/dcharbonnier/advanced-websocket/issues"
+    "url": "http://github.com/dcharbonnier/hydradex-ws/issues"
   },
   "scripts": {
     "doc": "typedoc",
