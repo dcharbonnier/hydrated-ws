@@ -1,6 +1,6 @@
-import {expect} from "chai";
-import {Server, WebSocket as MockWebSocket} from "mock-socket";
-import {Cable} from "./Cable";
+import { expect } from "chai";
+import { Server, WebSocket as MockWebSocket } from "mock-socket";
+import { Cable } from "./Cable";
 
 const URL = "ws://localhost:8080";
 
@@ -24,13 +24,13 @@ describe("cable", () => {
                                 {
                                     id: data.id,
                                     jsonrpc: "2.0",
-                                    result: {test: "success"},
+                                    result: { test: "success" },
                                 }));
                         }
                         if (data.method === "rejectMe") {
                             ws.send(JSON.stringify(
                                 {
-                                    error: {code: -32000, message: "testError"},
+                                    error: { code: -32000, message: "testError" },
                                     id: data.id,
                                     jsonrpc: "2.0",
                                 }));
@@ -73,9 +73,9 @@ describe("cable", () => {
             expect(data).to.not.haveOwnProperty("params");
         });
         it("send the parameters as an object", async () => {
-            cable.request("methodName", {p1: "a", p2: "b"});
+            cable.request("methodName", { p1: "a", p2: "b" });
             const data = JSON.parse(await waitForMessage());
-            expect(data).to.haveOwnProperty("params").deep.equal({p1: "a", p2: "b"});
+            expect(data).to.haveOwnProperty("params").deep.equal({ p1: "a", p2: "b" });
 
         });
         it("send the parameters as an array", async () => {
@@ -106,7 +106,7 @@ describe("cable", () => {
         it("should resolve with the response", (done) => {
             cable.request("resolveMe")
                 .then((res: any) => {
-                    expect(res).to.deep.equal({test: "success"});
+                    expect(res).to.deep.equal({ test: "success" });
                     done();
                 });
         });
@@ -132,9 +132,9 @@ describe("cable", () => {
             expect(data).to.not.haveOwnProperty("params");
         });
         it("send the parameters as an object", async () => {
-            cable.notify("methodName", {p1: "a", p2: "b"});
+            cable.notify("methodName", { p1: "a", p2: "b" });
             const data = JSON.parse(await waitForMessage());
-            expect(data).to.haveOwnProperty("params").deep.equal({p1: "a", p2: "b"});
+            expect(data).to.haveOwnProperty("params").deep.equal({ p1: "a", p2: "b" });
 
         });
         it("send the parameters as an array", async () => {
@@ -158,14 +158,16 @@ describe("cable", () => {
                 expect(params).to.deep.equal([1, 2, 3, 4, 5]);
                 done();
             });
-            serverWebSocket.send(JSON.stringify({jsonrpc: "2.0", method: "update", params: [1, 2, 3, 4, 5]}));
+            serverWebSocket.send(JSON.stringify({ jsonrpc: "2.0", method: "update", params: [1, 2, 3, 4, 5] }));
         });
         it("return an error if the method is not registered", async () => {
-            serverWebSocket.send(JSON.stringify({id: 4, jsonrpc: "2.0", method: "unknown", params: [1, 2, 3, 4, 5]}));
+            serverWebSocket.send(JSON.stringify({ id: 4, jsonrpc: "2.0", method: "unknown", params: [1, 2, 3, 4, 5] }));
             const data = JSON.parse(await waitForMessage());
-            expect(data).to.deep.equal({ error: { code: -32601, message: "Method 'unknown' not found" },
+            expect(data).to.deep.equal({
+                error: { code: -32601, message: "Method 'unknown' not found" },
+                id: 4,
                 jsonrpc: "2.0",
-                id: 4 },
+            },
             );
         });
     });
@@ -175,7 +177,7 @@ describe("cable", () => {
                 expect(evt.message).to.equal("Response received for an unknown request");
                 done();
             });
-            serverWebSocket.send(JSON.stringify({jsonrpc: "2.0", result: 19, id: 4}));
+            serverWebSocket.send(JSON.stringify({ jsonrpc: "2.0", result: 19, id: 4 }));
         });
         it("dispatch an error if no id is associated", (done) => {
             cable.addEventListener("error", (evt: ErrorEvent) => {
@@ -183,7 +185,7 @@ describe("cable", () => {
                 done();
             });
             serverWebSocket.send(JSON.stringify({
-                error: {code: -32000, message: "testError"},
+                error: { code: -32000, message: "testError" },
                 jsonrpc: "2.0",
             }));
         });

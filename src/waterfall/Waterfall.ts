@@ -30,7 +30,7 @@ export class Waterfall extends Shell {
         if (this.constructor !== Waterfall) {
             throw new TypeError("Failed to construct. Please use the 'new' operator");
         }
-        if (!url.match(REGEXP_URL)) {
+        if (!url || !url.match(REGEXP_URL)) {
             throw new TypeError("Invalid url");
         }
         this._url = url;
