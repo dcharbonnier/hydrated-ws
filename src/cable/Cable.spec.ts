@@ -163,7 +163,7 @@ describe("cable", () => {
         it("return an error if the method is not registered", async () => {
             serverWebSocket.send(JSON.stringify({id: 4, jsonrpc: "2.0", method: "unknown", params: [1, 2, 3, 4, 5]}));
             const data = JSON.parse(await waitForMessage());
-            expect(data).to.deep.equal({ error: { code: -32601, message: "Method not found" },
+            expect(data).to.deep.equal({ error: { code: -32601, message: "Method 'unknown' not found" },
                 jsonrpc: "2.0",
                 id: 4 },
             );

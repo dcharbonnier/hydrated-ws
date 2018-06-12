@@ -198,7 +198,7 @@ export class Cable extends Shell {
                 })
                 .catch(this.sendError.bind(this, id, Cable.SERVER_ERROR));
         } else {
-            this.sendError(id, Cable.METHOD_NOT_FOUND, "Method not found");
+            this.sendError(id, Cable.METHOD_NOT_FOUND, `Method '${method}' not found`);
         }
     }
 
