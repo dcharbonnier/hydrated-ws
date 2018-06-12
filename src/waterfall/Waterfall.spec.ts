@@ -1,7 +1,7 @@
-import {expect} from "chai";
+import { expect } from "chai";
 import WebSocket from "../polyfill/WebSocket";
-import {expectEventually, INVALID_URLS, rnd, sleep, supervisor, TIMEOUT_FACTOR, VALID_URLS} from "../wrench.spec";
-import {Waterfall} from "./Waterfall";
+import { expectEventually, INVALID_URLS, rnd, sleep, supervisor, TIMEOUT_FACTOR, VALID_URLS } from "../wrench.spec";
+import { Waterfall } from "./Waterfall";
 
 describe("Waterfall", () => {
     let ws: Waterfall;
@@ -22,8 +22,12 @@ describe("Waterfall", () => {
 
         it("should throw an error when using a bad url", () => {
             INVALID_URLS.forEach((url) => {
-                expect(() => new Waterfall(url)).to.throw();
+                expect(() => new Waterfall(url)).to.throw("Invalid url");
             });
+        });
+
+        it("should throw an error when using an undefined url", () => {
+            expect(() => new Waterfall(undefined)).to.throw("Invalid url");
         });
 
         it("should not throw when using a correct url", () => {
@@ -209,7 +213,7 @@ describe("Waterfall", () => {
     describe("when reconnect", () => {
         it("should connect after 2 failures", async () => {
             const testCase = rnd();
-            await supervisor.setup(testCase, [{fail: true}, {fail: true}]);
+            await supervisor.setup(testCase, [{ fail: true }, { fail: true }]);
             ws = new Waterfall(`ws://localtest.me:3000/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
@@ -219,11 +223,11 @@ describe("Waterfall", () => {
         });
         it("should retry if the first connection timeout", async () => {
             const testCase = rnd();
-            await supervisor.setup(testCase, [{delay: TIMEOUT_FACTOR * 300}]);
+            await supervisor.setup(testCase, [{ delay: TIMEOUT_FACTOR * 300 }]);
             ws = new Waterfall(
                 `ws://localtest.me:3000/${testCase}`,
                 null,
-                {connectionTimeout: (TIMEOUT_FACTOR || 1) * 200});
+                { connectionTimeout: (TIMEOUT_FACTOR || 1) * 200 });
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
