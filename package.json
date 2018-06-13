@@ -1,6 +1,6 @@
 {
   "name": "hydraded-ws",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "license": "Apache-2.0",
   "description": "The toolbox for websockets clients, reconnecting websockets, channels muxing websockets, authentication, json-rpc over websockets",
   "keywords": [
