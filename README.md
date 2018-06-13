@@ -1,14 +1,18 @@
-[![Gitter](https://img.shields.io/gitter/room/advanced-websocket/Lobby.svg?style=flat-square)](https://gitter.im/advanced-websocket/Lobby)
+<p align="center">
+  <img src="./logo.png">
+</p>
 
-[![Build Status](https://img.shields.io/travis/dcharbonnier/advanced-websocket/master.svg?style=flat-square)](https://travis-ci.org/dcharbonnier/advanced-websocket)
-[![Greenkeeper badge](https://badges.greenkeeper.io/dcharbonnier/advanced-websocket.svg)](https://greenkeeper.io/)
-[![devDependency Status](https://img.shields.io/david/dev/dcharbonnier/advanced-websocket.svg?style=flat-square)](https://david-dm.org/dcharbonnier/advanced-websocket#info=devDependencies)
-[![Codecov](https://img.shields.io/codecov/c/github/dcharbonnier/advanced-websocket/develop.svg?style=flat-square)](https://codecov.io/gh/dcharbonnier/advanced-websocket)
-[![Npm version](https://img.shields.io/npm/v/advanced-websocket.svg?style=flat-square)](https://www.npmjs.com/package/advanced-websocket)
-[![Code Climate](https://img.shields.io/codeclimate/maintainability/dcharbonnier/advanced-websocket.svg?style=flat-square)](https://codeclimate.com/github/dcharbonnier/advanced-websocket/)
+[![Gitter](https://img.shields.io/gitter/room/hydraded-ws/Lobby.svg?style=flat-square)](https://gitter.im/hydraded-ws/Lobby)
+
+[![Build Status](https://img.shields.io/travis/dcharbonnier/hydraded-ws/master.svg?style=flat-square)](https://travis-ci.org/dcharbonnier/hydraded-ws)
+[![Greenkeeper badge](https://badges.greenkeeper.io/dcharbonnier/hydraded-ws.svg)](https://greenkeeper.io/)
+[![devDependency Status](https://img.shields.io/david/dev/dcharbonnier/hydraded-ws.svg?style=flat-square)](https://david-dm.org/dcharbonnier/hydraded-ws#info=devDependencies)
+[![Codecov](https://img.shields.io/codecov/c/github/dcharbonnier/hydraded-ws/develop.svg?style=flat-square)](https://codecov.io/gh/dcharbonnier/hydraded-ws)
+[![Npm version](https://img.shields.io/npm/v/hydraded-ws.svg?style=flat-square)](https://www.npmjs.com/package/hydraded-ws)
+[![Code Climate](https://img.shields.io/codeclimate/maintainability/dcharbonnier/hydraded-ws.svg?style=flat-square)](https://codeclimate.com/github/dcharbonnier/hydraded-ws/)
 
 
-Advanced WebSocket is a collection of lightweight (no dependencies) and
+Hydraded WebSocket is a collection of lightweight (no dependencies) and
 simple components to build complex communication
 path over Websocket on the server and the browser.
 

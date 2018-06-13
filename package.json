@@ -1,5 +1,5 @@
 {
-  "name": "advanced-websocket",
+  "name": "hydraded-ws",
   "version": "0.3.6",
   "license": "Apache-2.0",
   "description": "The toolbox for websockets clients, reconnecting websockets, channels muxing websockets, authentication, json-rpc over websockets",
@@ -19,10 +19,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dcharbonnier/advanced-websocket.git"
+    "url": "https://github.com/dcharbonnier/hydraded-ws.git"
   },
   "bugs": {
-    "url": "http://github.com/dcharbonnier/advanced-websocket/issues"
+    "url": "http://github.com/dcharbonnier/hydraded-ws/issues"
   },
   "scripts": {
     "doc": "typedoc",
