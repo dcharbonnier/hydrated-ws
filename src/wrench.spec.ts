@@ -39,7 +39,7 @@ export const rnd = () => {
 };
 
 export const supervisor = (() => {
-    const ws = new WebSocket("ws://localtest.me:3000/supervisor");
+    const ws = new WebSocket("ws://localtest.me:4752/supervisor");
     const rpc = [];
     ws.onmessage = (e) => {
         const message = JSON.parse(e.data);

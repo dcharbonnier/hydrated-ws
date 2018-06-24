@@ -19,7 +19,7 @@ describe("Tank", () => {
 
     beforeEach((done) => {
         testCase = rnd();
-        ws = new WebSocket(`ws://localtest.me:3000/${testCase}`);
+        ws = new WebSocket(`ws://localtest.me:4752/${testCase}`);
         ws.onopen = () => done();
     });
 

@@ -14,7 +14,7 @@ describe("Dam", () => {
 
     beforeEach((done) => {
         testCase = rnd();
-        ws = new WebSocket(`ws://localtest.me:3000/${testCase}`);
+        ws = new WebSocket(`ws://localtest.me:4752/${testCase}`);
         ws.onopen = () => done();
     });
 
@@ -41,7 +41,7 @@ describe("Dam", () => {
         });
         it("should never dispatch the open event", async () => {
             ws.close();
-            ws = new WebSocket(`ws://localtest.me:3000/${testCase}`);
+            ws = new WebSocket(`ws://localtest.me:4752/${testCase}`);
             dam = new Dam(ws);
             dam.onopen = () => {
                 throw new Error("Received an open event");
@@ -76,7 +76,7 @@ describe("Dam", () => {
         });
         it("should dispatch an open event when the socket open", async () => {
             ws.close();
-            ws = new WebSocket(`ws://localtest.me:3000/${testCase}`);
+            ws = new WebSocket(`ws://localtest.me:4752/${testCase}`);
             dam = new Dam(ws);
             dam.status = "OPEN";
             return new Promise(async (resolve, reject) => {

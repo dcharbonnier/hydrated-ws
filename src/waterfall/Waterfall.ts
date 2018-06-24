@@ -17,7 +17,7 @@ export class Waterfall extends Shell {
     private connectionTimeout: number = 5000;
     private retryPolicy: (attempt: number, ws: Waterfall) => number = exponentialTruncatedBackoff();
     private _url: string;
-    private attempts: number = -1;
+    private attempts: number = -1   ;
 
     /**
      *
@@ -43,10 +43,22 @@ export class Waterfall extends Shell {
     }
 
     /**
-     * The URL as resolved by the constructor. This is always an absolute URL. **Read only.**
+     * The URL as resolved by the constructor. This is always an absolute URL.
      */
     public get url(): string {
         return this._url;
+    }
+
+    /**
+     * Change the url
+     */
+    public set url(value: string) {
+        if (this._url !== value) {
+            this._url = value;
+            if (this.ws) {
+                this.ws.close(1000);
+            }
+        }
     }
 
     /**
