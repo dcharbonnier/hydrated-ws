@@ -19,7 +19,7 @@ describe("Shell", () => {
         let ws: WebSocket;
         let url: string;
         beforeEach(() => {
-            url = `ws://localtest.me:3000/${rnd()}`;
+            url = `ws://localtest.me:4752/${rnd()}`;
             ws = new WebSocket(url);
             shell = new ShellCls(ws);
         });
@@ -63,7 +63,7 @@ describe("Shell", () => {
         let shell: Shell;
 
         beforeEach(() => {
-            shell = new ShellCls(new WebSocket(`ws://localtest.me:3000/${rnd()}`));
+            shell = new ShellCls(new WebSocket(`ws://localtest.me:4752/${rnd()}`));
         });
         it("should call the onopen function", (done) => {
             shell.onopen = () => {

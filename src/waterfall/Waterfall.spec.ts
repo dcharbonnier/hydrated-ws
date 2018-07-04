@@ -36,7 +36,7 @@ describe("Waterfall", () => {
             });
         });
         it("should immediately connect to the server", async () => {
-            ws = new Waterfall("ws://localtest.me:3000");
+            ws = new Waterfall("ws://localtest.me:4752");
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             return expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -45,7 +45,7 @@ describe("Waterfall", () => {
     describe("when connected", () => {
 
         beforeEach(async () => {
-            ws = new Waterfall("ws://localtest.me:3000");
+            ws = new Waterfall("ws://localtest.me:4752");
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -64,11 +64,40 @@ describe("Waterfall", () => {
         });
 
     });
+    describe("when the url change", () => {
+        let testCase: string;
+        beforeEach(async () => {
+            testCase = rnd();
+            ws = new Waterfall(`ws://localtest.me:4752/${testCase}`);
+            expect(ws.readyState).to.equal(WebSocket.CONNECTING);
+            await expectEventually(() => ws.readyState === WebSocket.OPEN,
+                "The WebSocket should be open");
+        });
+
+        it("should reconnect to the new url", async () => {
+            const newUrl = rnd();
+            ws.url = `ws://localtest.me:4752/${newUrl}`;
+            await expectEventually(() => ws.readyState === WebSocket.OPEN,
+                "The WebSocket should be open");
+            await sleep(TIMEOUT_FACTOR * 500);
+            expect((await supervisor.logs(testCase)).map((l) => l[1])).to.deep.equal(["connect", "close"]);
+            expect((await supervisor.logs(newUrl)).map((l) => l[1])).to.deep.equal(["connect"]);
+
+        });
+
+        it("should not reconnect if the url is the same", async () => {
+            ws.url = `ws://localtest.me:4752/${testCase}`;
+            await sleep(TIMEOUT_FACTOR * 500);
+            expect((await supervisor.logs(testCase)).map((l) => l[1])).to.deep.equal(["connect"]);
+        });
+
+    });
+
     describe("when disconnect", () => {
         let testCase: string;
         beforeEach(async () => {
             testCase = rnd();
-            ws = new Waterfall(`ws://localtest.me:3000/${testCase}`);
+            ws = new Waterfall(`ws://localtest.me:4752/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -109,7 +138,7 @@ describe("Waterfall", () => {
         });
         it("should dispatch the open event", async () => {
             return new Promise(async (resolve, reject) => {
-                ws = new Waterfall(`ws://localtest.me:3000/${testCase}`);
+                ws = new Waterfall(`ws://localtest.me:4752/${testCase}`);
                 const events = [];
                 ws.onopen = (event) => {
                     expect(events.length).to.equal(0);
@@ -135,7 +164,7 @@ describe("Waterfall", () => {
         });
         it("should dispatch the close event", async () => {
             return new Promise(async (resolve, reject) => {
-                ws = new Waterfall(`ws://localtest.me:3000/${testCase}`);
+                ws = new Waterfall(`ws://localtest.me:4752/${testCase}`);
                 const events = [];
                 ws.onclose = (event) => {
                     expect(events.length).to.equal(0);
@@ -163,7 +192,7 @@ describe("Waterfall", () => {
         });
         it("should remove the registered listeners", async () => {
             return new Promise(async (resolve, reject) => {
-                ws = new Waterfall(`ws://localtest.me:3000/${testCase}`);
+                ws = new Waterfall(`ws://localtest.me:4752/${testCase}`);
                 const listener = (event) => {
                     reject(new Error("this listener should be removes"));
                 };
@@ -176,7 +205,7 @@ describe("Waterfall", () => {
             });
         });
         it("should ignore an unexisting listener", async () => {
-            ws = new Waterfall(`ws://localtest.me:3000/${testCase}`);
+            ws = new Waterfall(`ws://localtest.me:4752/${testCase}`);
             ws.removeEventListener("ignore me" as any, () => {
                 // ignore
             });
@@ -184,7 +213,7 @@ describe("Waterfall", () => {
         });
         it("should stop dispatching the events if one return false", async () => {
             return new Promise(async (resolve, reject) => {
-                ws = new Waterfall(`ws://localtest.me:3000/${testCase}`);
+                ws = new Waterfall(`ws://localtest.me:4752/${testCase}`);
                 const events = [];
                 ws.onopen = (event) => {
                     expect(events.length).to.equal(0);
@@ -214,7 +243,7 @@ describe("Waterfall", () => {
         it("should connect after 2 failures", async () => {
             const testCase = rnd();
             await supervisor.setup(testCase, [{ fail: true }, { fail: true }]);
-            ws = new Waterfall(`ws://localtest.me:3000/${testCase}`);
+            ws = new Waterfall(`ws://localtest.me:4752/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -225,7 +254,7 @@ describe("Waterfall", () => {
             const testCase = rnd();
             await supervisor.setup(testCase, [{ delay: TIMEOUT_FACTOR * 300 }]);
             ws = new Waterfall(
-                `ws://localtest.me:3000/${testCase}`,
+                `ws://localtest.me:4752/${testCase}`,
                 null,
                 { connectionTimeout: (TIMEOUT_FACTOR || 1) * 200 });
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
@@ -239,7 +268,7 @@ describe("Waterfall", () => {
     describe("properties", () => {
         it("should return the socket properties", async () => {
             const testCase = rnd();
-            ws = new Waterfall(`ws://localtest.me:3000/${testCase}`);
+            ws = new Waterfall(`ws://localtest.me:4752/${testCase}`);
             expect(ws.extensions).to.equal("");
             expect(ws.protocol).to.equal("");
             expect(ws.bufferedAmount).to.equal(0);
@@ -249,7 +278,7 @@ describe("Waterfall", () => {
     describe("when close", () => {
         it("should not reconnect", async () => {
             const testCase = rnd();
-            ws = new Waterfall(`ws://localtest.me:3000/${testCase}`);
+            ws = new Waterfall(`ws://localtest.me:4752/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -260,7 +289,7 @@ describe("Waterfall", () => {
         });
         it("should pass the close reason to the server", async () => {
             const testCase = rnd();
-            ws = new Waterfall(`ws://localtest.me:3000/${testCase}`);
+            ws = new Waterfall(`ws://localtest.me:4752/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
@@ -274,7 +303,7 @@ describe("Waterfall", () => {
         });
         it("should ignore a second close", async () => {
             const testCase = rnd();
-            ws = new Waterfall(`ws://localtest.me:3000/${testCase}`);
+            ws = new Waterfall(`ws://localtest.me:4752/${testCase}`);
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");

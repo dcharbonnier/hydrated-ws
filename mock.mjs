@@ -13,7 +13,7 @@ const testCaseSetup = {};
 const reqCount = {};
 
 const wss = new WebSocket.Server({
-    port: 3000,
+    port: 4752,
     host: "0.0.0.0",
     verifyClient: (info, done) => {
         if (info.req.url === "/supervisor") {
