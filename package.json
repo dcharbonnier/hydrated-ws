@@ -1,5 +1,5 @@
 {
-  "name": "hydraded-ws",
+  "name": "hydrated-ws",
   "version": "0.4.0",
   "license": "Apache-2.0",
   "description": "The toolbox for websockets clients, reconnecting websockets, channels muxing websockets, authentication, json-rpc over websockets",
@@ -19,10 +19,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dcharbonnier/hydraded-ws.git"
+    "url": "https://github.com/dcharbonnier/hydrated-ws.git"
   },
   "bugs": {
-    "url": "http://github.com/dcharbonnier/hydraded-ws/issues"
+    "url": "http://github.com/dcharbonnier/hydrated-ws/issues"
   },
   "scripts": {
     "doc": "typedoc",
