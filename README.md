@@ -2,17 +2,17 @@
   <img src="./logo.png">
 </p>
 
-[![Gitter](https://img.shields.io/gitter/room/hydraded-ws/Lobby.svg?style=flat-square)](https://gitter.im/hydraded-ws/Lobby)
+[![Gitter](https://img.shields.io/gitter/room/hydrated-ws/Lobby.svg?style=flat-square)](https://gitter.im/hydrated-ws/Lobby)
 
-[![Build Status](https://img.shields.io/travis/dcharbonnier/hydraded-ws/master.svg?style=flat-square)](https://travis-ci.org/dcharbonnier/hydraded-ws)
-[![Greenkeeper badge](https://badges.greenkeeper.io/dcharbonnier/hydraded-ws.svg)](https://greenkeeper.io/)
-[![devDependency Status](https://img.shields.io/david/dev/dcharbonnier/hydraded-ws.svg?style=flat-square)](https://david-dm.org/dcharbonnier/hydraded-ws#info=devDependencies)
-[![Codecov](https://img.shields.io/codecov/c/github/dcharbonnier/hydraded-ws/develop.svg?style=flat-square)](https://codecov.io/gh/dcharbonnier/hydraded-ws)
-[![Npm version](https://img.shields.io/npm/v/hydraded-ws.svg?style=flat-square)](https://www.npmjs.com/package/hydraded-ws)
-[![Code Climate](https://img.shields.io/codeclimate/maintainability/dcharbonnier/hydraded-ws.svg?style=flat-square)](https://codeclimate.com/github/dcharbonnier/hydraded-ws/)
+[![Build Status](https://img.shields.io/travis/dcharbonnier/hydrated-ws/master.svg?style=flat-square)](https://travis-ci.org/dcharbonnier/hydrated-ws)
+[![Greenkeeper badge](https://badges.greenkeeper.io/dcharbonnier/hydrated-ws.svg)](https://greenkeeper.io/)
+[![devDependency Status](https://img.shields.io/david/dev/dcharbonnier/hydrated-ws.svg?style=flat-square)](https://david-dm.org/dcharbonnier/hydrated-ws#info=devDependencies)
+[![Codecov](https://img.shields.io/codecov/c/github/dcharbonnier/hydrated-ws/develop.svg?style=flat-square)](https://codecov.io/gh/dcharbonnier/hydrated-ws)
+[![Npm version](https://img.shields.io/npm/v/hydrated-ws.svg?style=flat-square)](https://www.npmjs.com/package/hydrated-ws)
+[![Code Climate](https://img.shields.io/codeclimate/maintainability/dcharbonnier/hydrated-ws.svg?style=flat-square)](https://codeclimate.com/github/dcharbonnier/hydrated-ws/)
 
 
-Hydraded WebSocket is a collection of lightweight (no dependencies) and
+hydrated WebSocket is a collection of lightweight (no dependencies) and
 simple components to build complex communication
 path over Websocket on the server and the browser.
 
