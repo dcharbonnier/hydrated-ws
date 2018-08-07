@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { Server, WebSocket as MockWebSocket } from "mock-socket";
 import { Cable } from "./Cable";
+import { CableError } from "./CableError";
 
 const URL = "ws://localhost:8080";
 
@@ -110,12 +111,18 @@ describe("cable", () => {
                     done();
                 });
         });
-        it("should resolve with the response", (done) => {
+        it("should reject with the response", (done) => {
             cable.request("rejectMe")
                 .catch((err: any) => {
-                    expect(err).to.be.an("error");
-                    expect(err.toString()).to.equal("Error: -32000, testError");
-                    done();
+                    try {
+                        expect(err).to.be.an.instanceof(CableError);
+                        expect(err.toString()).to.equal("Error: testError");
+                        expect(err.code).to.equal(-32000);
+                        expect(err.message).to.equal("testError");
+                        done();
+                    } catch (e) {
+                        done(e);
+                    }
                 });
         });
     });
@@ -181,7 +188,8 @@ describe("cable", () => {
         });
         it("dispatch an error if no id is associated", (done) => {
             cable.addEventListener("error", (evt: ErrorEvent) => {
-                expect(evt.message).to.equal("-32000, testError");
+                expect(evt.message).to.equal("testError");
+                expect(evt.error.code).to.equal(-32000);
                 done();
             });
             serverWebSocket.send(JSON.stringify({
