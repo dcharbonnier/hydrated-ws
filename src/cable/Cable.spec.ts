@@ -162,10 +162,40 @@ describe("cable", () => {
     describe("register", () => {
         it("call the registered method when a message is received", (done) => {
             cable.register("update", async (params: any) => {
-                expect(params).to.deep.equal([1, 2, 3, 4, 5]);
-                done();
+                try {
+                    expect(params).to.deep.equal([1, 2, 3, 4, 5]);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
             });
             serverWebSocket.send(JSON.stringify({ jsonrpc: "2.0", method: "update", params: [1, 2, 3, 4, 5] }));
+        });
+        it("return the default method error", async () => {
+            cable.register("update", async (params: any) => {
+                throw new Error("update failed");
+            });
+            serverWebSocket.send(JSON.stringify({ id: 4, jsonrpc: "2.0", method: "update", params: [1, 2, 3, 4, 5] }));
+            const data = JSON.parse(await waitForMessage());
+            expect(data).to.deep.equal({
+                error: { code: -32000, message: "Error: update failed" },
+                id: 4,
+                jsonrpc: "2.0",
+            },
+            );
+        });
+        it("return the correct method error", async () => {
+            cable.register("update", async (params: any) => {
+                throw new CableError("update failed", 502);
+            });
+            serverWebSocket.send(JSON.stringify({ id: 4, jsonrpc: "2.0", method: "update", params: [1, 2, 3, 4, 5] }));
+            const data = JSON.parse(await waitForMessage());
+            expect(data).to.deep.equal({
+                error: { code: 502, message: "update failed" },
+                id: 4,
+                jsonrpc: "2.0",
+            },
+            );
         });
         it("return an error if the method is not registered", async () => {
             serverWebSocket.send(JSON.stringify({ id: 4, jsonrpc: "2.0", method: "unknown", params: [1, 2, 3, 4, 5] }));
