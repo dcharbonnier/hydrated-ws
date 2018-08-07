@@ -1,7 +1,8 @@
-import {Dict} from "../polyfill/Dict";
+import { Dict } from "../polyfill/Dict";
 import ErrorEvent from "../polyfill/ErrorEvent";
-import {Shell} from "../Shell";
-import {uuid} from "./uuid";
+import { Shell } from "../Shell";
+import { CableError } from "./CableError";
+import { uuid } from "./uuid";
 
 const isVoid = (v: any): boolean => v === void 0;
 const voidNull = (v: any): any => v === null ? void 0 : v;
@@ -73,6 +74,21 @@ export class Cable extends Shell {
      */
     public static readonly SERVER_ERROR = -32000;
 
+    /**
+     * Timeout server-errors
+     */
+    public static readonly TIMEOUT_ERROR = -32001;
+
+    /**
+     * Response received for an unknown request server-errors
+     */
+    public static readonly UNKNOWN_REQUEST = -32002;
+
+    /**
+     *  Invalid method parameter(s) on the client
+     */
+    public static readonly INVALID_CLIENT_PARAMS = -32603;
+
     private static readonly id = uuid();
     private static index = 0;
 
@@ -115,7 +131,7 @@ export class Cable extends Shell {
             resolve,
             timeout: timeout ? setTimeout(() => this.timeout(id), timeout) : null,
         }));
-        this.sendMessage(id, {method, params});
+        this.sendMessage(id, { method, params });
         return p;
     }
 
@@ -127,19 +143,21 @@ export class Cable extends Shell {
      */
     public notify(method: string, params?: object | any[]) {
         this.guardParameters(params);
-        this.sendMessage(null, {method, params});
+        this.sendMessage(null, { method, params });
     }
 
     private guardParameters(params?: object | any[]): void {
         if (params === null || (!isVoid(params) && typeof params !== "object")) {
-            throw new Error(
-                `params accept an array or an object, provided a ${params === null ? null : typeof params}`);
+            throw new CableError(
+                `params accept an array or an object, provided a ${params === null ? null : typeof params}`,
+                Cable.INVALID_CLIENT_PARAMS,
+            );
         }
     }
 
     private timeout(id: string): void {
         if (this.calls.has(id)) {
-            this.calls.get(id).reject(new Error("Request timeout"));
+            this.calls.get(id).reject(new CableError("Request timeout", Cable.TIMEOUT_ERROR));
             this.calls.delete(id);
         }
     }
@@ -158,7 +176,7 @@ export class Cable extends Shell {
     private sendError(id: string, code: number, message: string | Error) {
         this.sendMessage(id,
             {
-                error: {code, message: message ? message.toString() : "Unknown error"},
+                error: { code, message: message ? message.toString() : "Unknown error" },
             });
     }
 
@@ -194,7 +212,7 @@ export class Cable extends Shell {
         if (this.methods.has(method)) {
             this.methods.get(method).call(this, params)
                 .then((res) => {
-                    this.sendMessage(id, {result: res || null});
+                    this.sendMessage(id, { result: res || null });
                 })
                 .catch(this.sendError.bind(this, id, Cable.SERVER_ERROR));
         } else {
@@ -209,17 +227,20 @@ export class Cable extends Shell {
             this.calls.delete(id);
 
         } else {
-            this.dispatchEvent(new ErrorEvent("error", {error: new Error(`Response received for an unknown request`)}));
+            this.dispatchEvent(new ErrorEvent("error", {
+                error:
+                    new CableError(`Response received for an unknown request`, Cable.UNKNOWN_REQUEST),
+            }));
         }
     }
 
     private rpcError(id: string, code: number, message: string): void {
         if (this.calls.has(id)) {
             clearTimeout(this.calls.get(id).timeout);
-            this.calls.get(id).reject(new Error(`${code}, ${message}`));
+            this.calls.get(id).reject(new CableError(message, code));
             this.calls.delete(id);
         } else {
-            this.dispatchEvent(new ErrorEvent("error", {error: new Error(`${code}, ${message}`)}));
+            this.dispatchEvent(new ErrorEvent("error", { error: new CableError(message, code) }));
         }
     }
 
