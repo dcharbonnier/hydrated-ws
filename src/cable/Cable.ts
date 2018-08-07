@@ -173,11 +173,13 @@ export class Cable extends Shell {
         this.ws.send(JSON.stringify(message));
     }
 
-    private sendError(id: string, code: number, message: string | Error) {
-        this.sendMessage(id,
-            {
-                error: { code, message: message ? message.toString() : "Unknown error" },
-            });
+    private sendError(id: string, code: number, messageOrError: string | Error) {
+        let message = messageOrError ? messageOrError.toString() : "Unknown error";
+        if (messageOrError instanceof CableError) {
+            code = messageOrError.code;
+            message = messageOrError.message;
+        }
+        this.sendMessage(id, { error: { code, message } });
     }
 
     private parseMessage(message: string): any {
@@ -235,12 +237,13 @@ export class Cable extends Shell {
     }
 
     private rpcError(id: string, code: number, message: string): void {
+        const error = new CableError(message, code);
         if (this.calls.has(id)) {
             clearTimeout(this.calls.get(id).timeout);
-            this.calls.get(id).reject(new CableError(message, code));
+            this.calls.get(id).reject(error);
             this.calls.delete(id);
         } else {
-            this.dispatchEvent(new ErrorEvent("error", { error: new CableError(message, code) }));
+            this.dispatchEvent(new ErrorEvent("error", { error }));
         }
     }
 
