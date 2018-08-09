@@ -72,7 +72,7 @@
     "codecov": "^3.0.0",
     "es6-promise": "^4.2.4",
     "forever": "^0.15.3",
-    "karma": "^2.0.0",
+    "karma": "^3.0.0",
     "karma-chai-plugins": "^0.9.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-helpful-reporter": "^0.3.4",
