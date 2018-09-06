@@ -1,9 +1,9 @@
 import CloseEvent from "../polyfill/CloseEvent";
 import CustomEvent from "../polyfill/CustomEvent";
 import WebSocket from "../polyfill/WebSocket";
-import {Shell} from "../Shell";
-import {exponentialTruncatedBackoff} from "./exponentialTruncatedBackoff";
-import {IWaterfallOptions} from "./IWaterfallOptions";
+import { Shell } from "../Shell";
+import { exponentialTruncatedBackoff } from "./exponentialTruncatedBackoff";
+import { IWaterfallOptions } from "./IWaterfallOptions";
 
 // https://gist.github.com/hansifer/32bcba48c24621c2da78
 /* tslint:disable-next-line */
@@ -19,7 +19,7 @@ export class Waterfall extends Shell {
     private emitClose: boolean = false;
     private retryPolicy: (attempt: number, ws: Waterfall) => number = exponentialTruncatedBackoff();
     private _url: string;
-    private attempts: number = -1   ;
+    private attempts: number = -1;
 
     /**
      *
@@ -41,9 +41,7 @@ export class Waterfall extends Shell {
             this.emitClose = options.emitClose || this.emitClose;
             this.retryPolicy = options.retryPolicy || this.retryPolicy;
         }
-        this.open();
-        this._readyState = WebSocket.CONNECTING;
-        this.dispatchEvent(new CustomEvent("connecting", {detail: 0}));
+        this.reconnect();
     }
 
     /**
@@ -87,7 +85,7 @@ export class Waterfall extends Shell {
      */
     public get extensions(): string {
         // https://github.com/websockets/ws/issues/1244
-        return typeof(this.ws.extensions) === "string" ? this.ws.extensions : "";
+        return typeof (this.ws.extensions) === "string" ? this.ws.extensions : "";
     }
 
     public get protocol(): string {
@@ -127,6 +125,16 @@ export class Waterfall extends Shell {
         this.dispatchEvent(evt);
     }
 
+    private reconnect(timeout?: number) {
+        this._readyState = WebSocket.CONNECTING;
+        this.dispatchEvent(new CustomEvent("connecting", { detail: timeout }));
+        if (timeout !== void 0) {
+            setTimeout(() => this.open(), timeout);
+        } else {
+            this.open();
+        }
+    }
+
     private onCloseWebSocket(evt: CloseEvent) {
         clearTimeout(this.timeout);
         if (this.closing) {
@@ -142,14 +150,10 @@ export class Waterfall extends Shell {
                     this._readyState = WebSocket.CLOSED;
                     this.dispatchEvent(evt);
                     setTimeout(() => {
-                        this._readyState = WebSocket.CONNECTING;
-                        this.dispatchEvent(new CustomEvent("connecting", {detail: timeout}));
-                        setTimeout(() => this.open(), timeout);
+                        this.reconnect(timeout);
                     }, 0);
                 } else {
-                    this._readyState = WebSocket.CONNECTING;
-                    this.dispatchEvent(new CustomEvent("connecting", {detail: timeout}));
-                    setTimeout(() => this.open(), timeout);
+                    this.reconnect(timeout);
                 }
             }
         }
@@ -186,7 +190,7 @@ export class Waterfall extends Shell {
             const timeout = this.retryPolicy(this.attempts + 1, this);
             if (timeout === null) {
                 this._readyState = WebSocket.CLOSED;
-                this.dispatchEvent(new CloseEvent("close", {code: 4000, reason: "Connect timeout"}));
+                this.dispatchEvent(new CloseEvent("close", { code: 4000, reason: "Connect timeout" }));
             } else {
                 setTimeout(() => this.open(), timeout);
             }
