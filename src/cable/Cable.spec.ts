@@ -11,13 +11,16 @@ describe("cable", () => {
     let clientWebSocket: any;
     let serverWebSocket: any;
     let cable: Cable;
-
+    if (!(global as any).Proxy) {
+        return;
+    }
     beforeEach(async () => {
+
         mockServer = new Server(URL);
         return new Promise((resolve) => {
             mockServer.on("connection", (ws) => {
                 serverWebSocket = ws;
-                ws.addEventListener("message", (message) => {
+                ws.on("message", (message) => {
                     try {
                         const data = JSON.parse(message);
                         if (data.method === "resolveMe") {
@@ -52,9 +55,9 @@ describe("cable", () => {
         return new Promise<string>((resolve) => {
             const listener = (evt: string) => {
                 resolve(evt);
-                mockServer.removeEventListener("message", listener);
+                serverWebSocket.removeEventListener("message", listener);
             };
-            mockServer.addEventListener("message", listener);
+            serverWebSocket.on("message", listener);
         });
 
     };
