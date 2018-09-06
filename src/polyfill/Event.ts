@@ -15,7 +15,7 @@ class EventPolyfill implements Event {
     public readonly cancelable: boolean;
     public readonly cancelBubble: boolean;
     public readonly currentTarget: EventTarget;
-    public readonly defaultPrevented: boolean;
+    public defaultPrevented: boolean;
     public readonly eventPhase: number;
     public readonly isTrusted: boolean;
     public returnValue: boolean;
@@ -42,7 +42,7 @@ class EventPolyfill implements Event {
     }
 
     public stopPropagation(): void {
-// unimplemented
+        // unimplemented
     }
 
     public deepPath(): EventTarget[] {

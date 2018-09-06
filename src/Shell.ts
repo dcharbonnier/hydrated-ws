@@ -1,4 +1,5 @@
-import {Dict} from "./polyfill/Dict";
+import IHydratedWebSocketEventMap from "./IHydratedWebSocketEventMap";
+import { Dict } from "./polyfill/Dict";
 import Event from "./polyfill/Event";
 import WebSocket from "./polyfill/WebSocket";
 
@@ -29,10 +30,10 @@ export abstract class Shell implements WebSocket {
     private _onmessage: (ev: MessageEvent) => any;
     private _onopen: (ev: Event) => any;
     private _onclose: (ev: CloseEvent) => any;
-    private listeners: Dict<keyof WebSocketEventMap,
+    private listeners: Dict<keyof IHydratedWebSocketEventMap,
         Array<{
             listener: (this: WebSocket,
-                       ev: WebSocketEventMap[keyof WebSocketEventMap]) => any,
+                       ev: IHydratedWebSocketEventMap[keyof IHydratedWebSocketEventMap]) => any,
             useCapture?: boolean,
         }>> = new Dict();
 
@@ -176,7 +177,7 @@ export abstract class Shell implements WebSocket {
     /**
      * Register an event handler of a specific event type on the EventTarget.
      * @param {K} A case-sensitive string representing the event type to listen for.
-     * @param {(ev: WebSocketEventMap[K]) => any} The object which receives a notification
+     * @param {(ev: IHydratedWebSocketEventMap[K]) => any} The object which receives a notification
      * (an object that implements the Event interface) when an event of the specified type occurs.
      * This must be an object implementing the EventListener interface, or a JavaScript function.
      * @param {boolean} A Boolean indicating whether events of this type will be dispatched to the registered
@@ -188,30 +189,32 @@ export abstract class Shell implements WebSocket {
      * See DOM Level 3 Events and JavaScript Event order for a detailed explanation.
      * If not specified, useCapture defaults to false.
      */
-    public addEventListener<K extends keyof WebSocketEventMap>(type: K,
-                                                               listener: (this: WebSocket,
-                                                                          ev: WebSocketEventMap[K]) => any,
-                                                               useCapture?: boolean): void {
+    public addEventListener<K extends keyof IHydratedWebSocketEventMap>(type: K,
+                                                                        listener: (this: WebSocket,
+                                                                                   ev: IHydratedWebSocketEventMap[K])
+                                                                                  => any,
+                                                                        useCapture?: boolean): void {
         let listeners = this.listeners.get(type);
         if (!listeners) {
             listeners = [];
             this.listeners.set(type, listeners);
         }
-        listeners.push({listener, useCapture});
+        listeners.push({ listener, useCapture });
     }
 
     /**
      * Removes an event listener from the EventTarget.
      * @param {K} A string which specifies the type of event for which to remove an event listener.
-     * @param {(ev: WebSocketEventMap[K]) => any} The EventListener
+     * @param {(ev: IHydratedWebSocketEventMap[K]) => any} The EventListener
      * function of the event handler to remove from the event target.
      * @param {boolean} Specifies whether the EventListener to be removed is registered as a capturing
      * listener or not. If this parameter is absent, a default value of false is assumed.
      */
-    public removeEventListener<K extends keyof WebSocketEventMap>(type: K,
-                                                                  listener: (this: WebSocket,
-                                                                             ev: WebSocketEventMap[K]) => any,
-                                                                  useCapture?: boolean): void {
+    public removeEventListener<K extends keyof IHydratedWebSocketEventMap>(type: K,
+                                                                           listener: (this: WebSocket,
+                                                                                      ev: IHydratedWebSocketEventMap[K])
+                                                                                     => any,
+                                                                           useCapture?: boolean): void {
         const listeners = this.listeners.get(type);
         if (listeners) {
             this.listeners.set(
@@ -232,11 +235,11 @@ export abstract class Shell implements WebSocket {
         if (typeof method === "function") {
             method.call(this, evt);
         }
-        return (this.listeners.get(evt.type as keyof WebSocketEventMap) || [])
-            .some(({listener}) => listener.call(this, evt) === false) === void 0;
+        return (this.listeners.get(evt.type as keyof IHydratedWebSocketEventMap) || [])
+            .some(({ listener }) => listener.call(this, evt) === false) === void 0;
     }
 
-    protected forwardEvents<K extends keyof WebSocketEventMap>(list?: K[]) {
+    protected forwardEvents<K extends keyof IHydratedWebSocketEventMap>(list?: K[]) {
         (list || ["close", "message", "open"] as K[]).forEach((event: K): void =>
             this.ws.addEventListener(event, this.forwardListener),
         );
