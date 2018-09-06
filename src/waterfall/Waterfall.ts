@@ -1,4 +1,5 @@
 import CloseEvent from "../polyfill/CloseEvent";
+import CustomEvent from "../polyfill/CustomEvent";
 import WebSocket from "../polyfill/WebSocket";
 import {Shell} from "../Shell";
 import {exponentialTruncatedBackoff} from "./exponentialTruncatedBackoff";
@@ -15,6 +16,7 @@ export class Waterfall extends Shell {
 
     private timeout: any;
     private connectionTimeout: number = 5000;
+    private emitClose: boolean = false;
     private retryPolicy: (attempt: number, ws: Waterfall) => number = exponentialTruncatedBackoff();
     private _url: string;
     private attempts: number = -1   ;
@@ -36,10 +38,12 @@ export class Waterfall extends Shell {
         this._url = url;
         if (options) {
             this.connectionTimeout = options.connectionTimeout || this.connectionTimeout;
+            this.emitClose = options.emitClose || this.emitClose;
             this.retryPolicy = options.retryPolicy || this.retryPolicy;
         }
         this.open();
         this._readyState = WebSocket.CONNECTING;
+        this.dispatchEvent(new CustomEvent("connecting", {detail: 0}));
     }
 
     /**
@@ -134,8 +138,19 @@ export class Waterfall extends Shell {
                 this._readyState = WebSocket.CLOSED;
                 this.dispatchEvent(evt);
             } else {
-                this._readyState = WebSocket.CONNECTING;
-                setTimeout(() => this.open(), timeout);
+                if (this.emitClose) {
+                    this._readyState = WebSocket.CLOSED;
+                    this.dispatchEvent(evt);
+                    setTimeout(() => {
+                        this._readyState = WebSocket.CONNECTING;
+                        this.dispatchEvent(new CustomEvent("connecting", {detail: timeout}));
+                        setTimeout(() => this.open(), timeout);
+                    }, 0);
+                } else {
+                    this._readyState = WebSocket.CONNECTING;
+                    this.dispatchEvent(new CustomEvent("connecting", {detail: timeout}));
+                    setTimeout(() => this.open(), timeout);
+                }
             }
         }
     }
