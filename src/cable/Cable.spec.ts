@@ -16,7 +16,7 @@ describe("cable", () => {
         return new Promise((resolve) => {
             mockServer.on("connection", (ws) => {
                 serverWebSocket = ws;
-                ws.addEventListener("message", (message) => {
+                ws.on("message", (message) => {
                     try {
                         const data = JSON.parse(message);
                         if (data.method === "resolveMe") {
@@ -51,9 +51,9 @@ describe("cable", () => {
         return new Promise<string>((resolve) => {
             const listener = (evt: string) => {
                 resolve(evt);
-                mockServer.removeEventListener("message", listener);
+                serverWebSocket.removeEventListener("message", listener);
             };
-            mockServer.addEventListener("message", listener);
+            serverWebSocket.on("message", listener);
         });
 
     };
@@ -110,7 +110,7 @@ describe("cable", () => {
                     done();
                 });
         });
-        it("should resolve with the response", (done) => {
+        it("should reject with the response", (done) => {
             cable.request("rejectMe")
                 .catch((err: any) => {
                     expect(err).to.be.an("error");
