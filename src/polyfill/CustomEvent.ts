@@ -4,13 +4,10 @@ import isNode from "./isNode";
 class CustomEventPolyfill<T> extends Event implements CustomEvent<T> {
 
     public readonly detail: T;
-    public readonly origin: string;
-    public readonly ports: any;
-    public readonly source: Window;
 
     constructor(type: string, eventInitDict?: CustomEvent) {
         super(type);
-        this.detail = eventInitDict.detail;
+        this.detail = eventInitDict ? eventInitDict.detail : null;
     }
 
     public initCustomEvent(typeArg: string,
