@@ -10,8 +10,11 @@ describe("cable", () => {
     let clientWebSocket: any;
     let serverWebSocket: any;
     let cable: Cable;
-
+    if (!(global as any).Proxy) {
+        return;
+    }
     beforeEach(async () => {
+
         mockServer = new Server(URL);
         return new Promise((resolve) => {
             mockServer.on("connection", (ws) => {
