@@ -20,7 +20,7 @@ All components are seen from the outside world like a WebSocket allowing
 you to integrate is on any existing project.
 
 <!-- toc -->
-- [Api documentation](https://dcharbonnier.github.io/hydrated-ws/)
+
 - [Examples](#examples)
     + [Waterfall](#waterfall)
     + [Pipe](#pipe)
