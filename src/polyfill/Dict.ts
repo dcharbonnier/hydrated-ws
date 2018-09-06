@@ -17,7 +17,7 @@ export class Dict<K extends string, T> {
     public delete(key: K) {
         delete this.values[key];
     }
-    public keys() {
-        return Object.keys(this.values);
+    public keys(): K[] {
+        return Object.keys(this.values) as K[];
     }
 }

@@ -29,7 +29,7 @@ export abstract class Shell implements WebSocket {
     private _onmessage: (ev: MessageEvent) => any;
     private _onopen: (ev: Event) => any;
     private _onclose: (ev: CloseEvent) => any;
-    private listeners: Dict<keyof WebSocketEventMap,
+    protected listenersDict: Dict<keyof WebSocketEventMap,
         Array<{
             listener: (this: WebSocket,
                        ev: WebSocketEventMap[keyof WebSocketEventMap]) => any,
@@ -141,7 +141,7 @@ export abstract class Shell implements WebSocket {
      * This string must be no longer than 123 bytes of UTF-8 text (not characters).
      */
     public close(code: number = 1000, reason?: string) {
-        this.ws.close(code, reason);
+        this.ws.close(code, reason || "");
     }
 
     /**
@@ -192,10 +192,10 @@ export abstract class Shell implements WebSocket {
                                                                listener: (this: WebSocket,
                                                                           ev: WebSocketEventMap[K]) => any,
                                                                useCapture?: boolean): void {
-        let listeners = this.listeners.get(type);
+        let listeners = this.listenersDict.get(type);
         if (!listeners) {
             listeners = [];
-            this.listeners.set(type, listeners);
+            this.listenersDict.set(type, listeners);
         }
         listeners.push({listener, useCapture});
     }
@@ -212,9 +212,9 @@ export abstract class Shell implements WebSocket {
                                                                   listener: (this: WebSocket,
                                                                              ev: WebSocketEventMap[K]) => any,
                                                                   useCapture?: boolean): void {
-        const listeners = this.listeners.get(type);
+        const listeners = this.listenersDict.get(type);
         if (listeners) {
-            this.listeners.set(
+            this.listenersDict.set(
                 type,
                 listeners.filter((l) => l.listener !== listener || l.useCapture !== useCapture),
             );
@@ -232,7 +232,7 @@ export abstract class Shell implements WebSocket {
         if (typeof method === "function") {
             method.call(this, evt);
         }
-        return (this.listeners.get(evt.type as keyof WebSocketEventMap) || [])
+        return (this.listenersDict.get(evt.type as keyof WebSocketEventMap) || [])
             .some(({listener}) => listener.call(this, evt) === false) === void 0;
     }
 

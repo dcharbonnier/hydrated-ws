@@ -136,7 +136,7 @@ describe("Shell", () => {
             setTimeout(done, 100);
         });
         it("should remove a non existing listener", () => {
-            expect(() =>            shell.removeEventListener("message", () => null)).to.not.throw();
+            expect(() => shell.removeEventListener("message", () => null)).to.not.throw();
         });
         it("should accept more than one listener", (done) => {
             let i = 0;
