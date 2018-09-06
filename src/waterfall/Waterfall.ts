@@ -140,22 +140,18 @@ export class Waterfall extends Shell {
         if (this.closing) {
             this._readyState = WebSocket.CLOSED;
             this.dispatchEvent(evt);
+            return;
+        }
+        const timeout = this.retryPolicy(this.attempts + 1, this);
+        if (timeout === null) {
+            this._readyState = WebSocket.CLOSED;
+            this.dispatchEvent(evt);
+        } else if (this.emitClose) {
+            this._readyState = WebSocket.CLOSED;
+            this.dispatchEvent(evt);
+            this.reconnect(timeout);
         } else {
-            const timeout = this.retryPolicy(this.attempts + 1, this);
-            if (timeout === null) {
-                this._readyState = WebSocket.CLOSED;
-                this.dispatchEvent(evt);
-            } else {
-                if (this.emitClose) {
-                    this._readyState = WebSocket.CLOSED;
-                    this.dispatchEvent(evt);
-                    setTimeout(() => {
-                        this.reconnect(timeout);
-                    }, 0);
-                } else {
-                    this.reconnect(timeout);
-                }
-            }
+            this.reconnect(timeout);
         }
     }
 
