@@ -14,7 +14,7 @@ class CustomEventPolyfill<T> extends Event implements CustomEvent<T> {
                            canBubbleArg: boolean,
                            cancelableArg: boolean,
                            detailArg: T): void {
-        throw new Error("initMessageEvent is deprecated");
+        throw new Error("initCustomEvent is deprecated");
     }
 
 }

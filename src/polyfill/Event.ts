@@ -34,7 +34,7 @@ class EventPolyfill implements Event {
     }
 
     public preventDefault(): void {
-        this.defaultPrevented = true;
+        // unimplemented
     }
 
     public stopImmediatePropagation(): void {

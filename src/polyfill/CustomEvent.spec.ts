@@ -6,8 +6,14 @@ describe("CustomEventPolyfill", () => {
 
     it("should be a constructor", () => {
         expect(() => {
-            new CustomEvent("test");
+            const _ = new CustomEvent("test");
         }).not.not.throw();
+    });
+
+    it("should reject the initEventMethod", () => {
+        expect(() => {
+            new (CustomEvent as any)().initCustomEvent();
+        }).not.throw("'Error: initCustomEvent is deprecated");
     });
 
     it("should keep the detail value", () => {
