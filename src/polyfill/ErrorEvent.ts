@@ -16,6 +16,8 @@ class ErrorEventPolyfill extends Event implements ErrorEvent {
 
     constructor(type: string, eventInitDict?: ErrorEventInit) {
         super(type);
+        eventInitDict = eventInitDict || {};
+
         this.error = eventInitDict.error;
         if (this.error) {
             this.message = this.error.message;

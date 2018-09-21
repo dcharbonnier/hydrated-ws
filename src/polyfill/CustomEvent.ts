@@ -5,9 +5,10 @@ class CustomEventPolyfill<T> extends Event implements CustomEvent<T> {
 
     public readonly detail: T;
 
-    constructor(type: string, eventInitDict?: CustomEvent) {
+    constructor(type: string, eventInitDict?: CustomEventInit<T>) {
         super(type);
-        this.detail = eventInitDict ? eventInitDict.detail : null;
+        eventInitDict = eventInitDict || {};
+        this.detail = eventInitDict.detail;
     }
 
     public initCustomEvent(typeArg: string,

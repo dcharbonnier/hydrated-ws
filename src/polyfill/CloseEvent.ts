@@ -9,6 +9,7 @@ class CloseEventPolyfill extends Event implements CloseEvent {
 
     constructor(typeArg: string, eventInitDict?: CloseEventInit) {
         super(typeArg);
+        eventInitDict = eventInitDict || {};
         this.code = eventInitDict.code;
         this.reason = eventInitDict.reason;
         this.wasClean = eventInitDict.wasClean;
@@ -20,7 +21,8 @@ class CloseEventPolyfill extends Event implements CloseEvent {
                           wasCleanArg: boolean,
                           codeArg: number,
                           reasonArg: string): void {
-        throw new Error("initCloseEvent is deprecated");
+                              console.log("ooo");
+                              throw new Error("initCloseEvent is deprecated");
 
     }
 
