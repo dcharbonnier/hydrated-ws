@@ -78,11 +78,7 @@ export class Router {
     }
 
     public broadcast(data: string | ArrayBufferLike | Blob | ArrayBufferView) {
-        this.localWebSockets.values().forEach((ws) => {
-            if (ws.readyState === WebSocket.OPEN) {
-                ws.send(data);
-            }
-        });
+        this.onBroadcast(data);
         if (this._connector) {
             this._connector.broadcast(data);
         }
