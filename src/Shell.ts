@@ -1,6 +1,5 @@
 import IHydratedWebSocketEventMap from "./IHydratedWebSocketEventMap";
 import { Dict } from "./polyfill/Dict";
-import Event from "./polyfill/Event";
 import WebSocket from "./polyfill/WebSocket";
 
 export abstract class Shell implements WebSocket {
