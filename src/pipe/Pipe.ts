@@ -2,7 +2,7 @@ import CloseEvent from "../polyfill/CloseEvent";
 import Event from "../polyfill/Event";
 import MessageEvent from "../polyfill/MessageEvent";
 import WebSocket from "../polyfill/WebSocket";
-import {Shell} from "../Shell";
+import { Shell } from "../Shell";
 
 /**
  * The Pipe create a simple multiplexing for string messages
@@ -34,17 +34,18 @@ export class Pipe extends Shell {
     }
 
     private readonly channel: string;
-    private readonly prefixLength = 4;
     private pipeReadyState: number = null;
 
     /**
      * @param {} ws
      * @param {string} a string used to mark the messages channel, transparent for the user
+     * @param {number} the maximum prefix length, should be as short as possible and
+     *                 identical for all pipes on a WebSocket, default to 4
      */
-    constructor(ws: WebSocket, channel: string) {
+    constructor(ws: WebSocket, channel: string, private readonly prefixLength: number = 4) {
         super();
 
-        if (typeof(channel) !== "string" || !channel.length || channel.length > this.prefixLength) {
+        if (typeof (channel) !== "string" || !channel.length || channel.length > this.prefixLength) {
             throw new Error(`Channel should be a string between 1 and ${this.prefixLength} characters`);
         }
         this.channel = `${Pipe.repeatString(" ", this.prefixLength)}${channel}`.slice(this.prefixLength * -1);
@@ -70,7 +71,7 @@ export class Pipe extends Shell {
         this.pipeReadyState = this.CLOSING;
         setTimeout(() => {
             this.pipeReadyState = this.CLOSED;
-            this.dispatchEvent(new CloseEvent("close", {code, reason, wasClean: true}));
+            this.dispatchEvent(new CloseEvent("close", { code, reason, wasClean: true }));
         }, 0);
     }
 
@@ -82,8 +83,8 @@ export class Pipe extends Shell {
         if (this.pipeReadyState) {
             return;
         }
-        if (typeof(data) !== "string") {
-            throw new Error(`Pipe only support sending string, you passed a type ${typeof(data)}`);
+        if (typeof (data) !== "string") {
+            throw new Error(`Pipe only support sending string, you passed a type ${typeof (data)}`);
         }
         super.send(this.channel + data);
     }
@@ -97,7 +98,7 @@ export class Pipe extends Shell {
     public dispatchEvent(evt: Event): any {
         if (evt.type === "message") {
             const e: MessageEvent = evt as any;
-            if (typeof(e.data) === "string" && this.channel === e.data.substr(0, this.prefixLength)) {
+            if (typeof (e.data) === "string" && this.channel === e.data.substr(0, this.prefixLength)) {
                 super.dispatchEvent(new MessageEvent("message", {
                     data: e.data.substr(this.prefixLength),
                     origin: e.origin,
