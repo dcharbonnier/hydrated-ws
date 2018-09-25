@@ -84,7 +84,7 @@ class MockWebsocketClass {
 
 const MockWebsocket = MockWebsocketClass as any;  // tslint:disable-line:variable-name
 
-describe.only("Router", () => {
+describe("Router", () => {
     describe("set", () => {
         it("should add the Websocket", () => {
             const router = new Router();
