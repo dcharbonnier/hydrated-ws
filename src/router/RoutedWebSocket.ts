@@ -14,7 +14,7 @@ export class RoutedWebSocket extends Shell {
     /**  The connection is closed or couldn't be opened. */
     public readonly CLOSED = WebSocket.CLOSED;
 
-    private __readyState: number = null;
+    private virtualReadyState: number = null;
 
     constructor(
         private readonly routerSend: (data: USVString | ArrayBuffer | Blob | ArrayBufferView) => void,
@@ -24,20 +24,20 @@ export class RoutedWebSocket extends Shell {
     }
 
     public setStatus(status: number) {
-        if (this.__readyState === status) {
+        if (this.virtualReadyState === status) {
             return;
         }
         switch (status) {
             case this.OPEN:
-                this.__readyState = status;
+                this.virtualReadyState = status;
                 this.dispatchEvent(new Event("open"));
                 break;
             case this.CLOSED:
-                this.__readyState = status;
+                this.virtualReadyState = status;
                 this.dispatchEvent(new CloseEvent("close"));
                 break;
             default:
-                this.__readyState = status;
+                this.virtualReadyState = status;
                 break;
         }
     }
@@ -63,11 +63,11 @@ export class RoutedWebSocket extends Shell {
     }
 
     public close(code: number = 1000, reason?: string) {
-        this.__readyState = this.CLOSED;
+        this.virtualReadyState = this.CLOSED;
         this.routerClose(code, reason);
     }
 
     protected getReadyState(): number {
-        return this.__readyState === null ? WebSocket.CONNECTING : this.__readyState;
+        return this.virtualReadyState === null ? WebSocket.CONNECTING : this.virtualReadyState;
     }
 }
