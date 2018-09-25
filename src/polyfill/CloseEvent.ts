@@ -21,7 +21,6 @@ class CloseEventPolyfill extends Event implements CloseEvent {
                           wasCleanArg: boolean,
                           codeArg: number,
                           reasonArg: string): void {
-                              console.log("ooo");
                               throw new Error("initCloseEvent is deprecated");
 
     }
