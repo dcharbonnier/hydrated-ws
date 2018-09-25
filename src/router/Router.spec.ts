@@ -35,7 +35,7 @@ export class DummyRouterConnector implements IRouterConnector {
         });
     }
 
-    public status(key: string, status: number): void {
+    public readyState(key: string, status: number): void {
         DummyRouterConnector.instances.forEach((connector) => {
             if (connector !== this && connector.onStatus) {
                 connector.onStatus(key, status);

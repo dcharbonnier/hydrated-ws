@@ -42,7 +42,7 @@ export class Router {
     public onStatus(id: string, status: number): void {
         const ws = this.virtualWebSockets.get(id);
         if (ws) {
-            ws.setStatus(status);
+            ws.setReadyState(status);
         }
     }
 
@@ -64,10 +64,10 @@ export class Router {
 
     public emitState(id: string, ws: WebSocket) {
         if (this.virtualWebSockets.has(id)) {
-            this.virtualWebSockets.get(id).setStatus(ws.readyState);
+            this.virtualWebSockets.get(id).setReadyState(ws.readyState);
         }
         if (this._connector) {
-            this._connector.status(id, ws.readyState);
+            this._connector.readyState(id, ws.readyState);
         }
     }
 
@@ -82,7 +82,7 @@ export class Router {
     public delete(id: string) {
         this.localWebSockets.delete(id);
         if (this.virtualWebSockets.has(id)) {
-            this.virtualWebSockets.get(id).setStatus(WebSocket.CLOSED);
+            this.virtualWebSockets.get(id).setReadyState(WebSocket.CLOSED);
         }
     }
 
@@ -90,12 +90,14 @@ export class Router {
         if (this.virtualWebSockets.has(id)) {
             return this.virtualWebSockets.get(id);
         } else {
-
             const ws = new RoutedWebSocket(
                 (data: string | ArrayBufferLike | Blob | ArrayBufferView) => this.send(id, data),
                 (code: number, reason: string) => this.close(id, code, reason),
             );
             this.virtualWebSockets.set(id, ws);
+            if (this.localWebSockets.has(id)) {
+                ws.setReadyState(this.localWebSockets.get(id).readyState);
+            }
             return ws;
         }
     }
@@ -118,7 +120,7 @@ export class Router {
 
     private close(id: string, code: number, reason: string) {
         if (this.virtualWebSockets.has(id)) {
-            this.virtualWebSockets.get(id).setStatus(WebSocket.CLOSED);
+            this.virtualWebSockets.get(id).setReadyState(WebSocket.CLOSED);
         }
         if (this.localWebSockets.has(id)) {
             this.localWebSockets.get(id).close(code, reason);

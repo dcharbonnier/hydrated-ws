@@ -5,6 +5,6 @@ export interface IRouterConnector {
     onClose?: (key: string, code: number, reason: string) => boolean;
     send(key: string, data: any): void;
     broadcast(data: any): void;
-    status(key: string, status: number): void;
+    readyState(key: string, status: number): void;
     close(key: string, code: number, reason: string): void;
 }

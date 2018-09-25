@@ -23,21 +23,19 @@ export class RoutedWebSocket extends Shell {
         super();
     }
 
-    public setStatus(status: number) {
-        if (this.virtualReadyState === status) {
+    public setReadyState(state: number) {
+        if (this.virtualReadyState === state) {
             return;
         }
-        switch (status) {
+        this.virtualReadyState = state;
+        switch (state) {
             case this.OPEN:
-                this.virtualReadyState = status;
                 this.dispatchEvent(new Event("open"));
                 break;
             case this.CLOSED:
-                this.virtualReadyState = status;
                 this.dispatchEvent(new CloseEvent("close"));
                 break;
             default:
-                this.virtualReadyState = status;
                 break;
         }
     }
