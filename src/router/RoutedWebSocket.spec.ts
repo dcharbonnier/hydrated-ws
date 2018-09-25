@@ -8,13 +8,9 @@ import { RoutedWebSocket } from "./RoutedWebSocket";
 import { Router } from "./Router";
 
 describe("RoutedWebSocket", () => {
-        it("should  be open",  () => {
+        it("should be connecting",  () => {
             const ws = new RoutedWebSocket(null, null);
-            expect (ws.readyState).to.equal(WebSocket.OPEN);
-        });
-        it("should dispatch an open event",  (done) => {
-            const ws = new RoutedWebSocket(null, null);
-            ws.onopen = () => done();
+            expect (ws.readyState).to.equal(WebSocket.CONNECTING);
         });
         it("should send a message",  (done) => {
             const ws = new RoutedWebSocket((data: any) => {
