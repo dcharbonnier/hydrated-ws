@@ -11,6 +11,7 @@ export class DummyRouterConnector implements IRouterConnector {
     public static clear = () => DummyRouterConnector.instances.length = 0;
     private static instances: DummyRouterConnector[] = [];
     public onMessage?: (key: string, data: any) => boolean;
+    public onStatus?: (key: string, status: number) => boolean;
     public onBroadcast?: (data: any) => void;
     public onClose?: (key: string, code: number, reason: string) => boolean;
 
@@ -34,6 +35,14 @@ export class DummyRouterConnector implements IRouterConnector {
         });
     }
 
+    public status(key: string, status: number): void {
+        DummyRouterConnector.instances.forEach((connector) => {
+            if (connector !== this && connector.onStatus) {
+                connector.onStatus(key, status);
+            }
+        });
+    }
+
     public close(key: string, code: number, reason: string): void {
         for (const connector of DummyRouterConnector.instances) {
             if (connector !== this && connector.onClose && connector.onClose(key, code, reason)) {
@@ -46,44 +55,49 @@ export class DummyRouterConnector implements IRouterConnector {
 class MockWebsocketClass {
     public received: any[] = [];
     public closed: { code: number, reason: string } = void 0;
-    public readyState: number = WebSocket.OPEN;
 
+    public listeners: { open: any[], close: any[] } = { open: [], close: [] };
+
+    constructor(public readyState: number = WebSocket.OPEN) {
+        setTimeout(() => {
+            if (this.readyState === WebSocket.OPEN) {
+                return;
+            }
+            this.readyState = WebSocket.OPEN;
+            this.listeners.open.forEach(((clb) => clb()));
+        });
+    }
     public send(data: any) {
         this.received.push(data);
     }
     public close(code?: number, reason?: string) {
         this.closed = { code, reason };
         this.readyState = WebSocket.CLOSED;
+        setTimeout(() => this.listeners.close.forEach(((clb) => clb())));
+
+    }
+
+    public addEventListener(event: "open" | "close", callback: (e: any) => void) {
+        this.listeners[event].push(callback);
     }
 }
 
 const MockWebsocket = MockWebsocketClass as any;  // tslint:disable-line:variable-name
 
-describe("Router", () => {
+describe.only("Router", () => {
     describe("set", () => {
-        it("should add the Websocket",  () => {
+        it("should add the Websocket", () => {
             const router = new Router();
             const ws1 = new MockWebsocket();
             router.set("id", ws1);
-            expect(router.get("id")).to.equal(ws1);
         });
-        it("should replace the Websocket and close the olv one",  () => {
+        it("should replace the Websocket and close the old one", () => {
             const router = new Router();
             const ws1 = new MockWebsocket();
             const ws2 = new MockWebsocket();
             router.set("id", ws1);
             router.set("id", ws2);
-            expect(router.get("id")).to.equal(ws2);
             expect(ws1.closed).to.not.be.undefined;
-        });
-        it("should add 2 Websocket",  () => {
-            const router = new Router();
-            const ws1 = new MockWebsocket();
-            const ws2 = new MockWebsocket();
-            router.set("id1", ws1);
-            router.set("id2", ws2);
-            expect(router.get("id1")).to.equal(ws1);
-            expect(router.get("id2")).to.equal(ws2);
         });
         it("should overwrite the Websocket", () => {
             const router = new Router();
@@ -91,7 +105,9 @@ describe("Router", () => {
             router.set("id", ws1);
             const ws2 = new MockWebsocket();
             router.set("id", ws2);
-            expect(router.get("id")).to.equal(ws2);
+            router.get("id").send("test");
+            expect(ws1.received.length).to.equal(0);
+            expect(ws2.received.length).to.equal(1);
         });
     });
     describe("delete", () => {
@@ -99,8 +115,9 @@ describe("Router", () => {
             const router = new Router();
             const ws1 = new MockWebsocket();
             router.set("id", ws1);
+            const ws = router.get("id");
             router.delete("id");
-            expect(router.get("id")).to.not.equal(ws1);
+            expect(ws.readyState).to.equal(WebSocket.CLOSED);
         });
     });
     describe("clear", () => {
@@ -108,23 +125,14 @@ describe("Router", () => {
             const router = new Router();
             const ws1 = new MockWebsocket();
             router.set("id", ws1);
+            const ws = router.get("id");
             router.clear();
-            expect(router.get("id")).to.not.equal(ws1);
+            expect(ws.readyState).to.equal(WebSocket.CLOSED);
         });
-    });
-
-    describe("get", () => {
-        it("should return the websocket for a connected websocket", () => {
-            const router = new Router();
-            const ws1 = new MockWebsocket();
-            router.set("id", ws1);
-            expect(router.get("id")).to.equal(ws1);
-        });
-
     });
 
     describe("send", () => {
-        it("should send to the correct ws",  () => {
+        it("should send to the correct ws", () => {
             const router = new Router();
             const ws1 = new MockWebsocket();
             const ws2 = new MockWebsocket();
@@ -177,63 +185,90 @@ describe("Router", () => {
             router1.connector = connector1;
             router2 = new Router();
             router2.connector = connector2;
-            ws1 = new MockWebsocket();
-            ws2 = new MockWebsocket();
+            ws1 = new MockWebsocket(WebSocket.CONNECTING);
+            ws2 = new MockWebsocket(WebSocket.CONNECTING);
             router1.set("id1", ws1);
             router2.set("id2", ws2);
         });
         afterEach(() => {
             DummyRouterConnector.clear();
         });
-        it("should broadcast", () => {
-            router1.broadcast("test");
-            expect(ws1.received.length).to.equal(1);
-            expect(ws2.received.length).to.equal(1);
+        it("should broadcast", (done) => {
+            setTimeout(() => {
+                router1.broadcast("test");
+                expect(ws1.received.length).to.equal(1);
+                expect(ws2.received.length).to.equal(1);
+                done();
+            });
         });
-        it("should broadcast to open only", () => {
-            ws2.close();
-            router1.broadcast("test");
-            expect(ws1.received.length).to.equal(1);
-            expect(ws2.received.length).to.equal(0);
+        it("should broadcast to open only", (done) => {
+            setTimeout(() => {
+                ws2.close();
+                router1.broadcast("test");
+                expect(ws1.received.length).to.equal(1);
+                expect(ws2.received.length).to.equal(0);
+                done();
+            });
         });
-        it("should transmit messages to a remote websocket", () => {
-            router1.get("id2").send("test");
-            expect(ws1.received.length).to.equal(0);
-            expect(ws2.received.length).to.equal(1);
+        it("should transmit messages to a remote websocket", (done) => {
+            setTimeout(() => {
+                router1.get("id2").send("test");
+                expect(ws1.received.length).to.equal(0);
+                expect(ws2.received.length).to.equal(1);
+                done();
+            });
         });
-        it("should transmit messages to a remote if open only", () => {
-            ws2.close();
-            router1.get("id2").send("test");
-            expect(ws1.received.length).to.equal(0);
-            expect(ws2.received.length).to.equal(0);
+        it("should transmit messages to a remote if open only", (done) => {
+            setTimeout(() => {
+                ws2.close();
+                router1.get("id2").send("test");
+                expect(ws1.received.length).to.equal(0);
+                expect(ws2.received.length).to.equal(0);
+                done();
+            });
         });
-        it("should get twice the same remote websocket", () => {
-            router1.get("id2").send("test");
-            router1.get("id2").send("test");
-            expect(ws1.received.length).to.equal(0);
-            expect(ws2.received.length).to.equal(2);
+        it("should get twice the same remote websocket", (done) => {
+            setTimeout(() => {
+                router1.get("id2").send("test");
+                router1.get("id2").send("test");
+                expect(ws1.received.length).to.equal(0);
+                expect(ws2.received.length).to.equal(2);
+                done();
+            });
         });
-        it("should close a remote websocket", () => {
-            router1.get("id2").close(999, "test");
-            expect(ws2.closed).to.deep.equal({ code: 999, reason: "test" });
+        it("should close a remote websocket", (done) => {
+            setTimeout(() => {
+                router1.get("id2").close(999, "test");
+                expect(ws2.closed).to.deep.equal({ code: 999, reason: "test" });
+                done();
+            });
         });
-        it("should replace a remote websocket", () => {
-            const ws3 = new MockWebsocket();
-            router1.set("id2", ws3);
-            expect(ws2.closed).to.not.be.undefined;
+        it("should replace a remote websocket", (done) => {
+            setTimeout(() => {
+                const ws3 = new MockWebsocket();
+                router1.set("id2", ws3);
+                expect(ws2.closed).to.not.be.undefined;
+                done();
+            });
         });
-        it("should replace a connector", () => {
-            const connector3 = new DummyRouterConnector();
-            router1.connector = connector3;
-            router1.get("id2").send("test");
-            expect(ws1.received.length).to.equal(0);
-            expect(ws2.received.length).to.equal(1);
+        it("should replace a connector", (done) => {
+            setTimeout(() => {
+                const connector3 = new DummyRouterConnector();
+                router1.connector = connector3;
+                router1.get("id2").send("test");
+                expect(ws1.received.length).to.equal(0);
+                expect(ws2.received.length).to.equal(1);
+                done();
+            });
         });
-        it("should delete a connector", () => {
-            router1.connector = null;
-            router1.get("id2").send("test");
-            expect(ws1.received.length).to.equal(0);
-            expect(ws2.received.length).to.equal(0);
+        it("should delete a connector", (done) => {
+            setTimeout(() => {
+                router1.connector = null;
+                router1.get("id2").send("test");
+                expect(ws1.received.length).to.equal(0);
+                expect(ws2.received.length).to.equal(0);
+                done();
+            });
         });
     });
 });

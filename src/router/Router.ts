@@ -9,10 +9,10 @@ export class Router {
     public _connector: IRouterConnector;
 
     private readonly localWebSockets: Dict<string, WebSocket> = new Dict();
-    private readonly remoteWebSockets: Dict<string, RoutedWebSocket> = new Dict();
+    private readonly virtualWebSockets: Dict<string, RoutedWebSocket> = new Dict();
 
     public clear(): void {
-        this.localWebSockets.clear();
+        this.localWebSockets.keys().forEach((key) => this.delete(key));
     }
 
     public set connector(value: IRouterConnector) {
@@ -20,12 +20,14 @@ export class Router {
             this._connector.onBroadcast = void 0;
             this._connector.onMessage = void 0;
             this._connector.onClose = void 0;
+            this._connector.onStatus = void 0;
         }
         this._connector = value;
         if (value) {
             this._connector.onBroadcast = this.onBroadcast.bind(this);
             this._connector.onMessage = this.onMessage.bind(this);
             this._connector.onClose = this.onClose.bind(this);
+            this._connector.onStatus = this.onStatus.bind(this);
         }
     }
 
@@ -34,6 +36,13 @@ export class Router {
         if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send(data);
             return true;
+        }
+    }
+
+    public onStatus(id: string, status: number): void {
+        const ws = this.virtualWebSockets.get(id);
+        if (ws) {
+            ws.setStatus(status);
         }
     }
 
@@ -53,26 +62,40 @@ export class Router {
         }
     }
 
+    public emitState(id: string, ws: WebSocket) {
+        if (this.virtualWebSockets.has(id)) {
+            this.virtualWebSockets.get(id).setStatus(ws.readyState);
+        }
+        if (this._connector) {
+            this._connector.status(id, ws.readyState);
+        }
+    }
+
     public set(id: string, ws: WebSocket) {
         this.close(id, 1000, "Duplicate websocket");
+        ws.addEventListener("open", () => this.emitState(id, ws));
+        ws.addEventListener("close", () => this.emitState(id, ws));
         this.localWebSockets.set(id, ws);
+        this.emitState(id, ws);
     }
 
     public delete(id: string) {
         this.localWebSockets.delete(id);
+        if (this.virtualWebSockets.has(id)) {
+            this.virtualWebSockets.get(id).setStatus(WebSocket.CLOSED);
+        }
     }
 
     public get(id: string): WebSocket {
-        if (this.localWebSockets.has(id)) {
-            return this.localWebSockets.get(id);
-        } else if (this.remoteWebSockets.has(id)) {
-            return this.remoteWebSockets.get(id);
+        if (this.virtualWebSockets.has(id)) {
+            return this.virtualWebSockets.get(id);
         } else {
+
             const ws = new RoutedWebSocket(
                 (data: string | ArrayBufferLike | Blob | ArrayBufferView) => this.send(id, data),
                 (code: number, reason: string) => this.close(id, code, reason),
             );
-            this.remoteWebSockets.set(id, ws);
+            this.virtualWebSockets.set(id, ws);
             return ws;
         }
     }
@@ -85,12 +108,18 @@ export class Router {
     }
 
     private send(id: string, data: string | ArrayBufferLike | Blob | ArrayBufferView) {
-        if (this._connector) {
+        const ws = this.localWebSockets.get(id);
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(data);
+        } else if (this._connector) {
             this._connector.send(id, data);
         }
     }
 
     private close(id: string, code: number, reason: string) {
+        if (this.virtualWebSockets.has(id)) {
+            this.virtualWebSockets.get(id).setStatus(WebSocket.CLOSED);
+        }
         if (this.localWebSockets.has(id)) {
             this.localWebSockets.get(id).close(code, reason);
         } else if (this._connector) {
