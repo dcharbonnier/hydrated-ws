@@ -84,6 +84,9 @@ export class Server {
                         .catch((e) => void 0);
 
                 };
+                if (targetWs.readyState === WebSocket.OPEN) {
+                    connect();
+                }
                 targetWs.addEventListener("open", () => {
                     connect();
                 });
