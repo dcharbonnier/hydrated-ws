@@ -119,7 +119,7 @@ export class Router {
 
     private setReadyState(id, state: number) {
         if (this.virtualWebSockets.has(id)) {
-            this.virtualWebSockets.get(id).setReadyState(WebSocket.CLOSED);
+            this.virtualWebSockets.get(id).setReadyState(state);
         }
     }
 
