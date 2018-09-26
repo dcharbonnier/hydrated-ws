@@ -4,6 +4,10 @@ import WebSocket from "../polyfill/WebSocket";
 import { IRouterConnector } from "./IRouterConnector";
 import { RoutedWebSocket } from "./RoutedWebSocket";
 
+/**
+ * ALPHA, do not use
+ * The Router route messages from different servers
+ */
 export class Router {
 
     public _connector: IRouterConnector;
