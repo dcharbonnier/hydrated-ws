@@ -63,9 +63,7 @@ export class Router {
     }
 
     public emitState(id: string, ws: WebSocket) {
-        if (this.virtualWebSockets.has(id)) {
-            this.virtualWebSockets.get(id).setReadyState(ws.readyState);
-        }
+        this.setReadyState(id, ws.readyState);
         if (this._connector) {
             this._connector.readyState(id, ws.readyState);
         }
@@ -81,15 +79,11 @@ export class Router {
 
     public delete(id: string) {
         this.localWebSockets.delete(id);
-        if (this.virtualWebSockets.has(id)) {
-            this.virtualWebSockets.get(id).setReadyState(WebSocket.CLOSED);
-        }
+        this.setReadyState(id, WebSocket.CLOSED);
     }
 
     public get(id: string): WebSocket {
-        if (this.virtualWebSockets.has(id)) {
-            return this.virtualWebSockets.get(id);
-        } else {
+        if (!this.virtualWebSockets.has(id)) {
             const ws = new RoutedWebSocket(
                 (data: string | ArrayBufferLike | Blob | ArrayBufferView) => this.send(id, data),
                 (code: number, reason: string) => this.close(id, code, reason),
@@ -98,8 +92,9 @@ export class Router {
             if (this.localWebSockets.has(id)) {
                 ws.setReadyState(this.localWebSockets.get(id).readyState);
             }
-            return ws;
         }
+        return this.virtualWebSockets.get(id);
+
     }
 
     public broadcast(data: string | ArrayBufferLike | Blob | ArrayBufferView) {
@@ -118,10 +113,14 @@ export class Router {
         }
     }
 
-    private close(id: string, code: number, reason: string) {
+    private setReadyState(id, state: number) {
         if (this.virtualWebSockets.has(id)) {
             this.virtualWebSockets.get(id).setReadyState(WebSocket.CLOSED);
         }
+    }
+
+    private close(id: string, code: number, reason: string) {
+        this.setReadyState(id, WebSocket.CLOSED);
         if (this.localWebSockets.has(id)) {
             this.localWebSockets.get(id).close(code, reason);
         } else if (this._connector) {
