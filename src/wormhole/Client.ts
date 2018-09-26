@@ -9,19 +9,20 @@ export class Client {
     public readonly dataPipe: WebSocket;
     public readonly cable: Cable;
     private readonly webSockets: Dict<string, Pipe> = new Dict();
-
+    private identified = false;
+    private identifyRunning = false;
     constructor(private readonly uuid: string, ws: WebSocket, onConnection: (ws: WebSocket) => void) {
         const cablePipe = new Pipe(ws, "WOHC");
         this.dataPipe = new Pipe(ws, "WOHD");
-
+        ws.addEventListener("open", () => {
+            this.identified = false;
+            this.identify();
+        });
         this.cable = new Cable(new Tank(cablePipe));
-
-        this.cable.request("identity", { uuid })
-            .catch((e) => void 0);
 
         this.cable.register("open", ({ channel }: { channel: string }): Promise<void> => {
             if (this.webSockets.has(channel)) {
-                return;
+                return new Promise((resolve) => setTimeout(resolve, 0));
             }
             const pipe = new Pipe(this.dataPipe, channel, 32);
             this.webSockets.set(channel, pipe);
@@ -50,6 +51,24 @@ export class Client {
             }
         });
         return pipe;
+    }
+
+    private identify() {
+        if (this.identified || this.identifyRunning) {
+            return;
+        }
+        this.identifyRunning = true;
+        this.cable.request("identity", { uuid: this.uuid })
+            .then(() => {
+                this.identifyRunning = false;
+                this.identified = true;
+            })
+            .catch(() => {
+                this.identifyRunning = false;
+                setTimeout(() => {
+                    this.identify();
+                }, 100);
+            });
     }
 
 }
