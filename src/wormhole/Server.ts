@@ -1,6 +1,7 @@
 import { Cable } from "../cable/Cable";
 import { Pipe } from "../pipe/Pipe";
 import { Dict } from "../polyfill/Dict";
+import WebSocket from "../polyfill/WebSocket";
 import { Router } from "../router/Router";
 
 export class Server {
