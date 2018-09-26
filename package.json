@@ -34,7 +34,7 @@
     "test-phantom": "yarn test-server && karma start --single-run --browsers PhantomJS",
     "test-chrome": "yarn test-server && karma start --single-run --browsers Chrome",
     "test-node": "yarn test-server && nyc mocha --opts mocha.opts",
-    "lint": "tslint -c tslint.json --fix 'src/**/*.ts'",
+    "lint": "tslint -c tslint.json  -p . --fix",
     "codecov": "codecov",
     "prepublishOnly": "yarn build && yarn toc && yarn doc"
   },
