@@ -1,16 +1,15 @@
 import { Cable } from "../cable/Cable";
 import { Pipe } from "../pipe/Pipe";
 import { Dict } from "../polyfill/Dict";
-import WebSocket from "../polyfill/WebSocket";
 import { Router } from "../router/Router";
-import { Tank } from "../tank/Tank";
 
 export class Server {
 
     public readonly router: Router;
 
-    public pipes: Dict<string, { data: Pipe, cable: Pipe }> = new Dict();
-    public buffer: Dict<string, string[]> = new Dict();
+    public clients: Dict<string, { data: Pipe, cable: Pipe }> = new Dict();
+    public buffers: Dict<string, string[]> = new Dict();
+    public channels: Dict<string, { source: Pipe, target?: Pipe }> = new Dict();
 
     constructor() {
         this.router = new Router();
@@ -21,53 +20,76 @@ export class Server {
         const cablePipe = new Pipe(ws, "WOHC");
         const cable = new Cable(cablePipe);
         const dataPipe = new Pipe(ws, "WOHD");
-        dataPipe.addEventListener("message", (e) => {
-            const channel = e.data.substr(0, 32);
-            if (!this.buffer.has(channel)) {
-                this.buffer.set(channel, []);
-            }
-            this.buffer.get(channel).push(e.data.substr(32));
-        });
 
         cable.register("identity", ({ uuid }: { uuid: string }): Promise<void> => {
-            this.pipes.set(uuid, {data: dataPipe, cable: cablePipe});
-            this.router.set(uuid, ws);
+            try {
+                this.clients.set(uuid, { data: dataPipe, cable: cablePipe });
+                this.router.set(uuid, ws);
+            } catch (e) {
+                // ignore
+            }
+            return new Promise((resolve) => setTimeout(resolve, 0));
+        });
+
+        cable.register("close", ({ channel }: { channel: string }): Promise<void> => {
+            const pipes = this.channels.get(channel);
+
+            if (pipes && pipes.source) {
+                pipes.source.close();
+            }
             return new Promise((resolve) => setTimeout(resolve, 0));
         });
 
         cable.register("connect", ({ uuid, channel }: { uuid: string, channel: string }): Promise<void> => {
-            const targetWs = this.router.get(uuid);
-            const connect = () => {
-                const pipes = this.pipes.get(uuid);
-                const targetCablePipe = pipes.cable;
-                const targetDataPipe = pipes.data;
-                const targetCable = new Cable(targetCablePipe);
-                const targetPipe = new Tank(new Pipe(targetDataPipe, channel, 32));
-                const sourcePipe = new Tank(new Pipe(dataPipe, channel, 32));
-
-                targetPipe.onmessage = (event) => {
-                    sourcePipe.send(event.data);
+            try {
+                const targetWs = this.router.get(uuid);
+                const pipes: { source: Pipe, target?: Pipe } = { source: new Pipe(dataPipe, channel, 32) };
+                this.channels.set(channel, pipes);
+                pipes.source.onmessage = (event) => {
+                    if (!this.buffers.has(channel)) {
+                        this.buffers.set(channel, []);
+                    }
+                    this.buffers.get(channel).push(event.data);
                 };
-                sourcePipe.onmessage = (event) => {
-                    targetPipe.send(event.data || event);
+                const connect = () => {
+                    const clients = this.clients.get(uuid);
+                    const targetCablePipe = clients.cable;
+                    const targetDataPipe = clients.data;
+                    const targetCable = new Cable(targetCablePipe);
+                    pipes.target = new Pipe(targetDataPipe, channel, 32);
+                    pipes.target.onmessage = (event) => {
+                        pipes.source.send(event.data);
+                    };
+                    pipes.source.onclose = (event) => {
+                        pipes.target.close();
+                        try {
+                            targetCable.notify("close", { channel });
+                        } catch (e) {
+                            // ignore
+                        }
+                        this.channels.delete(channel);
+
+                    };
+                    targetCable.request("open", { channel })
+                        .then(() => {
+                            const buffer = this.buffers.get(channel) || [];
+                            while (buffer.length) {
+                                pipes.target.send(buffer.shift());
+                            }
+                            pipes.source.onmessage = (event) => {
+                                pipes.target.send(event.data);
+                            };
+
+                        })
+                        .catch((e) => void 0);
+
                 };
-
-                targetCable.request("open", { channel }).catch((e) => console.log("open failed", e));
-                const buffer = this.buffer.get(channel) || [];
-                while (buffer.length) {
-                    targetPipe.send(buffer.shift());
-                }
-
-            };
-            if (targetWs.readyState === WebSocket.OPEN) {
-                connect();
-            } else {
                 targetWs.addEventListener("open", () => {
-                    targetWs.removeEventListener("open", connect);
                     connect();
                 });
+            } catch (e) {
+                // ignore
             }
-
             return new Promise((resolve) => setTimeout(resolve, 0));
         });
     }
