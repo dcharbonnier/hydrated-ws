@@ -7,7 +7,7 @@ import WebSocket from "../polyfill/WebSocket";
 import { Tank } from "../tank/Tank";
 import * as wormhole from "./index";
 
-describe.only("Wormhole", () => {
+describe("Wormhole", () => {
     if (!isNode || !(WebSocket as any).Server) {
         return;
     }
