@@ -12,7 +12,7 @@ describe("EventPolyfill", () => {
 
     it("should reject the initEventMethod", () => {
         expect(() => {
-            new (Event as any)().initCustomEvent();
+            new (Event as any)().initEvent();
         }).not.throw("'Error: initEvent is deprecated");
     });
 

@@ -1,23 +1,31 @@
 export class Dict<K extends string, T> {
 
-    private values: { [key: string]: T } = {};
+    private data: { [key: string]: T } = {};
 
     public get(key: K): T {
-        return this.values[key];
+        return this.data[key];
+    }
+
+    public clear() {
+        return this.data = {};
     }
 
     public set(key: K, value: T) {
-        this.values[key] = value;
+        this.data[key] = value;
     }
 
     public has(key: K) {
-        return this.values[key] !== void 0;
+        return this.data[key] !== void 0;
     }
 
     public delete(key: K) {
-        delete this.values[key];
+        delete this.data[key];
     }
     public keys() {
-        return Object.keys(this.values);
+        return Object.keys(this.data);
+    }
+
+    public values(): T[] {
+        return this.keys().map((key) => this.data[key]);
     }
 }

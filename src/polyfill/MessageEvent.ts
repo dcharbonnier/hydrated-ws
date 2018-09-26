@@ -10,6 +10,7 @@ class MessageEventPolyfill extends Event implements MessageEvent {
 
     constructor(type: string, eventInitDict?: MessageEventInit) {
         super(type);
+        eventInitDict = eventInitDict || {};
         this.data = eventInitDict.data;
     }
 
