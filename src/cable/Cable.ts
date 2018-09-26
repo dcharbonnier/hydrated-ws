@@ -170,7 +170,12 @@ export class Cable extends Shell {
         if (id !== null) {
             message.id = id;
         }
-        this.ws.send(JSON.stringify(message));
+        try {
+            this.ws.send(JSON.stringify(message));
+        } catch (e) {
+            // ignore
+        }
+
     }
 
     private sendError(id: string, code: number, messageOrError: string | Error) {
