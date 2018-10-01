@@ -19,6 +19,11 @@ export class Router {
         this.localWebSockets.keys().forEach((key) => this.delete(key));
     }
 
+    public destroy() {
+        this.localWebSockets.values().forEach((ws) => ws.close());
+        this.clear();
+    }
+
     public set connector(value: IRouterConnector) {
         if (this._connector) {
             this._connector.onBroadcast = void 0;

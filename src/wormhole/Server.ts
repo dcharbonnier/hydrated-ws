@@ -14,6 +14,23 @@ export class Server {
 
     constructor() {
         this.router = new Router();
+        this.channels.values()
+            .forEach(({ source, target }: { source: Pipe, target?: Pipe }) => {
+                if (source) { source.close(); }
+                if (target) { target.close(); }
+            });
+        this.clients.values()
+            .forEach(({ data, cable }: { data: Pipe, cable?: Pipe }) => {
+                if (data) { data.close(); }
+                if (cable) { cable.close(); }
+            });
+        this.clients = void 0;
+        this.buffers = void 0;
+        this.channels = void 0;
+    }
+
+    public destroy() {
+        this.router.destroy();
     }
 
     public addWebSocket(ws: WebSocket) {
