@@ -14,6 +14,10 @@ export class Server {
 
     constructor() {
         this.router = new Router();
+    }
+
+    public destroy() {
+        this.router.destroy();
         this.channels.values()
             .forEach(({ source, target }: { source: Pipe, target?: Pipe }) => {
                 if (source) { source.close(); }
@@ -27,10 +31,6 @@ export class Server {
         this.clients = void 0;
         this.buffers = void 0;
         this.channels = void 0;
-    }
-
-    public destroy() {
-        this.router.destroy();
     }
 
     public addWebSocket(ws: WebSocket) {
