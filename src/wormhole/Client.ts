@@ -16,6 +16,7 @@ export class Client {
         this.dataPipe = new Pipe(ws, "WOHD");
         ws.addEventListener("open", () => {
             this.identified = false;
+            this.identifyRunning = false;
             this.identify();
         });
         this.cable = new Cable(new Tank(cablePipe));
