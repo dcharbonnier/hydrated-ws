@@ -93,18 +93,53 @@ describe("Waterfall", () => {
 
     });
 
+    describe("when using an url generator", () => {
+        let testCase: string;
+        let urlGeneratorCall: number = 0;
+        beforeEach(async () => {
+
+            urlGeneratorCall = 0;
+            const urlGenerator = (attemp: number, ws: Waterfall) => {
+                testCase = rnd();
+                urlGeneratorCall++;
+                return `ws://localtest.me:4752/${testCase}`;
+            };
+            ws = new Waterfall(urlGenerator);
+            expect(ws.readyState).to.equal(WebSocket.CONNECTING);
+            await expectEventually(() => ws.readyState === WebSocket.OPEN,
+                "The WebSocket should be open");
+        });
+
+        it("should call the url generator when reconnecting", (done) => {
+            const firstTest = testCase;
+            ws.send("disconnect");
+            ws.addEventListener("connecting", async () => {
+                await sleep(100);
+                const secondTest = testCase;
+                expect(firstTest).to.not.equal(secondTest);
+                expect(urlGeneratorCall).to.equal(2);
+                expect((await supervisor.logs(firstTest)).map((l) => l[1]))
+                .to.deep.equal(["connect", "disconnect", "close"]);
+                expect((await supervisor.logs(secondTest)).map((l) => l[1]))
+                .to.deep.equal(["connect"]);
+                done();
+            });
+
+        });
+    });
+
     describe("when disconnect with emitClose option", () => {
         let testCase: string;
         beforeEach(async () => {
             testCase = rnd();
-            ws = new Waterfall(`ws://localtest.me:4752/${testCase}`, null, {emitClose: true});
+            ws = new Waterfall(`ws://localtest.me:4752/${testCase}`, null, { emitClose: true });
             expect(ws.readyState).to.equal(WebSocket.CONNECTING);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be open");
         });
         it("should receive a close event if emitClose is true", (done) => {
-                ws.onclose = () => done();
-                ws.send("disconnect");
+            ws.onclose = () => done();
+            ws.send("disconnect");
         });
     });
 
