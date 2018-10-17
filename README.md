@@ -19,8 +19,8 @@ path over Websocket on the server and the browser.
 All components are seen from the outside world like a WebSocket allowing
 you to integrate is on any existing project.
 
+- [Api documentation](http://doc.hydrated.ws/)
 <!-- toc -->
-
 - [Examples](#examples)
     + [Waterfall](#waterfall)
     + [Pipe](#pipe)
@@ -167,7 +167,8 @@ lerna
 - [ ] Fizz - Wrap your WebSocket interface for more fun with `once`,
 `on`, `Promises`
 - [ ] Bottling - A json stream with filtering
-- [ ] Url change (WIP)
+- [x] Wormhole - Client to client connection
+- [x] Proxy
 - [ ] 100% test coverage
 - [ ] Your idea here, send an issue, provide a PR
 
