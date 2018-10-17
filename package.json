@@ -90,7 +90,7 @@
     "puppeteer": "^1.0.0",
     "ts-node": "^7.0.0",
     "tslint": "^5.9.1",
-    "typedoc": "^0.12.0",
+    "typedoc": "^0.13.0",
     "typescript": "^2.7.1",
     "ws": "^6.0.0"
   }
