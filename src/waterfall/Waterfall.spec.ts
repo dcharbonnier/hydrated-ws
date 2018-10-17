@@ -64,6 +64,55 @@ describe("Waterfall", () => {
         });
 
     });
+
+    describe("when using a factory", () => {
+        let factoryCall: boolean = false;
+        beforeEach(async () => {
+            factoryCall = false;
+            ws = new Waterfall("ws://localtest.me:4752", null, {
+                factory: (url: string) => {
+                    factoryCall = true;
+                    return new WebSocket(url);
+                },
+            });
+            expect(ws.readyState).to.equal(WebSocket.CONNECTING);
+            await expectEventually(() => ws.readyState === WebSocket.OPEN,
+                "The WebSocket should be open");
+        });
+
+        it("should call the factory", () => {
+            expect(factoryCall).to.be.true;
+        });
+
+    });
+
+    describe("when using a retryPolicy", () => {
+        let retryPolicyCall: boolean;
+
+        beforeEach(async () => {
+            retryPolicyCall = false;
+            ws = new Waterfall("ws://localtest.me:4752", null, {
+                retryPolicy: () => {
+                    retryPolicyCall = true;
+                    return null;
+                },
+            });
+            expect(ws.readyState).to.equal(WebSocket.CONNECTING);
+            await expectEventually(() => ws.readyState === WebSocket.OPEN,
+                "The WebSocket should be open");
+        });
+
+        it("should close then the retry policy return null", (done) => {
+            ws.send("disconnect");
+            ws.onclose = () => {
+                expect(retryPolicyCall).to.be.true;
+                done();
+            };
+
+        });
+
+    });
+
     describe("when the url change", () => {
         let testCase: string;
         beforeEach(async () => {
@@ -119,9 +168,9 @@ describe("Waterfall", () => {
                 expect(firstTest).to.not.equal(secondTest);
                 expect(urlGeneratorCall).to.equal(2);
                 expect((await supervisor.logs(firstTest)).map((l) => l[1]))
-                .to.deep.equal(["connect", "disconnect", "close"]);
+                    .to.deep.equal(["connect", "disconnect", "close"]);
                 expect((await supervisor.logs(secondTest)).map((l) => l[1]))
-                .to.deep.equal(["connect"]);
+                    .to.deep.equal(["connect"]);
                 done();
             });
 
