@@ -184,8 +184,11 @@ export class Waterfall extends Shell {
         this.ws.onerror = this.dispatchEvent.bind(this);
     }
 
-    private forceClose(): void {
+    private forceClose(silent: boolean = false): void {
         try {
+            if (silent) {
+                this.unbindWebSocket();
+            }
             this.ws.close();
         } catch {
             // ignore
@@ -195,7 +198,7 @@ export class Waterfall extends Shell {
     private setupWebSocketTimeout(): void {
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
-            this.forceClose();
+            this.forceClose(true);
             const timeout = this.retryPolicy(this.attempts + 1, this);
             if (timeout === null) {
                 this._readyState = WebSocket.CLOSED;
@@ -210,9 +213,9 @@ export class Waterfall extends Shell {
         if (this.closing) {
             return;
         }
-        this._url = this._urlGenerator(this.attempts, this);
         this.attempts++;
-        this.unbindWebSocket();
+        this._url = this._urlGenerator(this.attempts, this);
+        this.forceClose(true);
         this.ws = this.webSocketFactory();
         (this.ws as any).binaryType = this.binaryType || this.ws.binaryType;
         this.setupWebSocketTimeout();
