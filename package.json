@@ -1,6 +1,6 @@
 {
   "name": "hydrated-ws",
-  "version": "0.8.0-alpha.7",
+  "version": "0.8.0",
   "license": "Apache-2.0",
   "description": "The toolbox for websockets clients, reconnecting websockets, channels muxing websockets, authentication, json-rpc over websockets",
   "keywords": [
