@@ -66,6 +66,15 @@ export class Waterfall extends Shell {
     }
 
     /**
+     * Reset the connection (close/open)
+     */
+    public reset() {
+        if (this.ws) {
+            this.ws.close(1000);
+        }
+    }
+
+    /**
      * The current state of the connection; this is one of the Ready state constants. **Read only.**
      */
     public get readyState(): number {
