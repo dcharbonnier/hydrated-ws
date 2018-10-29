@@ -7,6 +7,7 @@ class MessageEventPolyfill extends Event implements MessageEvent {
     public readonly origin: string;
     public readonly ports: any;
     public readonly source: Window;
+    public readonly lastEventId: string;
 
     constructor(type: string, eventInitDict?: MessageEventInit) {
         super(type);

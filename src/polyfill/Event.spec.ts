@@ -21,9 +21,4 @@ describe("EventPolyfill", () => {
         expect(event.type).to.equal("test");
     });
 
-    it("should return an empty deepPath", () => {
-        const event = new Event("test");
-        expect(event.deepPath()).to.deep.equal([]);
-    });
-
 });
