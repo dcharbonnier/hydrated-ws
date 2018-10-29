@@ -163,7 +163,7 @@ export abstract class Shell implements WebSocket {
      * You can send any JavaScript typed array object as a binary frame; its binary data contents are queued in the
      * buffer, increasing the value of bufferedAmount by the requisite number of bytes.
      */
-    public send(data: USVString | ArrayBuffer | Blob | ArrayBufferView): void {
+    public send(data: string | ArrayBuffer | Blob | ArrayBufferView): void {
         if (this.ws.readyState !== WebSocket.OPEN) {
             const err = new Error(
                 `WebSocket is not open ws is ${this.ws.readyState}, local is ${this.readyState}`,

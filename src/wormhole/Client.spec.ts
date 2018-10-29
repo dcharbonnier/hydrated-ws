@@ -50,10 +50,10 @@ describe("Wormhole client", () => {
         cable.register("identity", (data): Promise<void> => {
             if (count === 1) {
                 done();
-                return new Promise((resolve, reject) => setTimeout(resolve(), 0));
+                return new Promise((resolve, reject) => setTimeout(() => resolve(), 0));
             }
             count++;
-            return new Promise((resolve, reject) => setTimeout(reject(new Error("fail")), 0));
+            return new Promise((resolve, reject) => setTimeout(() => reject(new Error("fail")), 0));
         });
 
     });

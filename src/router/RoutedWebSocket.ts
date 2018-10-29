@@ -17,7 +17,7 @@ export class RoutedWebSocket extends Shell {
     private virtualReadyState: number = null;
 
     constructor(
-        private readonly routerSend: (data: USVString | ArrayBuffer | Blob | ArrayBufferView) => void,
+        private readonly routerSend: (data: string | ArrayBuffer | Blob | ArrayBufferView) => void,
         private readonly routerClose: (code: number, reason: string) => void,
     ) {
         super();
@@ -40,7 +40,7 @@ export class RoutedWebSocket extends Shell {
         }
     }
 
-    public send(data: USVString | ArrayBuffer | Blob | ArrayBufferView): void {
+    public send(data: string | ArrayBuffer | Blob | ArrayBufferView): void {
         this.routerSend(data);
     }
 

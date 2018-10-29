@@ -24,6 +24,7 @@ class EventPolyfill implements Event {
     public readonly timeStamp: number;
     public readonly scoped: boolean;
     public readonly type: string;
+    public readonly composed: boolean = false;
 
     constructor(type: string) {
         this.type = type;
@@ -34,19 +35,19 @@ class EventPolyfill implements Event {
     }
 
     public preventDefault(): void {
-        // unimplemented
+        throw new Error("Unimplemented");
+    }
+
+    public composedPath(): EventTarget[] {
+        throw new Error("Unimplemented");
     }
 
     public stopImmediatePropagation(): void {
-        // unimplemented
+        throw new Error("Unimplemented");
     }
 
     public stopPropagation(): void {
-        // unimplemented
-    }
-
-    public deepPath(): EventTarget[] {
-        return [];
+        throw new Error("Unimplemented");
     }
 
 }
