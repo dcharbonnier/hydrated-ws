@@ -187,7 +187,10 @@ describe("Waterfall", () => {
                 "The WebSocket should be open");
         });
         it("should receive a close event if emitClose is true", (done) => {
-            ws.onclose = () => done();
+            ws.onclose = () => {
+                ws.onclose = null;
+                done();
+            };
             ws.send("disconnect");
         });
     });
