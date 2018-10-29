@@ -66,6 +66,15 @@ export class Waterfall extends Shell {
     }
 
     /**
+     * Reset the connection (close/open)
+     */
+    public reset() {
+        if (this.ws) {
+            this.ws.close(1000);
+        }
+    }
+
+    /**
      * The current state of the connection; this is one of the Ready state constants. **Read only.**
      */
     public get readyState(): number {
@@ -113,7 +122,7 @@ export class Waterfall extends Shell {
         this.ws.close(code, reason);
     }
 
-    private set urlGenerator( value: string | UrlGenerator) {
+    private set urlGenerator(value: string | UrlGenerator) {
         if (typeof value === "string") {
             if (!value.match(REGEXP_URL)) {
                 throw new TypeError("Invalid url");
@@ -184,25 +193,32 @@ export class Waterfall extends Shell {
         this.ws.onerror = this.dispatchEvent.bind(this);
     }
 
-    private forceClose(): void {
+    private forceClose(silent: boolean = false): void {
         try {
+            if (silent) {
+                this.unbindWebSocket();
+            }
             this.ws.close();
         } catch {
             // ignore
         }
     }
 
+    private failed(): void {
+        this.forceClose(true);
+        const timeout = this.retryPolicy(this.attempts + 1, this);
+        if (timeout === null) {
+            this._readyState = WebSocket.CLOSED;
+            this.dispatchEvent(new CloseEvent("close", { code: 4000, reason: "Connect timeout" }));
+        } else {
+            setTimeout(() => this.open(), timeout);
+        }
+    }
+
     private setupWebSocketTimeout(): void {
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
-            this.forceClose();
-            const timeout = this.retryPolicy(this.attempts + 1, this);
-            if (timeout === null) {
-                this._readyState = WebSocket.CLOSED;
-                this.dispatchEvent(new CloseEvent("close", { code: 4000, reason: "Connect timeout" }));
-            } else {
-                setTimeout(() => this.open(), timeout);
-            }
+            this.failed();
         }, this.connectionTimeout);
     }
 
@@ -210,14 +226,17 @@ export class Waterfall extends Shell {
         if (this.closing) {
             return;
         }
-        this._url = this._urlGenerator(this.attempts, this);
         this.attempts++;
-        this.unbindWebSocket();
-        this.ws = this.webSocketFactory();
-        (this.ws as any).binaryType = this.binaryType || this.ws.binaryType;
-        this.setupWebSocketTimeout();
-        this.bindWebSocket();
-
+        this._url = this._urlGenerator(this.attempts, this);
+        this.forceClose(true);
+        try {
+            this.ws = this.webSocketFactory();
+            (this.ws as any).binaryType = this.binaryType || this.ws.binaryType;
+            this.setupWebSocketTimeout();
+            this.bindWebSocket();
+        } catch (e) {
+            this.failed();
+        }
     }
 
 }
