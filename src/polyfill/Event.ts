@@ -35,19 +35,19 @@ class EventPolyfill implements Event {
     }
 
     public preventDefault(): void {
-        // unimplemented
+        throw new Error("Unimplemented");
     }
 
     public composedPath(): EventTarget[] {
-        return [];
+        throw new Error("Unimplemented");
     }
 
     public stopImmediatePropagation(): void {
-        // unimplemented
+        throw new Error("Unimplemented");
     }
 
     public stopPropagation(): void {
-        // unimplemented
+        throw new Error("Unimplemented");
     }
 
 }

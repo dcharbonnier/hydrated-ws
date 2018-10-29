@@ -21,4 +21,19 @@ describe("EventPolyfill", () => {
         expect(event.type).to.equal("test");
     });
 
+    it("should throw for unimplemented methods method", () => {
+        expect(() => {
+            new (Event as any)().preventDefault();
+        }).to.throw("Unimplemented");
+        expect(() => {
+            new (Event as any)().composedPath();
+        }).to.throw("Unimplemented");
+        expect(() => {
+            new (Event as any)().stopImmediatePropagation();
+        }).to.throw("Unimplemented");
+        expect(() => {
+            new (Event as any)().stopPropagation();
+        }).to.throw("Unimplemented");
+    });
+
 });
