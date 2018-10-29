@@ -25,8 +25,16 @@ describe("Pipe", () => {
 
     describe("constructor", () => {
         it("should throw an error if the channel parameter is invalid", () => {
-            ["", 6, NaN, [], {}, "XXXXXXXXXX"].forEach((channel) => {
+            ["", 6, NaN, [], {}, "XXXXX"].forEach((channel) => {
                 expect(() => new Pipe(ws, channel as any)).to.throw();
+            });
+        });
+        it("should support a prefix length", () => {
+            ["a", "aaaaaaaaaa"].forEach((channel) => {
+                expect(() => new Pipe(ws, channel as any, 10)).to.not.throw();
+            });
+            ["aaaaaaaaaaa"].forEach((channel) => {
+                expect(() => new Pipe(ws, channel as any, 10)).to.throw();
             });
         });
     });

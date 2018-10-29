@@ -1,51 +1,8 @@
-import {Dict} from "./polyfill/Dict";
-import Event from "./polyfill/Event";
+import IHydratedWebSocketEventMap from "./IHydratedWebSocketEventMap";
+import { Dict } from "./polyfill/Dict";
 import WebSocket from "./polyfill/WebSocket";
 
 export abstract class Shell implements WebSocket {
-
-    /** The connection is not yet open. */
-    public readonly CONNECTING = WebSocket.CONNECTING;
-    /**  The connection is open and ready to communicate. */
-    public readonly OPEN = WebSocket.OPEN;
-    /**  The connection is in the process of closing. */
-    public readonly CLOSING = WebSocket.CLOSING;
-    /**  The connection is closed or couldn't be opened. */
-    public readonly CLOSED = WebSocket.CLOSED;
-
-    /**
-     * A string indicating the type of binary data being transmitted by the connection.
-     * This should be either "blob" if DOM Blob objects are being used or "arraybuffer"
-     * if ArrayBuffer objects are being used.
-     */
-    public binaryType: "blob" | "arraybuffer";
-
-    protected closing: boolean = false;
-    protected ws: WebSocket;
-    protected _readyState: number = WebSocket.CONNECTING;
-
-    private readonly forwardListener: (evt: Event) => boolean;
-    private _onerror: (ev: Event) => any;
-    private _onmessage: (ev: MessageEvent) => any;
-    private _onopen: (ev: Event) => any;
-    private _onclose: (ev: CloseEvent) => any;
-    protected listenersDict: Dict<keyof WebSocketEventMap,
-        Array<{
-            listener: (this: WebSocket,
-                       ev: WebSocketEventMap[keyof WebSocketEventMap]) => any,
-            useCapture?: boolean,
-        }>> = new Dict();
-
-    constructor(ws?: WebSocket) {
-        if (!this.dispatchEvent) {
-            throw new TypeError("Failed to construct. Please use the 'new' operator");
-        }
-        this.forwardListener = this.dispatchEvent.bind(this);
-        if (ws) {
-            this.ws = ws;
-            this.forwardEvents();
-        }
-    }
 
     /**
      * An event listener to be called when the WebSocket connection's **readyState** changes to **CLOSED**.
@@ -130,6 +87,49 @@ export abstract class Shell implements WebSocket {
         return this.ws.protocol;
     }
 
+    /** The connection is not yet open. */
+    public readonly CONNECTING = WebSocket.CONNECTING;
+    /**  The connection is open and ready to communicate. */
+    public readonly OPEN = WebSocket.OPEN;
+    /**  The connection is in the process of closing. */
+    public readonly CLOSING = WebSocket.CLOSING;
+    /**  The connection is closed or couldn't be opened. */
+    public readonly CLOSED = WebSocket.CLOSED;
+
+    /**
+     * A string indicating the type of binary data being transmitted by the connection.
+     * This should be either "blob" if DOM Blob objects are being used or "arraybuffer"
+     * if ArrayBuffer objects are being used.
+     */
+    public binaryType: "blob" | "arraybuffer";
+
+    protected closing: boolean = false;
+    protected ws: WebSocket;
+    protected _readyState: number = WebSocket.CONNECTING;
+    protected listenersDict: Dict<keyof IHydratedWebSocketEventMap,
+        Array<{
+            listener: (this: WebSocket,
+                       ev: IHydratedWebSocketEventMap[keyof IHydratedWebSocketEventMap]) => any,
+            useCapture?: boolean,
+        }>> = new Dict();
+
+    private readonly forwardListener: (evt: Event) => boolean;
+    private _onerror: (ev: Event) => any;
+    private _onmessage: (ev: MessageEvent) => any;
+    private _onopen: (ev: Event) => any;
+    private _onclose: (ev: CloseEvent) => any;
+
+    constructor(ws?: WebSocket) {
+        if (!this.dispatchEvent) {
+            throw new TypeError("Failed to construct. Please use the 'new' operator");
+        }
+        this.forwardListener = this.dispatchEvent.bind(this);
+        if (ws) {
+            this.ws = ws;
+            this.forwardEvents();
+        }
+    }
+
     /**
      * Closes the WebSocket connection or connection attempt, if any.
      * If the connection is already CLOSED, this method does nothing.
@@ -163,7 +163,7 @@ export abstract class Shell implements WebSocket {
      * You can send any JavaScript typed array object as a binary frame; its binary data contents are queued in the
      * buffer, increasing the value of bufferedAmount by the requisite number of bytes.
      */
-    public send(data: USVString | ArrayBuffer | Blob | ArrayBufferView): void {
+    public send(data: string | ArrayBuffer | Blob | ArrayBufferView): void {
         if (this.ws.readyState !== WebSocket.OPEN) {
             const err = new Error(
                 `WebSocket is not open ws is ${this.ws.readyState}, local is ${this.readyState}`,
@@ -176,7 +176,7 @@ export abstract class Shell implements WebSocket {
     /**
      * Register an event handler of a specific event type on the EventTarget.
      * @param {K} A case-sensitive string representing the event type to listen for.
-     * @param {(ev: WebSocketEventMap[K]) => any} The object which receives a notification
+     * @param {(ev: IHydratedWebSocketEventMap[K]) => any} The object which receives a notification
      * (an object that implements the Event interface) when an event of the specified type occurs.
      * This must be an object implementing the EventListener interface, or a JavaScript function.
      * @param {boolean} A Boolean indicating whether events of this type will be dispatched to the registered
@@ -188,30 +188,32 @@ export abstract class Shell implements WebSocket {
      * See DOM Level 3 Events and JavaScript Event order for a detailed explanation.
      * If not specified, useCapture defaults to false.
      */
-    public addEventListener<K extends keyof WebSocketEventMap>(type: K,
-                                                               listener: (this: WebSocket,
-                                                                          ev: WebSocketEventMap[K]) => any,
-                                                               useCapture?: boolean): void {
+    public addEventListener<K extends keyof IHydratedWebSocketEventMap>(type: K,
+                                                                        listener:
+                                                                        (this: WebSocket,
+                                                                         ev: IHydratedWebSocketEventMap[K]) => any,
+                                                                        useCapture?: boolean): void {
         let listeners = this.listenersDict.get(type);
         if (!listeners) {
             listeners = [];
             this.listenersDict.set(type, listeners);
         }
-        listeners.push({listener, useCapture});
+        listeners.push({ listener, useCapture });
     }
 
     /**
      * Removes an event listener from the EventTarget.
      * @param {K} A string which specifies the type of event for which to remove an event listener.
-     * @param {(ev: WebSocketEventMap[K]) => any} The EventListener
+     * @param {(ev: IHydratedWebSocketEventMap[K]) => any} The EventListener
      * function of the event handler to remove from the event target.
      * @param {boolean} Specifies whether the EventListener to be removed is registered as a capturing
      * listener or not. If this parameter is absent, a default value of false is assumed.
      */
-    public removeEventListener<K extends keyof WebSocketEventMap>(type: K,
-                                                                  listener: (this: WebSocket,
-                                                                             ev: WebSocketEventMap[K]) => any,
-                                                                  useCapture?: boolean): void {
+    public removeEventListener<K extends keyof IHydratedWebSocketEventMap>(type: K,
+                                                                           listener: (
+                                                                               this: WebSocket,
+                                                                               ev: IHydratedWebSocketEventMap[K]) => any,
+                                                                           useCapture?: boolean): void {
         const listeners = this.listenersDict.get(type);
         if (listeners) {
             this.listenersDict.set(
@@ -232,11 +234,11 @@ export abstract class Shell implements WebSocket {
         if (typeof method === "function") {
             method.call(this, evt);
         }
-        return (this.listenersDict.get(evt.type as keyof WebSocketEventMap) || [])
+        return (this.listenersDict.get(evt.type as keyof IHydratedWebSocketEventMap) || [])
             .some(({listener}) => listener.call(this, evt) === false) === void 0;
     }
 
-    protected forwardEvents<K extends keyof WebSocketEventMap>(list?: K[]) {
+    protected forwardEvents<K extends keyof IHydratedWebSocketEventMap>(list?: K[]) {
         (list || ["close", "message", "open"] as K[]).forEach((event: K): void =>
             this.ws.addEventListener(event, this.forwardListener),
         );

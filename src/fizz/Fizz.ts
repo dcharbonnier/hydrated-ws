@@ -18,7 +18,7 @@ export class Fizz extends Shell implements EventEmitter {
                 this.addEventListener("open", () => listener());
                 break;
             default:
-                console.log("not impelmented");
+                console.log("not implemented");
         }
         return this;
     }

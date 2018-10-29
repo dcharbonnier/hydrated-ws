@@ -1,12 +1,22 @@
 {
-    "defaultSeverity": "error",
+    "defaultSeverity": "warn",
+    "lintOptions": {
+        "project": "tsconfig.json",
+        "typeCheck": true
+    },
     "extends": [
         "tslint:recommended"
     ],
     "jsRules": {},
     "rules": {
-        "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
-        "no-bitwise": false
+        "variable-name": [
+            true,
+            "ban-keywords",
+            "check-format",
+            "allow-leading-underscore"
+        ],
+        "no-bitwise": false,
+        "no-floating-promises": true
     },
     "rulesDirectory": []
 }

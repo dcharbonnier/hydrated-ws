@@ -39,7 +39,7 @@ export class Tank extends Shell {
      * You can send any JavaScript typed array object as a binary frame; its binary data contents are queued in the
      * buffer, increasing the value of bufferedAmount by the requisite number of bytes.
      */
-    public send(data: USVString| ArrayBuffer | Blob | ArrayBufferView) {
+    public send(data: string| ArrayBuffer | Blob | ArrayBufferView) {
         if (!data) { return; }
         this.buffer.unshift(data);
         this.flush();

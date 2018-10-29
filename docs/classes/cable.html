@@ -1030,10 +1030,22 @@ img { max-width: 100%; }
 			<a href="cableerror.html" class="tsd-kind-icon">Cable<wbr>Error</a>
 		</li>
 		<li class=" tsd-kind-class">
+			<a href="client.html" class="tsd-kind-icon">Client</a>
+		</li>
+		<li class=" tsd-kind-class">
 			<a href="dam.html" class="tsd-kind-icon">Dam</a>
 		</li>
 		<li class=" tsd-kind-class">
 			<a href="pipe.html" class="tsd-kind-icon">Pipe</a>
+		</li>
+		<li class=" tsd-kind-class">
+			<a href="routedwebsocket.html" class="tsd-kind-icon">Routed<wbr>Web<wbr>Socket</a>
+		</li>
+		<li class=" tsd-kind-class">
+			<a href="router.html" class="tsd-kind-icon">Router</a>
+		</li>
+		<li class=" tsd-kind-class">
+			<a href="server.html" class="tsd-kind-icon">Server</a>
 		</li>
 		<li class=" tsd-kind-class">
 			<a href="shell.html" class="tsd-kind-icon">Shell</a>
@@ -1045,7 +1057,16 @@ img { max-width: 100%; }
 			<a href="waterfall.html" class="tsd-kind-icon">Waterfall</a>
 		</li>
 		<li class=" tsd-kind-interface">
+			<a href="../interfaces/ihydratedwebsocketeventmap.html" class="tsd-kind-icon">IHydrated<wbr>Web<wbr>Socket<wbr>Event<wbr>Map</a>
+		</li>
+		<li class=" tsd-kind-interface">
+			<a href="../interfaces/irouterconnector.html" class="tsd-kind-icon">IRouter<wbr>Connector</a>
+		</li>
+		<li class=" tsd-kind-interface">
 			<a href="../interfaces/iwaterfalloptions.html" class="tsd-kind-icon">IWaterfall<wbr>Options</a>
+		</li>
+		<li class=" tsd-kind-type-alias">
+			<a href="../index.html#urlgenerator" class="tsd-kind-icon">Url<wbr>Generator</a>
 		</li>
 		<li class=" tsd-kind-variable">
 			<a href="../index.html#regexp_url" class="tsd-kind-icon">REGEXP_<wbr>URL</a>
@@ -1070,7 +1091,7 @@ img { max-width: 100%; }
 				you can define methods on both sides of the cable and call the remote methods</p>
 				<dl class="tsd-comment-tags">
 					<dt>example</dt>
-					<dd><pre><code class="lang-typescript">
+					<dd><pre><code class="language-typescript">
 <span class="hljs-comment">// Client 1</span>
 <span class="hljs-keyword">const</span> cable = <span class="hljs-keyword">new</span> Cable(ws);
 cable.register(<span class="hljs-string">"ping"</span>, <span class="hljs-keyword">async</span> () =&gt; {
@@ -1091,8 +1112,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Implementation error on the server"</span>);
   }
   <span class="hljs-keyword">throw</span> e;
-}
-</code></pre>
+}</code></pre>
 					</dd>
 				</dl>
 			</div>
@@ -1194,7 +1214,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 						<aside class="tsd-sources">
 							<p>Overrides <a href="shell.html">Shell</a>.<a href="shell.html#constructor">constructor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/cable/Cable.ts#L97">cable/Cable.ts:97</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/cable/Cable.ts#L97">cable/Cable.ts:97</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1224,7 +1244,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#closed">CLOSED</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L14">Shell.ts:14</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L14">Shell.ts:14</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1240,7 +1260,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#closing">CLOSING</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L12">Shell.ts:12</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L12">Shell.ts:12</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1256,7 +1276,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#connecting">CONNECTING</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L8">Shell.ts:8</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L8">Shell.ts:8</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1272,7 +1292,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#open">OPEN</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L10">Shell.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L10">Shell.ts:10</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1288,7 +1308,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#_readystate">_readyState</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L25">Shell.ts:25</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L25">Shell.ts:25</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1299,7 +1319,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#binarytype">binaryType</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L21">Shell.ts:21</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L21">Shell.ts:21</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1317,7 +1337,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#closing-1">closing</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L23">Shell.ts:23</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L23">Shell.ts:23</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1328,7 +1348,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#ws">ws</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L24">Shell.ts:24</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L24">Shell.ts:24</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1338,7 +1358,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<div class="tsd-signature tsd-kind-icon">INTERNAL_<wbr>ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32603</span><span class="tsd-signature-symbol"> =&nbsp;-32603</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/cable/Cable.ts#L70">cable/Cable.ts:70</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/cable/Cable.ts#L70">cable/Cable.ts:70</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1353,7 +1373,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<div class="tsd-signature tsd-kind-icon">INVALID_<wbr>CLIENT_<wbr>PARAMS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32603</span><span class="tsd-signature-symbol"> =&nbsp;-32603</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/cable/Cable.ts#L90">cable/Cable.ts:90</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/cable/Cable.ts#L90">cable/Cable.ts:90</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1368,7 +1388,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<div class="tsd-signature tsd-kind-icon">INVALID_<wbr>PARAMS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32602</span><span class="tsd-signature-symbol"> =&nbsp;-32602</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/cable/Cable.ts#L65">cable/Cable.ts:65</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/cable/Cable.ts#L65">cable/Cable.ts:65</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1383,7 +1403,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<div class="tsd-signature tsd-kind-icon">INVALID_<wbr>REQUEST<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32600</span><span class="tsd-signature-symbol"> =&nbsp;-32600</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/cable/Cable.ts#L55">cable/Cable.ts:55</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/cable/Cable.ts#L55">cable/Cable.ts:55</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1398,7 +1418,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<div class="tsd-signature tsd-kind-icon">METHOD_<wbr>NOT_<wbr>FOUND<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32601</span><span class="tsd-signature-symbol"> =&nbsp;-32601</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/cable/Cable.ts#L60">cable/Cable.ts:60</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/cable/Cable.ts#L60">cable/Cable.ts:60</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1413,7 +1433,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<div class="tsd-signature tsd-kind-icon">PARSE_<wbr>ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32700</span><span class="tsd-signature-symbol"> =&nbsp;-32700</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/cable/Cable.ts#L50">cable/Cable.ts:50</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/cable/Cable.ts#L50">cable/Cable.ts:50</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1429,7 +1449,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<div class="tsd-signature tsd-kind-icon">SERVER_<wbr>ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32000</span><span class="tsd-signature-symbol"> =&nbsp;-32000</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/cable/Cable.ts#L75">cable/Cable.ts:75</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/cable/Cable.ts#L75">cable/Cable.ts:75</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1444,7 +1464,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<div class="tsd-signature tsd-kind-icon">TIMEOUT_<wbr>ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32001</span><span class="tsd-signature-symbol"> =&nbsp;-32001</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/cable/Cable.ts#L80">cable/Cable.ts:80</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/cable/Cable.ts#L80">cable/Cable.ts:80</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1459,7 +1479,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<div class="tsd-signature tsd-kind-icon">UNKNOWN_<wbr>REQUEST<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">-32002</span><span class="tsd-signature-symbol"> =&nbsp;-32002</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/cable/Cable.ts#L85">cable/Cable.ts:85</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/cable/Cable.ts#L85">cable/Cable.ts:85</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1478,7 +1498,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#bufferedamount">bufferedAmount</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L117">Shell.ts:117</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L117">Shell.ts:117</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1496,7 +1516,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#extensions">extensions</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L125">Shell.ts:125</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L125">Shell.ts:125</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1513,8 +1533,8 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onclose">onclose</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L54">Shell.ts:54</a></li>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L58">Shell.ts:58</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L54">Shell.ts:54</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L58">Shell.ts:58</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1531,8 +1551,8 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onerror">onerror</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L65">Shell.ts:65</a></li>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L69">Shell.ts:69</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L65">Shell.ts:65</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L69">Shell.ts:69</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1548,8 +1568,8 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onmessage">onmessage</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L77">Shell.ts:77</a></li>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L81">Shell.ts:81</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L77">Shell.ts:77</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L81">Shell.ts:81</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1566,8 +1586,8 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onopen">onopen</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L90">Shell.ts:90</a></li>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L94">Shell.ts:94</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L90">Shell.ts:90</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L94">Shell.ts:94</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1585,7 +1605,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#protocol">protocol</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L129">Shell.ts:129</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L129">Shell.ts:129</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1596,7 +1616,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#readystate">readyState</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L101">Shell.ts:101</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L101">Shell.ts:101</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1612,7 +1632,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#url">url</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L108">Shell.ts:108</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L108">Shell.ts:108</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1635,7 +1655,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#addeventlistener">addEventListener</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L191">Shell.ts:191</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L191">Shell.ts:191</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1646,7 +1666,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
 						<ul class="tsd-type-parameters">
 							<li>
-								<h4>K<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">keyof WebSocketEventMap</span></h4>
+								<h4>K<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">keyof IHydratedWebSocketEventMap</span></h4>
 							</li>
 						</ul>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1659,7 +1679,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 								<ul class="tsd-parameters">
 									<li class="tsd-parameter-siganture">
 										<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WebSocket</span>, ev<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WebSocketEventMap[K]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WebSocket</span>, ev<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IHydratedWebSocketEventMap[K]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
 										</ul>
 										<ul class="tsd-descriptions">
 											<li class="tsd-description">
@@ -1669,7 +1689,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 														<h5>this: <span class="tsd-signature-type">WebSocket</span></h5>
 													</li>
 													<li>
-														<h5>ev: <span class="tsd-signature-type">WebSocketEventMap[K]</span></h5>
+														<h5>ev: <span class="tsd-signature-type">IHydratedWebSocketEventMap[K]</span></h5>
 													</li>
 												</ul>
 												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
@@ -1697,7 +1717,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#close">close</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L143">Shell.ts:143</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L143">Shell.ts:143</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1730,7 +1750,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#dispatchevent">dispatchEvent</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L230">Shell.ts:230</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L232">Shell.ts:232</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1761,13 +1781,13 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#forwardevents">forwardEvents</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L239">Shell.ts:239</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L241">Shell.ts:241</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
 						<ul class="tsd-type-parameters">
 							<li>
-								<h4>K<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">keyof WebSocketEventMap</span></h4>
+								<h4>K<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">keyof IHydratedWebSocketEventMap</span></h4>
 							</li>
 						</ul>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1791,7 +1811,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#getreadystate">getReadyState</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L251">Shell.ts:251</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L253">Shell.ts:253</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1808,7 +1828,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/cable/Cable.ts#L144">cable/Cable.ts:144</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/cable/Cable.ts#L144">cable/Cable.ts:144</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1842,7 +1862,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/cable/Cable.ts#L114">cable/Cable.ts:114</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/cable/Cable.ts#L114">cable/Cable.ts:114</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1898,7 +1918,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#removeeventlistener">removeEventListener</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L211">Shell.ts:211</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L212">Shell.ts:212</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1909,7 +1929,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
 						<ul class="tsd-type-parameters">
 							<li>
-								<h4>K<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">keyof WebSocketEventMap</span></h4>
+								<h4>K<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">keyof IHydratedWebSocketEventMap</span></h4>
 							</li>
 						</ul>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1922,7 +1942,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 								<ul class="tsd-parameters">
 									<li class="tsd-parameter-siganture">
 										<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WebSocket</span>, ev<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WebSocketEventMap[K]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WebSocket</span>, ev<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IHydratedWebSocketEventMap[K]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
 										</ul>
 										<ul class="tsd-descriptions">
 											<li class="tsd-description">
@@ -1932,7 +1952,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 														<h5>this: <span class="tsd-signature-type">WebSocket</span></h5>
 													</li>
 													<li>
-														<h5>ev: <span class="tsd-signature-type">WebSocketEventMap[K]</span></h5>
+														<h5>ev: <span class="tsd-signature-type">IHydratedWebSocketEventMap[K]</span></h5>
 													</li>
 												</ul>
 												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
@@ -1959,7 +1979,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/cable/Cable.ts#L125">cable/Cable.ts:125</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/cable/Cable.ts#L125">cable/Cable.ts:125</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1990,14 +2010,14 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 				<a name="send" class="tsd-anchor"></a>
 				<h3>send</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<li class="tsd-signature tsd-kind-icon">send<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">USVString</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ArrayBuffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Blob</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ArrayBufferView</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">send<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ArrayBuffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Blob</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ArrayBufferView</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#send">send</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L166">Shell.ts:166</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L166">Shell.ts:166</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2011,7 +2031,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>data: <span class="tsd-signature-type">USVString</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ArrayBuffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Blob</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ArrayBufferView</span></h5>
+								<h5>data: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ArrayBuffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Blob</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ArrayBufferView</span></h5>
 								<div class="tsd-comment tsd-typography">
 									<p>The data to send to the server. It may be one of the following types:</p>
 									<ul>
@@ -2046,7 +2066,7 @@ cable.register(<span class="hljs-string">"hello"</span>, <span class="hljs-keywo
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#stopforwardingevents">stopForwardingEvents</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/bb14125/src/Shell.ts#L245">Shell.ts:245</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/Shell.ts#L247">Shell.ts:247</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>

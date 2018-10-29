@@ -64,6 +64,55 @@ describe("Waterfall", () => {
         });
 
     });
+
+    describe("when using a factory", () => {
+        let factoryCall: boolean = false;
+        beforeEach(async () => {
+            factoryCall = false;
+            ws = new Waterfall("ws://localtest.me:4752", null, {
+                factory: (url: string) => {
+                    factoryCall = true;
+                    return new WebSocket(url);
+                },
+            });
+            expect(ws.readyState).to.equal(WebSocket.CONNECTING);
+            await expectEventually(() => ws.readyState === WebSocket.OPEN,
+                "The WebSocket should be open");
+        });
+
+        it("should call the factory", () => {
+            expect(factoryCall).to.be.true;
+        });
+
+    });
+
+    describe("when using a retryPolicy", () => {
+        let retryPolicyCall: boolean;
+
+        beforeEach(async () => {
+            retryPolicyCall = false;
+            ws = new Waterfall("ws://localtest.me:4752", null, {
+                retryPolicy: () => {
+                    retryPolicyCall = true;
+                    return null;
+                },
+            });
+            expect(ws.readyState).to.equal(WebSocket.CONNECTING);
+            await expectEventually(() => ws.readyState === WebSocket.OPEN,
+                "The WebSocket should be open");
+        });
+
+        it("should close then the retry policy return null", (done) => {
+            ws.send("disconnect");
+            ws.onclose = () => {
+                expect(retryPolicyCall).to.be.true;
+                done();
+            };
+
+        });
+
+    });
+
     describe("when the url change", () => {
         let testCase: string;
         beforeEach(async () => {
@@ -93,6 +142,59 @@ describe("Waterfall", () => {
 
     });
 
+    describe("when using an url generator", () => {
+        let testCase: string;
+        let urlGeneratorCall: number = 0;
+        beforeEach(async () => {
+
+            urlGeneratorCall = 0;
+            const urlGenerator = (attemp: number, ws: Waterfall) => {
+                testCase = rnd();
+                urlGeneratorCall++;
+                return `ws://localtest.me:4752/${testCase}`;
+            };
+            ws = new Waterfall(urlGenerator);
+            expect(ws.readyState).to.equal(WebSocket.CONNECTING);
+            await expectEventually(() => ws.readyState === WebSocket.OPEN,
+                "The WebSocket should be open");
+        });
+
+        it("should call the url generator when reconnecting", (done) => {
+            const firstTest = testCase;
+            ws.send("disconnect");
+            ws.addEventListener("connecting", async () => {
+                await sleep(100);
+                const secondTest = testCase;
+                expect(firstTest).to.not.equal(secondTest);
+                expect(urlGeneratorCall).to.equal(2);
+                expect((await supervisor.logs(firstTest)).map((l) => l[1]))
+                    .to.deep.equal(["connect", "disconnect", "close"]);
+                expect((await supervisor.logs(secondTest)).map((l) => l[1]))
+                    .to.deep.equal(["connect"]);
+                done();
+            });
+
+        });
+    });
+
+    describe("when disconnect with emitClose option", () => {
+        let testCase: string;
+        beforeEach(async () => {
+            testCase = rnd();
+            ws = new Waterfall(`ws://localtest.me:4752/${testCase}`, null, { emitClose: true });
+            expect(ws.readyState).to.equal(WebSocket.CONNECTING);
+            await expectEventually(() => ws.readyState === WebSocket.OPEN,
+                "The WebSocket should be open");
+        });
+        it("should receive a close event if emitClose is true", (done) => {
+            ws.onclose = () => {
+                ws.onclose = null;
+                done();
+            };
+            ws.send("disconnect");
+        });
+    });
+
     describe("when disconnect", () => {
         let testCase: string;
         beforeEach(async () => {
@@ -112,17 +214,17 @@ describe("Waterfall", () => {
                 setTimeout(() => resolve(), 100);
             });
         });
-        // the api do not define an event, there is no way to test that on a reliable way
-        it.skip("should be on a connecting state", async () => {
+
+        it("should be on a connecting state", (done) => {
+            ws.addEventListener("connecting", () => {
+                expect(ws.readyState).to.equal(WebSocket.CONNECTING);
+                done();
+            });
             ws.send("disconnect");
-            await expectEventually(() => ws.readyState === WebSocket.CONNECTING,
-                "The WebSocket should be connecting");
         });
+
         it("should eventually reconnect", async () => {
             ws.send("disconnect");
-            // the api do not define an event, there is no way to test that on a reliable way
-            // await expectEventually(() => ws.readyState === WebSocket.CONNECTING,
-            //     "The WebSocket should be connecting");
             await sleep(TIMEOUT_FACTOR * 500);
             await expectEventually(() => ws.readyState === WebSocket.OPEN,
                 "The WebSocket should be connected");

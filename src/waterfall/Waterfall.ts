@@ -1,13 +1,14 @@
 import CloseEvent from "../polyfill/CloseEvent";
+import CustomEvent from "../polyfill/CustomEvent";
 import WebSocket from "../polyfill/WebSocket";
-import {Shell} from "../Shell";
-import {exponentialTruncatedBackoff} from "./exponentialTruncatedBackoff";
-import {IWaterfallOptions} from "./IWaterfallOptions";
+import { Shell } from "../Shell";
+import { exponentialTruncatedBackoff } from "./exponentialTruncatedBackoff";
+import { IWaterfallOptions } from "./IWaterfallOptions";
 
 // https://gist.github.com/hansifer/32bcba48c24621c2da78
 /* tslint:disable-next-line */
 export const REGEXP_URL = /^wss?:(?:\/\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\._~!\$&'\(\)\*\+,;=:\xA0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[\uD800-\uD83E\uD840-\uD87E\uD880-\uD8BE\uD8C0-\uD8FE\uD900-\uD93E\uD940-\uD97E\uD980-\uD9BE\uD9C0-\uD9FE\uDA00-\uDA3E\uDA40-\uDA7E\uDA80-\uDABE\uDAC0-\uDAFE\uDB00-\uDB3E\uDB44-\uDB7E][\uDC00-\uDFFF]|[\uD83F\uD87F\uD8BF\uD8FF\uD93F\uD97F\uD9BF\uD9FF\uDA3F\uDA7F\uDABF\uDAFF\uDB3F\uDB7F][\uDC00-\uDFFD])*@)?(?:\[(?:(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3})|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3})|(?:[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){4}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3})|(?:[0-9a-f]{1,4}:[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){3}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3})|(?:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){2}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3})|(?:(?:[0-9a-f]{1,4}:){0,3}[0-9a-f]{1,4})?::[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3})|(?:(?:[0-9a-f]{1,4}:){0,4}[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3})|(?:(?:[0-9a-f]{1,4}:){0,5}[0-9a-f]{1,4})?::[0-9a-f]{1,4}|(?:(?:[0-9a-f]{1,4}:){0,6}[0-9a-f]{1,4})?::)|v[0-9a-f]+[-a-z0-9\._~!\$&'\(\)\*\+,;=:]+)\]|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}|(?:%[0-9a-f][0-9a-f]|[-a-z0-9\._~!\$&'\(\)\*\+,;=@\xA0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[\uD800-\uD83E\uD840-\uD87E\uD880-\uD8BE\uD8C0-\uD8FE\uD900-\uD93E\uD940-\uD97E\uD980-\uD9BE\uD9C0-\uD9FE\uDA00-\uDA3E\uDA40-\uDA7E\uDA80-\uDABE\uDAC0-\uDAFE\uDB00-\uDB3E\uDB44-\uDB7E][\uDC00-\uDFFF]|[\uD83F\uD87F\uD8BF\uD8FF\uD93F\uD97F\uD9BF\uD9FF\uDA3F\uDA7F\uDABF\uDAFF\uDB3F\uDB7F][\uDC00-\uDFFD])*)(?::[0-9]*)?(?:\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\._~!\$&'\(\)\*\+,;=:@\xA0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[\uD800-\uD83E\uD840-\uD87E\uD880-\uD8BE\uD8C0-\uD8FE\uD900-\uD93E\uD940-\uD97E\uD980-\uD9BE\uD9C0-\uD9FE\uDA00-\uDA3E\uDA40-\uDA7E\uDA80-\uDABE\uDAC0-\uDAFE\uDB00-\uDB3E\uDB44-\uDB7E][\uDC00-\uDFFF]|[\uD83F\uD87F\uD8BF\uD8FF\uD93F\uD97F\uD9BF\uD9FF\uDA3F\uDA7F\uDABF\uDAFF\uDB3F\uDB7F][\uDC00-\uDFFD]))*)*|\/(?:(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\._~!\$&'\(\)\*\+,;=:@\xA0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[\uD800-\uD83E\uD840-\uD87E\uD880-\uD8BE\uD8C0-\uD8FE\uD900-\uD93E\uD940-\uD97E\uD980-\uD9BE\uD9C0-\uD9FE\uDA00-\uDA3E\uDA40-\uDA7E\uDA80-\uDABE\uDAC0-\uDAFE\uDB00-\uDB3E\uDB44-\uDB7E][\uDC00-\uDFFF]|[\uD83F\uD87F\uD8BF\uD8FF\uD93F\uD97F\uD9BF\uD9FF\uDA3F\uDA7F\uDABF\uDAFF\uDB3F\uDB7F][\uDC00-\uDFFD]))+)(?:\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\._~!\$&'\(\)\*\+,;=:@\xA0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[\uD800-\uD83E\uD840-\uD87E\uD880-\uD8BE\uD8C0-\uD8FE\uD900-\uD93E\uD940-\uD97E\uD980-\uD9BE\uD9C0-\uD9FE\uDA00-\uDA3E\uDA40-\uDA7E\uDA80-\uDABE\uDAC0-\uDAFE\uDB00-\uDB3E\uDB44-\uDB7E][\uDC00-\uDFFF]|[\uD83F\uD87F\uD8BF\uD8FF\uD93F\uD97F\uD9BF\uD9FF\uDA3F\uDA7F\uDABF\uDAFF\uDB3F\uDB7F][\uDC00-\uDFFD]))*)*)?|(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\._~!\$&'\(\)\*\+,;=:@\xA0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[\uD800-\uD83E\uD840-\uD87E\uD880-\uD8BE\uD8C0-\uD8FE\uD900-\uD93E\uD940-\uD97E\uD980-\uD9BE\uD9C0-\uD9FE\uDA00-\uDA3E\uDA40-\uDA7E\uDA80-\uDABE\uDAC0-\uDAFE\uDB00-\uDB3E\uDB44-\uDB7E][\uDC00-\uDFFF]|[\uD83F\uD87F\uD8BF\uD8FF\uD93F\uD97F\uD9BF\uD9FF\uDA3F\uDA7F\uDABF\uDAFF\uDB3F\uDB7F][\uDC00-\uDFFD]))+)(?:\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\._~!\$&'\(\)\*\+,;=:@\xA0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[\uD800-\uD83E\uD840-\uD87E\uD880-\uD8BE\uD8C0-\uD8FE\uD900-\uD93E\uD940-\uD97E\uD980-\uD9BE\uD9C0-\uD9FE\uDA00-\uDA3E\uDA40-\uDA7E\uDA80-\uDABE\uDAC0-\uDAFE\uDB00-\uDB3E\uDB44-\uDB7E][\uDC00-\uDFFF]|[\uD83F\uD87F\uD8BF\uD8FF\uD93F\uD97F\uD9BF\uD9FF\uDA3F\uDA7F\uDABF\uDAFF\uDB3F\uDB7F][\uDC00-\uDFFD]))*)*|(?!(?:%[0-9a-f][0-9a-f]|[-a-z0-9\._~!\$&'\(\)\*\+,;=:@\xA0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[\uD800-\uD83E\uD840-\uD87E\uD880-\uD8BE\uD8C0-\uD8FE\uD900-\uD93E\uD940-\uD97E\uD980-\uD9BE\uD9C0-\uD9FE\uDA00-\uDA3E\uDA40-\uDA7E\uDA80-\uDABE\uDAC0-\uDAFE\uDB00-\uDB3E\uDB44-\uDB7E][\uDC00-\uDFFF]|[\uD83F\uD87F\uD8BF\uD8FF\uD93F\uD97F\uD9BF\uD9FF\uDA3F\uDA7F\uDABF\uDAFF\uDB3F\uDB7F][\uDC00-\uDFFD])))(?:\?(?:%[0-9a-f][0-9a-f]|[-a-z0-9\._~!\$&'\(\)\*\+,;=:@\/\?\xA0-\uD7FF\uE000-\uFDCF\uFDF0-\uFFEF]|[\uD800-\uD83E\uD840-\uD87E\uD880-\uD8BE\uD8C0-\uD8FE\uD900-\uD93E\uD940-\uD97E\uD980-\uD9BE\uD9C0-\uD9FE\uDA00-\uDA3E\uDA40-\uDA7E\uDA80-\uDABE\uDAC0-\uDAFE\uDB00-\uDB3E\uDB44-\uDB7E\uDB80-\uDBBE\uDBC0-\uDBFE][\uDC00-\uDFFF]|[\uD83F\uD87F\uD8BF\uD8FF\uD93F\uD97F\uD9BF\uD9FF\uDA3F\uDA7F\uDABF\uDAFF\uDB3F\uDB7F\uDBBF\uDBFF][\uDC00-\uDFFD])*)?(?:\#(?:%[0-9a-f][0-9a-f]|[-a-z0-9\._~!\$&'\(\)\*\+,;=:@\/\?\xA0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[\uD800-\uD83E\uD840-\uD87E\uD880-\uD8BE\uD8C0-\uD8FE\uD900-\uD93E\uD940-\uD97E\uD980-\uD9BE\uD9C0-\uD9FE\uDA00-\uDA3E\uDA40-\uDA7E\uDA80-\uDABE\uDAC0-\uDAFE\uDB00-\uDB3E\uDB44-\uDB7E][\uDC00-\uDFFF]|[\uD83F\uD87F\uD8BF\uD8FF\uD93F\uD97F\uD9BF\uD9FF\uDA3F\uDA7F\uDABF\uDAFF\uDB3F\uDB7F][\uDC00-\uDFFD])*)?$/i;
-
+export type UrlGenerator = (attempt: number, ws: Waterfall) => string;
 /**
  * The Waterfall provide a Websocket that will try to reconnect automatically according to the policy
  */
@@ -15,31 +16,33 @@ export class Waterfall extends Shell {
 
     private timeout: any;
     private connectionTimeout: number = 5000;
+    private emitClose: boolean = false;
     private retryPolicy: (attempt: number, ws: Waterfall) => number = exponentialTruncatedBackoff();
+    private _urlGenerator: (attempt: number, ws: Waterfall) => string;
     private _url: string;
-    private attempts: number = -1   ;
+    private attempts: number = -1;
 
     /**
      *
-     * @param {string} url
+     * @param {string | (attempt: number, ws: Waterfall) => string} url
      * @param {string | string[]} protocols
      * @param {IWaterfallOptions} options
      */
-    public constructor(url: string, private protocols?: string | string[], private options?: IWaterfallOptions) {
+    public constructor(
+        url: string | UrlGenerator,
+        private protocols?: string | string[],
+        private options?: IWaterfallOptions) {
         super();
-        if (this.constructor !== Waterfall) {
-            throw new TypeError("Failed to construct. Please use the 'new' operator");
-        }
-        if (!url || !url.match(REGEXP_URL)) {
+        if (!url) {
             throw new TypeError("Invalid url");
         }
-        this._url = url;
+        this.urlGenerator = url;
         if (options) {
             this.connectionTimeout = options.connectionTimeout || this.connectionTimeout;
+            this.emitClose = options.emitClose || this.emitClose;
             this.retryPolicy = options.retryPolicy || this.retryPolicy;
         }
-        this.open();
-        this._readyState = WebSocket.CONNECTING;
+        this.reconnect();
     }
 
     /**
@@ -53,11 +56,21 @@ export class Waterfall extends Shell {
      * Change the url
      */
     public set url(value: string) {
+        this.urlGenerator = value;
         if (this._url !== value) {
             this._url = value;
             if (this.ws) {
                 this.ws.close(1000);
             }
+        }
+    }
+
+    /**
+     * Reset the connection (close/open)
+     */
+    public reset() {
+        if (this.ws) {
+            this.ws.close(1000);
         }
     }
 
@@ -83,7 +96,7 @@ export class Waterfall extends Shell {
      */
     public get extensions(): string {
         // https://github.com/websockets/ws/issues/1244
-        return typeof(this.ws.extensions) === "string" ? this.ws.extensions : "";
+        return typeof (this.ws.extensions) === "string" ? this.ws.extensions : "";
     }
 
     public get protocol(): string {
@@ -109,6 +122,17 @@ export class Waterfall extends Shell {
         this.ws.close(code, reason);
     }
 
+    private set urlGenerator(value: string | UrlGenerator) {
+        if (typeof value === "string") {
+            if (!value.match(REGEXP_URL)) {
+                throw new TypeError("Invalid url");
+            }
+            this._urlGenerator = () => value;
+        } else {
+            this._urlGenerator = value;
+        }
+    }
+
     private webSocketFactory(): WebSocket {
         return this.options && this.options.factory
             ? this.options.factory(this.url, this.protocols || [])
@@ -123,20 +147,33 @@ export class Waterfall extends Shell {
         this.dispatchEvent(evt);
     }
 
+    private reconnect(timeout?: number) {
+        this._readyState = WebSocket.CONNECTING;
+        this.dispatchEvent(new CustomEvent("connecting", { detail: timeout }));
+        if (timeout !== void 0) {
+            setTimeout(() => this.open(), timeout);
+        } else {
+            this.open();
+        }
+    }
+
     private onCloseWebSocket(evt: CloseEvent) {
         clearTimeout(this.timeout);
         if (this.closing) {
             this._readyState = WebSocket.CLOSED;
             this.dispatchEvent(evt);
+            return;
+        }
+        const timeout = this.retryPolicy(this.attempts + 1, this);
+        if (timeout === null) {
+            this._readyState = WebSocket.CLOSED;
+            this.dispatchEvent(evt);
+        } else if (this.emitClose) {
+            this._readyState = WebSocket.CLOSED;
+            this.dispatchEvent(evt);
+            this.reconnect(timeout);
         } else {
-            const timeout = this.retryPolicy(this.attempts + 1, this);
-            if (timeout === null) {
-                this._readyState = WebSocket.CLOSED;
-                this.dispatchEvent(evt);
-            } else {
-                this._readyState = WebSocket.CONNECTING;
-                setTimeout(() => this.open(), timeout);
-            }
+            this.reconnect(timeout);
         }
     }
 
@@ -156,25 +193,32 @@ export class Waterfall extends Shell {
         this.ws.onerror = this.dispatchEvent.bind(this);
     }
 
-    private forceClose(): void {
+    private forceClose(silent: boolean = false): void {
         try {
+            if (silent) {
+                this.unbindWebSocket();
+            }
             this.ws.close();
         } catch {
             // ignore
         }
     }
 
+    private failed(): void {
+        this.forceClose(true);
+        const timeout = this.retryPolicy(this.attempts + 1, this);
+        if (timeout === null) {
+            this._readyState = WebSocket.CLOSED;
+            this.dispatchEvent(new CloseEvent("close", { code: 4000, reason: "Connect timeout" }));
+        } else {
+            setTimeout(() => this.open(), timeout);
+        }
+    }
+
     private setupWebSocketTimeout(): void {
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
-            this.forceClose();
-            const timeout = this.retryPolicy(this.attempts + 1, this);
-            if (timeout === null) {
-                this._readyState = WebSocket.CLOSED;
-                this.dispatchEvent(new CloseEvent("close", {code: 4000, reason: "Connect timeout"}));
-            } else {
-                setTimeout(() => this.open(), timeout);
-            }
+            this.failed();
         }, this.connectionTimeout);
     }
 
@@ -183,12 +227,16 @@ export class Waterfall extends Shell {
             return;
         }
         this.attempts++;
-        this.unbindWebSocket();
-        this.ws = this.webSocketFactory();
-        (this.ws as any).binaryType = this.binaryType || this.ws.binaryType;
-        this.setupWebSocketTimeout();
-        this.bindWebSocket();
-
+        this._url = this._urlGenerator(this.attempts, this);
+        this.forceClose(true);
+        try {
+            this.ws = this.webSocketFactory();
+            (this.ws as any).binaryType = this.binaryType || this.ws.binaryType;
+            this.setupWebSocketTimeout();
+            this.bindWebSocket();
+        } catch (e) {
+            this.failed();
+        }
     }
 
 }

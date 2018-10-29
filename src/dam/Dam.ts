@@ -104,7 +104,7 @@ export class Dam extends Shell {
      * You can send any JavaScript typed array object as a binary frame; its binary data contents are queued in the
      * buffer, increasing the value of bufferedAmount by the requisite number of bytes.
      */
-    public send(data: USVString| ArrayBuffer | Blob | ArrayBufferView ): void {
+    public send(data: string| ArrayBuffer | Blob | ArrayBufferView ): void {
         if (this._status === Dam.OPEN) {
             super.send(data);
         } else {
