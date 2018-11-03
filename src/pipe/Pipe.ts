@@ -98,12 +98,16 @@ export class Pipe extends Shell {
     public dispatchEvent(evt: Event): any {
         if (evt.type === "message") {
             const e: MessageEvent = evt as any;
+            // Older TS versions did not have proper typings for MessageEvent.source, but
+            // MessageEventSource is not available in TS < 3
+            // https://developer.mozilla.org/en-US/docs/Web/API/MessageEvent#Properties
+            const eventSource = e.source as Window;
             if (typeof (e.data) === "string" && this.channel === e.data.substr(0, this.prefixLength)) {
                 super.dispatchEvent(new MessageEvent("message", {
                     data: e.data.substr(this.prefixLength),
                     origin: e.origin,
                     ports: e.ports as any,
-                    source: e.source,
+                    source: eventSource,
                 }));
                 return false;
             }

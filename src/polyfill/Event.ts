@@ -50,6 +50,13 @@ class EventPolyfill implements Event {
         throw new Error("Unimplemented");
     }
 
+    // TODO: deepPath has been deprecated as a standard but we should keep this around for a
+    // little while in order to keep compatability with older versions of TS
+    // https://github.com/Microsoft/TypeScript/issues/17974
+    public deepPath(): EventTarget[] {
+        throw new Error("Unimplemented");
+    }
+
 }
 
 export default ((isNode ? EventPolyfill : Event) as any) as { new(type: string): Event };
