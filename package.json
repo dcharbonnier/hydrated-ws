@@ -29,7 +29,7 @@
     "toc": "markdown-toc README.md -i --maxdepth 3",
     "build": "tsc -p ./tsconfig.json --outDir dist/",
     "test": "yarn test-node && yarn test-karma && yarn build && yarn test-typescript-compatibility",
-    "test-typescript-compatibility": "for version in 2.8 2.9 3.0 3.1; do ./test-typescript-compatibility.sh $version || exit 1;done;",
+    "test-typescript-compatibility": "for version in 2.7 2.8 2.9 3.0 3.1; do ./test-typescript-compatibility.sh $version || exit 1;done;",
     "test-server": "node --experimental-modules mock.mjs >/dev/null 2>&1 &",
     "test-karma": "yarn test-server && karma start --single-run",
     "test-phantom": "yarn test-server && karma start --single-run --browsers PhantomJS",
