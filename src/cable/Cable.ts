@@ -47,47 +47,47 @@ export class Cable extends Shell {
      *  Invalid JSON was received by the server.
      *  An error occurred on the server while parsing the JSON text.
      */
-    public static readonly PARSE_ERROR = -32700;
+    public static readonly PARSE_ERROR: number = -32700;
 
     /**
      * The JSON sent is not a valid Request object.
      */
-    public static readonly INVALID_REQUEST = -32600;
+    public static readonly INVALID_REQUEST: number = -32600;
 
     /**
      *  The method does not exist / is not available.
      */
-    public static readonly METHOD_NOT_FOUND = -32601;
+    public static readonly METHOD_NOT_FOUND: number = -32601;
 
     /**
      *  Invalid method parameter(s).
      */
-    public static readonly INVALID_PARAMS = -32602;
+    public static readonly INVALID_PARAMS: number = -32602;
 
     /**
      *  Internal JSON-RPC error.
      */
-    public static readonly INTERNAL_ERROR = -32603;
+    public static readonly INTERNAL_ERROR: number = -32603;
 
     /**
      * Generic server-errors
      */
-    public static readonly SERVER_ERROR = -32000;
+    public static readonly SERVER_ERROR: number = -32000;
 
     /**
      * Timeout server-errors
      */
-    public static readonly TIMEOUT_ERROR = -32001;
+    public static readonly TIMEOUT_ERROR: number = -32001;
 
     /**
      * Response received for an unknown request server-errors
      */
-    public static readonly UNKNOWN_REQUEST = -32002;
+    public static readonly UNKNOWN_REQUEST: number = -32002;
 
     /**
      *  Invalid method parameter(s) on the client
      */
-    public static readonly INVALID_CLIENT_PARAMS = -32603;
+    public static readonly INVALID_CLIENT_PARAMS: number = -32603;
 
     private static readonly id = uuid();
     private static index = 0;
