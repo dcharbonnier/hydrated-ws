@@ -81,10 +81,10 @@ wss.on('connection', (ws, request) => {
             } else if (message.substr(4) === "ping") {
                 ws.send(message.replace("ping", "pong"));
             }
-            try {
-                ws.send("hello");
-            } catch (e) {
-            }
+            // try {
+            //     ws.send("hello");
+            // } catch (e) {
+            // }
         });
 
     }

@@ -21,8 +21,9 @@ export class Dict<K extends string, T> {
     public delete(key: K) {
         delete this.data[key ? key.toString() : key];
     }
-    public keys() {
-        return Object.keys(this.data);
+
+    public keys(): K[] {
+        return Object.keys(this.values) as K[];
     }
 
     public values(): T[] {
