@@ -103,7 +103,7 @@ export class Cable extends Shell {
         super();
         this.ws = ws;
         this.forwardEvents(["close", "open"]);
-        this.ws.addEventListener("message", (e: MessageEvent) => this.receivedMessage(e.data));
+        this.ws.addEventListener("message", this.receivedMessage);
     }
 
     /**
@@ -144,6 +144,17 @@ export class Cable extends Shell {
     public notify(method: string, params?: object | any[]) {
         this.guardParameters(params);
         this.sendMessage(null, { method, params });
+    }
+
+    /**
+     * Destroy the Cable, send a timeout for all pending calls and clean the registered methods
+     */
+    public destroy() {
+        this.stopForwardingEvents();
+        this.ws.removeEventListener("message", this.receivedMessage);
+        this.calls.keys().forEach((id) => this.timeout(id));
+        this.calls.clear();
+        this.methods.clear();
     }
 
     private guardParameters(params?: object | any[]): void {
@@ -199,8 +210,8 @@ export class Cable extends Shell {
 
     }
 
-    private receivedMessage(message: string): void {
-        const data = this.parseMessage(message);
+    private receivedMessage = (e: MessageEvent): void => {
+        const data = this.parseMessage(e.data);
         if (!data) {
             return;
         }
