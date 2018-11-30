@@ -1,8 +1,8 @@
-import { Cable } from "../cable/Cable";
-import { Pipe } from "../pipe/Pipe";
-import { Dict } from "../polyfill/Dict";
+import {Cable} from "../cable/Cable";
+import {Pipe} from "../pipe/Pipe";
+import {Dict} from "../polyfill/Dict";
 import WebSocket from "../polyfill/WebSocket";
-import { Router } from "../router/Router";
+import {Router} from "../router/Router";
 
 export class Server {
 
@@ -19,29 +19,37 @@ export class Server {
     public destroy() {
         this.router.destroy();
         this.channels.values()
-            .forEach(({ source, target }: { source: Pipe, target?: Pipe }) => {
-                if (source) { source.close(); }
-                if (target) { target.close(); }
+            .forEach(({source, target}: { source: Pipe, target?: Pipe }) => {
+                if (source) {
+                    source.close();
+                }
+                if (target) {
+                    target.close();
+                }
             });
         this.clients.values()
-            .forEach(({ data, cable }: { data: Pipe, cable?: Pipe }) => {
-                if (data) { data.close(); }
-                if (cable) { cable.close(); }
+            .forEach(({data, cable}: { data: Pipe, cable?: Pipe }) => {
+                if (data) {
+                    data.close();
+                }
+                if (cable) {
+                    cable.close();
+                }
             });
         this.clients = void 0;
         this.buffers = void 0;
         this.channels = void 0;
     }
 
-    public addWebSocket(ws: WebSocket) {
+    public addWebSocket(ws: WebSocket): () => void {
 
         const cablePipe = new Pipe(ws, "WOHC");
         const cable = new Cable(cablePipe);
         const dataPipe = new Pipe(ws, "WOHD");
 
-        cable.register("identity", ({ uuid }: { uuid: string }): Promise<void> => {
+        cable.register("identity", ({uuid}: { uuid: string }): Promise<void> => {
             try {
-                this.clients.set(uuid, { data: dataPipe, cable: cablePipe });
+                this.clients.set(uuid, {data: dataPipe, cable: cablePipe});
                 this.router.set(uuid, ws);
             } catch (e) {
                 // ignore
@@ -49,7 +57,7 @@ export class Server {
             return new Promise((resolve) => setTimeout(resolve, 0));
         });
 
-        cable.register("close", ({ channel }: { channel: string }): Promise<void> => {
+        cable.register("close", ({channel}: { channel: string }): Promise<void> => {
             const pipes = this.channels.get(channel);
 
             if (pipes && pipes.source) {
@@ -58,10 +66,10 @@ export class Server {
             return new Promise((resolve) => setTimeout(resolve, 0));
         });
 
-        cable.register("connect", ({ uuid, channel }: { uuid: string, channel: string }): Promise<void> => {
+        cable.register("connect", ({uuid, channel}: { uuid: string, channel: string }): Promise<void> => {
             try {
                 const targetWs = this.router.get(uuid);
-                const pipes: { source: Pipe, target?: Pipe } = { source: new Pipe(dataPipe, channel, 32) };
+                const pipes: { source: Pipe, target?: Pipe } = {source: new Pipe(dataPipe, channel, 32)};
                 this.channels.set(channel, pipes);
                 pipes.source.onmessage = (event) => {
                     if (!this.buffers.has(channel)) {
@@ -81,14 +89,14 @@ export class Server {
                     pipes.source.onclose = (event) => {
                         pipes.target.close();
                         try {
-                            targetCable.notify("close", { channel });
+                            targetCable.notify("close", {channel});
                         } catch (e) {
                             // ignore
                         }
                         this.channels.delete(channel);
 
                     };
-                    targetCable.request("open", { channel })
+                    targetCable.request("open", {channel})
                         .then(() => {
                             const buffer = this.buffers.get(channel) || [];
                             while (buffer.length) {
@@ -113,6 +121,12 @@ export class Server {
             }
             return new Promise((resolve) => setTimeout(resolve, 0));
         });
+
+        return () => {
+            cable.destroy();
+            cablePipe.close();
+            dataPipe.close();
+        };
     }
 
 }
