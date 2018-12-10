@@ -124,9 +124,10 @@
   version "9.12.3"
   resolved "https://registry.yarnpkg.com/@types/highlight.js/-/highlight.js-9.12.3.tgz#b672cfaac25cbbc634a0fd92c515f66faa18dbca"
 
-"@types/karma@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@types/karma/-/karma-3.0.0.tgz#a9406fb7e4287a7b8e31ee8eafea552676c96958"
+"@types/karma@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@types/karma/-/karma-3.0.1.tgz#98ebc5cc626d5d8e0a06bbb9ef1ee0a46859d246"
+  integrity sha512-rhG6SCZEMbfkuvCBFsT9D7//X3wH2HlRwisZOayx/Jcd86Kg8UBv62/0T3C934CGiCE5Uupd+5FyEXkxOhxeYg==
   dependencies:
     "@types/bluebird" "*"
     "@types/node" "*"
