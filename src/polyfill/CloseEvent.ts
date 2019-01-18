@@ -28,4 +28,4 @@ class CloseEventPolyfill extends Event implements CloseEvent {
 }
 
 export default (isNode ? CloseEventPolyfill : CloseEvent) as
-    { new(type: string, eventInitDict?: CloseEventInit): CloseEvent };
+    new(type: string, eventInitDict?: CloseEventInit) => CloseEvent;

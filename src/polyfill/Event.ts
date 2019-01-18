@@ -52,4 +52,4 @@ class EventPolyfill implements Event {
 
 }
 
-export default ((isNode ? EventPolyfill : Event) as any) as { new(type: string): Event };
+export default ((isNode ? EventPolyfill : Event) as any) as new(type: string) => Event;

@@ -28,4 +28,4 @@ class MessageEventPolyfill extends Event implements MessageEvent {
 }
 
 export default (isNode ? MessageEventPolyfill : MessageEvent) as
-    { new(type: string, eventInitDict?: MessageEventInit): MessageEvent };
+    new(type: string, eventInitDict?: MessageEventInit) => MessageEvent;

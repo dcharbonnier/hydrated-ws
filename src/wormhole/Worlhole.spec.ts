@@ -38,6 +38,23 @@ describe("Wormhole", () => {
 
     });
 
+    it("addWebSocket return a destructor", (done) => {
+        const server = new wormhole.Server();
+        mockServer.on("connection", (clientWs) => {
+            const destructor = server.addWebSocket(clientWs);
+            destructor();
+            done();
+        });
+        const client1 = new wormhole.Client("client1", new WebSocket(url), () => void 0);
+        // client1.dataPipe.onmessage = (evt) => {
+        //     expect(evt.data).to.equal("test");
+        //     done();
+        // };
+        const ws = new Pipe(server.router.get("client1"), "WOHD");
+        ws.onopen = () => ws.send("test");
+
+    });
+
     it("build a direct connection between clients", (done) => {
         const server = new wormhole.Server();
         mockServer.on("connection", (ws) => {
@@ -55,6 +72,11 @@ describe("Wormhole", () => {
             done();
         };
         ws1.send("client 1");
+    });
+
+    it("destroy the server", () => {
+        const server = new wormhole.Server();
+        server.destroy();
     });
 
     it("close a direct connection between clients", (done) => {
