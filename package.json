@@ -82,7 +82,7 @@
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-promise": "^0.1.0",
     "karma-sauce-launcher": "^2.0.2",
-    "karma-typescript": "^3.0.13",
+    "karma-typescript": "^4.0.0",
     "karma-typescript-es6-transform": "^1.0.4",
     "markdown-toc": "^1.2.0",
     "mocha": "^5.2.0",
