@@ -42,11 +42,12 @@ export class RoutedWebSocket extends Shell {
 
     private virtualReadyState: number = null;
     private subscribed: boolean = false;
+
     constructor(
         private readonly routerSend: (data: string | ArrayBuffer | Blob | ArrayBufferView) => void,
         private readonly routerClose: (code: number, reason: string) => void,
-        private readonly onMessageSubscribe: (ws: RoutedWebSocket) => void,
-        private readonly onMessageUnubscribe: (ws: RoutedWebSocket) => void,
+        private readonly onMessageSubscribe?: (ws: RoutedWebSocket) => void,
+        private readonly onMessageUnsubscribe?: (ws: RoutedWebSocket) => void,
     ) {
         super();
     }
@@ -107,13 +108,17 @@ export class RoutedWebSocket extends Shell {
         if (this.onmessage || (this.listeners.has("message") && this.listeners.get("message").length)) {
             if (!this.subscribed) {
                 this.subscribed = true;
-                this.onMessageSubscribe(this);
+                if (this.onMessageSubscribe) {
+                    this.onMessageSubscribe(this);
+                }
             }
 
         } else {
             if (this.subscribed) {
                 this.subscribed = false;
-                this.onMessageUnubscribe(this);
+                if (this.onMessageUnsubscribe) {
+                    this.onMessageUnsubscribe(this);
+                }
             }
         }
     }
