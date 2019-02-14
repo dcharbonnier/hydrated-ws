@@ -21,4 +21,4 @@ class CustomEventPolyfill<T> extends Event implements CustomEvent<T> {
 }
 
 export default (isNode ? CustomEventPolyfill : CustomEvent) as
-    { new(type: string, eventInitDict?: CustomEventInit): CustomEvent };
+    new(type: string, eventInitDict?: CustomEventInit) => CustomEvent;
