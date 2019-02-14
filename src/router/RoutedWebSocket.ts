@@ -1,9 +1,35 @@
+import IHydratedWebSocketEventMap from "../IHydratedWebSocketEventMap";
 import CloseEvent from "../polyfill/CloseEvent";
 import Event from "../polyfill/Event";
 import WebSocket from "../polyfill/WebSocket";
-import { Shell } from "../Shell";
+import {Shell} from "../Shell";
 
 export class RoutedWebSocket extends Shell {
+
+    public set onmessage(f: (ev: MessageEvent) => any) {
+        super.setOnmessage(f);
+        this.checkSubscriptions();
+    }
+
+    public get onmessage(): (ev: MessageEvent) => any {
+        return super.getOnmessage();
+    }
+
+    public get url(): string {
+        return "";
+    }
+
+    public get bufferedAmount(): number {
+        return 0;
+    }
+
+    public get extensions(): string {
+        return "";
+    }
+
+    public get protocol(): string {
+        return "";
+    }
 
     /** The connection is not yet open. */
     public readonly CONNECTING = WebSocket.CONNECTING;
@@ -15,10 +41,13 @@ export class RoutedWebSocket extends Shell {
     public readonly CLOSED = WebSocket.CLOSED;
 
     private virtualReadyState: number = null;
+    private subscribed: boolean = false;
 
     constructor(
         private readonly routerSend: (data: string | ArrayBuffer | Blob | ArrayBufferView) => void,
         private readonly routerClose: (code: number, reason: string) => void,
+        private readonly onMessageSubscribe?: (ws: RoutedWebSocket) => void,
+        private readonly onMessageUnsubscribe?: (ws: RoutedWebSocket) => void,
     ) {
         super();
     }
@@ -40,24 +69,30 @@ export class RoutedWebSocket extends Shell {
         }
     }
 
+    public addEventListener<K extends keyof IHydratedWebSocketEventMap>(type: K,
+                                                                        listener: (this: WebSocket,
+                                                                                   ev: IHydratedWebSocketEventMap[K])
+                                                                            => any,
+                                                                        useCapture?: boolean): void {
+        super.addEventListener(type, listener, useCapture);
+        this.checkSubscriptions();
+    }
+
+    public removeEventListener<K extends keyof IHydratedWebSocketEventMap>(type: K,
+                                                                           listener: (this: WebSocket,
+                                                                                      ev: IHydratedWebSocketEventMap[K])
+                                                                               => any,
+                                                                           useCapture?: boolean): void {
+        super.removeEventListener(type, listener, useCapture);
+        this.checkSubscriptions();
+    }
+
+    public emitMessage(event: MessageEvent) {
+        this.dispatchEvent(event);
+    }
+
     public send(data: string | ArrayBuffer | Blob | ArrayBufferView): void {
         this.routerSend(data);
-    }
-
-    public get url(): string {
-        return "";
-    }
-
-    public get bufferedAmount(): number {
-        return 0;
-    }
-
-    public get extensions(): string {
-        return "";
-    }
-
-    public get protocol(): string {
-        return "";
     }
 
     public close(code: number = 1000, reason?: string) {
@@ -67,5 +102,24 @@ export class RoutedWebSocket extends Shell {
 
     protected getReadyState(): number {
         return this.virtualReadyState === null ? WebSocket.CONNECTING : this.virtualReadyState;
+    }
+
+    private checkSubscriptions() {
+        if (this.onmessage || (this.listeners.has("message") && this.listeners.get("message").length)) {
+            if (!this.subscribed) {
+                this.subscribed = true;
+                if (this.onMessageSubscribe) {
+                    this.onMessageSubscribe(this);
+                }
+            }
+
+        } else {
+            if (this.subscribed) {
+                this.subscribed = false;
+                if (this.onMessageUnsubscribe) {
+                    this.onMessageUnsubscribe(this);
+                }
+            }
+        }
     }
 }
