@@ -11,6 +11,7 @@ export class Client {
     private readonly webSockets: Dict<string, Pipe> = new Dict();
     private identified = false;
     private identifyRunning = false;
+
     constructor(private readonly uuid: string, ws: WebSocket, onConnection: (ws: WebSocket) => void) {
         const cablePipe = new Pipe(ws, "WOHC");
         this.dataPipe = new Pipe(ws, "WOHD");
@@ -25,6 +26,7 @@ export class Client {
             if (this.webSockets.has(channel)) {
                 return new Promise((resolve) => setTimeout(resolve, 0));
             }
+
             const pipe = new Pipe(this.dataPipe, channel, 32);
             this.webSockets.set(channel, pipe);
             onConnection(pipe);
