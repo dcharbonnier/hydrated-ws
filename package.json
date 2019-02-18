@@ -85,7 +85,7 @@
     "karma-typescript": "^4.0.0",
     "karma-typescript-es6-transform": "^4.0.0",
     "markdown-toc": "^1.2.0",
-    "mocha": "^5.2.0",
+    "mocha": "^6.0.0",
     "mock-socket": "^8.0.5",
     "nyc": "^13.2.0",
     "puppeteer": "^1.12.2",
