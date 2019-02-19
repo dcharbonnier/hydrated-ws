@@ -185,13 +185,14 @@ describe("Waterfall", () => {
                 return `unknown`;
             };
             ws = new Waterfall(urlGenerator, null, {
-                connectionTimeout: 10,
+                connectionTimeout: 5,
+                retryPolicy: () => 0
             });
             setTimeout(() => {
                 expect(urlGeneratorCall).to.equal(succeedAfter + 1);
                 expect(ws.readyState).to.equal(WebSocket.OPEN);
                 done();
-            }, 250);
+            }, 50);
 
         });
     });
