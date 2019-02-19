@@ -162,6 +162,15 @@ describe("cable", () => {
             expect(() => cable.notify("methodName", 99 as any)).to.throw();
         });
     });
+
+
+    describe("destroy", () => {
+        it("should timeout all remaining requests", (done) => {
+            cable.request("methodName").catch(() =>done())
+            cable.destroy();
+        });
+    });
+
     describe("register", () => {
         it("call the registered method when a message is received", (done) => {
             cable.register("update", async (params: any) => {
