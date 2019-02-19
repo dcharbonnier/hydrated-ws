@@ -190,7 +190,7 @@ describe("Dam", () => {
             });
         });
     });
-    describe("when changes to close", async () => {
+    describe("when changes to close", () => {
         it("should not send a close event", () => {
             const dam = new Dam(ws);
             dam.status = "OPEN";
