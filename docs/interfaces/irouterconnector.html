@@ -920,6 +920,9 @@ img { max-width: 100%; }
 			<a href="../classes/dam.html" class="tsd-kind-icon">Dam</a>
 		</li>
 		<li class=" tsd-kind-class">
+			<a href="../classes/dummyrouterconnector.html" class="tsd-kind-icon">Dummy<wbr>Router<wbr>Connector</a>
+		</li>
+		<li class=" tsd-kind-class">
 			<a href="../classes/pipe.html" class="tsd-kind-icon">Pipe</a>
 		</li>
 		<li class=" tsd-kind-class">
@@ -965,10 +968,19 @@ img { max-width: 100%; }
 					<a href="irouterconnector.html#close" class="tsd-kind-icon">close</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-interface">
+					<a href="irouterconnector.html#emitmessage" class="tsd-kind-icon">emit<wbr>Message</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-interface">
 					<a href="irouterconnector.html#readystate" class="tsd-kind-icon">ready<wbr>State</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-interface">
 					<a href="irouterconnector.html#send" class="tsd-kind-icon">send</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-interface">
+					<a href="irouterconnector.html#subscribe" class="tsd-kind-icon">subscribe</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-interface">
+					<a href="irouterconnector.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a>
 				</li>
 			</ul>
 		</li>
@@ -999,6 +1011,12 @@ img { max-width: 100%; }
 				</li>
 			</ul>
 		</section>
+		<section class="tsd-panel">
+			<h3>Implemented by</h3>
+			<ul class="tsd-hierarchy">
+				<li><a href="../classes/dummyrouterconnector.html" class="tsd-signature-type">DummyRouterConnector</a></li>
+			</ul>
+		</section>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
 			<section class="tsd-panel tsd-index-panel">
@@ -1017,8 +1035,11 @@ img { max-width: 100%; }
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-method tsd-parent-kind-interface"><a href="irouterconnector.html#broadcast" class="tsd-kind-icon">broadcast</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-interface"><a href="irouterconnector.html#close" class="tsd-kind-icon">close</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-interface"><a href="irouterconnector.html#emitmessage" class="tsd-kind-icon">emit<wbr>Message</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-interface"><a href="irouterconnector.html#readystate" class="tsd-kind-icon">ready<wbr>State</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-interface"><a href="irouterconnector.html#send" class="tsd-kind-icon">send</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-interface"><a href="irouterconnector.html#subscribe" class="tsd-kind-icon">subscribe</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-interface"><a href="irouterconnector.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a></li>
 						</ul>
 					</section>
 				</div>
@@ -1032,7 +1053,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">on<wbr>Broadcast<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/router/IRouterConnector.ts#L3">router/IRouterConnector.ts:3</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8947c97/src/router/IRouterConnector.ts#L5">router/IRouterConnector.ts:5</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -1063,7 +1084,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">on<wbr>Close<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/router/IRouterConnector.ts#L5">router/IRouterConnector.ts:5</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8947c97/src/router/IRouterConnector.ts#L7">router/IRouterConnector.ts:7</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -1100,7 +1121,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">on<wbr>Message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/router/IRouterConnector.ts#L2">router/IRouterConnector.ts:2</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8947c97/src/router/IRouterConnector.ts#L4">router/IRouterConnector.ts:4</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -1134,7 +1155,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">on<wbr>Status<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/router/IRouterConnector.ts#L4">router/IRouterConnector.ts:4</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8947c97/src/router/IRouterConnector.ts#L6">router/IRouterConnector.ts:6</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -1175,7 +1196,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/router/IRouterConnector.ts#L7">router/IRouterConnector.ts:7</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8947c97/src/router/IRouterConnector.ts#L11">router/IRouterConnector.ts:11</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1198,7 +1219,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/router/IRouterConnector.ts#L9">router/IRouterConnector.ts:9</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8947c97/src/router/IRouterConnector.ts#L15">router/IRouterConnector.ts:15</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1218,6 +1239,32 @@ img { max-width: 100%; }
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+				<a name="emitmessage" class="tsd-anchor"></a>
+				<h3>emit<wbr>Message</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+					<li class="tsd-signature tsd-kind-icon">emit<wbr>Message<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MessageEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8947c97/src/router/IRouterConnector.ts#L21">router/IRouterConnector.ts:21</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>key: <span class="tsd-signature-type">string</span></h5>
+							</li>
+							<li>
+								<h5>event: <span class="tsd-signature-type">MessageEvent</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 				<a name="readystate" class="tsd-anchor"></a>
 				<h3>ready<wbr>State</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -1227,7 +1274,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/router/IRouterConnector.ts#L8">router/IRouterConnector.ts:8</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8947c97/src/router/IRouterConnector.ts#L13">router/IRouterConnector.ts:13</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1253,7 +1300,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/0eb80d4/src/router/IRouterConnector.ts#L6">router/IRouterConnector.ts:6</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8947c97/src/router/IRouterConnector.ts#L9">router/IRouterConnector.ts:9</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1266,6 +1313,58 @@ img { max-width: 100%; }
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+				<a name="subscribe" class="tsd-anchor"></a>
+				<h3>subscribe</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+					<li class="tsd-signature tsd-kind-icon">subscribe<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, ws<span class="tsd-signature-symbol">: </span><a href="../classes/routedwebsocket.html" class="tsd-signature-type">RoutedWebSocket</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8947c97/src/router/IRouterConnector.ts#L17">router/IRouterConnector.ts:17</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>key: <span class="tsd-signature-type">string</span></h5>
+							</li>
+							<li>
+								<h5>ws: <a href="../classes/routedwebsocket.html" class="tsd-signature-type">RoutedWebSocket</a></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+				<a name="unsubscribe" class="tsd-anchor"></a>
+				<h3>unsubscribe</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+					<li class="tsd-signature tsd-kind-icon">unsubscribe<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, ws<span class="tsd-signature-symbol">: </span><a href="../classes/routedwebsocket.html" class="tsd-signature-type">RoutedWebSocket</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8947c97/src/router/IRouterConnector.ts#L19">router/IRouterConnector.ts:19</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>key: <span class="tsd-signature-type">string</span></h5>
+							</li>
+							<li>
+								<h5>ws: <a href="../classes/routedwebsocket.html" class="tsd-signature-type">RoutedWebSocket</a></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
 					</li>
 				</ul>
 			</section>

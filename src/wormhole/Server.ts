@@ -70,9 +70,14 @@ export class Server {
                     this.buffers.get(channel).push(event.data);
                 };
                 const connect = () => {
-                    const clients = this.clients.get(uuid);
-                    const targetCablePipe = clients.cable;
-                    const targetDataPipe = clients.data;
+                    if (!this.clients.has(uuid)) {
+                        const routedCablePipe = new Pipe(targetWs, "WOHC");
+                        const routedDataPipe = new Pipe(targetWs, "WOHD");
+                        this.clients.set(uuid, { data: routedDataPipe, cable: routedCablePipe });
+                    }
+                    const client = this.clients.get(uuid);
+                    const targetCablePipe = client.cable;
+                    const targetDataPipe = client.data;
                     const targetCable = new Cable(targetCablePipe);
                     pipes.target = new Pipe(targetDataPipe, channel, 32);
                     pipes.target.onmessage = (event) => {

@@ -36,4 +36,4 @@ class ErrorEventPolyfill extends Event implements ErrorEvent {
 }
 
 export default (isNode ? ErrorEventPolyfill : ErrorEvent) as
-    { new(type: string, eventInitDict?: ErrorEventInit): ErrorEvent };
+    new(type: string, eventInitDict?: ErrorEventInit) => ErrorEvent;

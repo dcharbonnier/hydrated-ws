@@ -5,58 +5,16 @@ import WebSocket from "../polyfill/WebSocket";
 import { expect } from "chai";
 import { IRouterConnector } from "./IRouterConnector";
 import { Router } from "./Router";
+import {DummyRouterConnector} from "./DummyRouterConnector";
+import MessageEvent from "../polyfill/MessageEvent";
 
-export class DummyRouterConnector implements IRouterConnector {
-
-    public static clear = () => DummyRouterConnector.instances.length = 0;
-    private static instances: DummyRouterConnector[] = [];
-    public onMessage?: (key: string, data: any) => boolean;
-    public onStatus?: (key: string, status: number) => boolean;
-    public onBroadcast?: (data: any) => void;
-    public onClose?: (key: string, code: number, reason: string) => boolean;
-
-    constructor() {
-        DummyRouterConnector.instances.push(this);
-    }
-
-    public send(key: string, data: any): void {
-        for (const connector of DummyRouterConnector.instances) {
-            if (connector !== this && connector.onMessage && connector.onMessage(key, data)) {
-                return;
-            }
-        }
-    }
-
-    public broadcast(data: any): void {
-        DummyRouterConnector.instances.forEach((connector) => {
-            if (connector !== this && connector.onBroadcast) {
-                connector.onBroadcast(data);
-            }
-        });
-    }
-
-    public readyState(key: string, status: number): void {
-        DummyRouterConnector.instances.forEach((connector) => {
-            if (connector !== this && connector.onStatus) {
-                connector.onStatus(key, status);
-            }
-        });
-    }
-
-    public close(key: string, code: number, reason: string): void {
-        for (const connector of DummyRouterConnector.instances) {
-            if (connector !== this && connector.onClose && connector.onClose(key, code, reason)) {
-                return;
-            }
-        }
-    }
-}
 
 class MockWebsocketClass {
     public received: any[] = [];
     public closed: { code: number, reason: string } = void 0;
+    public onmessage: any;
 
-    public listeners: { open: any[], close: any[] } = { open: [], close: [] };
+    public listeners: { open: any[], close: any[], message: any[] } = { open: [], close: [], message: [] };
 
     constructor(public readyState: number = WebSocket.OPEN) {
         setTimeout(() => {
@@ -67,9 +25,19 @@ class MockWebsocketClass {
             this.listeners.open.forEach(((clb) => clb()));
         });
     }
+
     public send(data: any) {
         this.received.push(data);
+        const event = new MessageEvent("message", {
+            data
+        })
+        if(this.onmessage) {
+            this.onmessage(data);
+        }
+        this.listeners.message.forEach((callback) => callback(event));
+
     }
+
     public close(code?: number, reason?: string) {
         this.closed = { code, reason };
         this.readyState = WebSocket.CLOSED;
@@ -77,7 +45,7 @@ class MockWebsocketClass {
 
     }
 
-    public addEventListener(event: "open" | "close", callback: (e: any) => void) {
+    public addEventListener(event: "open" | "close" | "message", callback: (e: any) => void) {
         this.listeners[event].push(callback);
     }
 }
@@ -128,6 +96,29 @@ describe("Router", () => {
             const ws = router.get("id");
             router.clear();
             expect(ws.readyState).to.equal(WebSocket.CLOSED);
+        });
+    });
+
+    describe("get", () => {
+        it("should get a virtual Websocket receiving messages onmessage", (done) => {
+            const router = new Router();
+            const ws1 = new MockWebsocket();
+            router.set("id", ws1);
+            router.get("id").onmessage = (e) => {
+                router.destroy();
+                done();
+            }
+            ws1.send("test should get a virtual Websocket receiving message");
+        });
+        it("should get a virtual Websocket receiving messages addListener", (done) => {
+            const router = new Router();
+            const ws1 = new MockWebsocket();
+            router.set("id", ws1);
+            router.get("id").addEventListener("message", (e) => {
+                router.destroy();
+                done();
+            });
+            ws1.send("test should get a virtual Websocket receiving message");
         });
     });
 
@@ -216,6 +207,12 @@ describe("Router", () => {
                 expect(ws1.received.length).to.equal(0);
                 expect(ws2.received.length).to.equal(1);
                 done();
+            });
+        });
+        it("should emit messages on a remote routed websocket", (done) => {
+            setTimeout(() => {
+                router1.get("id2").onmessage = () => done();
+                ws2.send("test");
             });
         });
         it("should transmit messages to a remote if open only", (done) => {
