@@ -920,6 +920,9 @@ img { max-width: 100%; }
 			<a href="dam.html" class="tsd-kind-icon">Dam</a>
 		</li>
 		<li class=" tsd-kind-class">
+			<a href="dummyrouterconnector.html" class="tsd-kind-icon">Dummy<wbr>Router<wbr>Connector</a>
+		</li>
+		<li class=" tsd-kind-class">
 			<a href="pipe.html" class="tsd-kind-icon">Pipe</a>
 		</li>
 		<li class=" tsd-kind-class">
@@ -960,6 +963,9 @@ img { max-width: 100%; }
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a href="tank.html#closing-1" class="tsd-kind-icon">closing</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a href="tank.html#listeners" class="tsd-kind-icon">listeners</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a href="tank.html#ws" class="tsd-kind-icon">ws</a>
@@ -1004,6 +1010,9 @@ img { max-width: 100%; }
 					<a href="tank.html#forwardevents" class="tsd-kind-icon">forward<wbr>Events</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a href="tank.html#getonmessage" class="tsd-kind-icon">get<wbr>Onmessage</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a href="tank.html#getreadystate" class="tsd-kind-icon">get<wbr>Ready<wbr>State</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
@@ -1011,6 +1020,9 @@ img { max-width: 100%; }
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 					<a href="tank.html#send" class="tsd-kind-icon">send</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a href="tank.html#setonmessage" class="tsd-kind-icon">set<wbr>Onmessage</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a href="tank.html#stopforwardingevents" class="tsd-kind-icon">stop<wbr>Forwarding<wbr>Events</a>
@@ -1092,6 +1104,7 @@ img { max-width: 100%; }
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="tank.html#_readystate" class="tsd-kind-icon">_ready<wbr>State</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="tank.html#binarytype" class="tsd-kind-icon">binary<wbr>Type</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="tank.html#closing-1" class="tsd-kind-icon">closing</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="tank.html#listeners" class="tsd-kind-icon">listeners</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="tank.html#ws" class="tsd-kind-icon">ws</a></li>
 						</ul>
 					</section>
@@ -1116,9 +1129,11 @@ img { max-width: 100%; }
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="tank.html#close" class="tsd-kind-icon">close</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="tank.html#dispatchevent" class="tsd-kind-icon">dispatch<wbr>Event</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected"><a href="tank.html#forwardevents" class="tsd-kind-icon">forward<wbr>Events</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="tank.html#getonmessage" class="tsd-kind-icon">get<wbr>Onmessage</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="tank.html#getreadystate" class="tsd-kind-icon">get<wbr>Ready<wbr>State</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="tank.html#removeeventlistener" class="tsd-kind-icon">remove<wbr>Event<wbr>Listener</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="tank.html#send" class="tsd-kind-icon">send</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="tank.html#setonmessage" class="tsd-kind-icon">set<wbr>Onmessage</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="tank.html#stopforwardingevents" class="tsd-kind-icon">stop<wbr>Forwarding<wbr>Events</a></li>
 						</ul>
 					</section>
@@ -1138,7 +1153,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Overrides <a href="shell.html">Shell</a>.<a href="shell.html#constructor">constructor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/tank/Tank.ts#L10">tank/Tank.ts:10</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/tank/Tank.ts#L10">tank/Tank.ts:10</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1161,7 +1176,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#closed">CLOSED</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L14">Shell.ts:14</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L97">Shell.ts:97</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1177,7 +1192,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#closing">CLOSING</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L12">Shell.ts:12</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L95">Shell.ts:95</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1193,7 +1208,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#connecting">CONNECTING</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L8">Shell.ts:8</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L91">Shell.ts:91</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1209,7 +1224,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#open">OPEN</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L10">Shell.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L93">Shell.ts:93</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1225,7 +1240,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#_readystate">_readyState</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L25">Shell.ts:25</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L108">Shell.ts:108</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1236,7 +1251,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#binarytype">binaryType</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L21">Shell.ts:21</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L104">Shell.ts:104</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1254,7 +1269,18 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#closing-1">closing</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L23">Shell.ts:23</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L106">Shell.ts:106</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+				<a name="listeners" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagProtected">Protected</span> listeners</h3>
+				<div class="tsd-signature tsd-kind-icon">listeners<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Dict</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">keyof IHydratedWebSocketEventMap</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new Dict()</span></div>
+				<aside class="tsd-sources">
+					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#listeners">listeners</a></p>
+					<ul>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L109">Shell.ts:109</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1265,7 +1291,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#ws">ws</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L24">Shell.ts:24</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L107">Shell.ts:107</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1279,7 +1305,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#bufferedamount">bufferedAmount</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L117">Shell.ts:117</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L74">Shell.ts:74</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1297,7 +1323,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#extensions">extensions</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L125">Shell.ts:125</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L82">Shell.ts:82</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1314,8 +1340,8 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onclose">onclose</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L54">Shell.ts:54</a></li>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L58">Shell.ts:58</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L11">Shell.ts:11</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L15">Shell.ts:15</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1332,8 +1358,8 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onerror">onerror</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L65">Shell.ts:65</a></li>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L69">Shell.ts:69</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L22">Shell.ts:22</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L26">Shell.ts:26</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1349,8 +1375,8 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onmessage">onmessage</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L77">Shell.ts:77</a></li>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L81">Shell.ts:81</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L34">Shell.ts:34</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L38">Shell.ts:38</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1367,8 +1393,8 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#onopen">onopen</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L90">Shell.ts:90</a></li>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L94">Shell.ts:94</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L47">Shell.ts:47</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L51">Shell.ts:51</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1386,7 +1412,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#protocol">protocol</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L129">Shell.ts:129</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L86">Shell.ts:86</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1397,7 +1423,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#readystate">readyState</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L101">Shell.ts:101</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L58">Shell.ts:58</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1413,7 +1439,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#url">url</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L108">Shell.ts:108</a></li>
+						<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L65">Shell.ts:65</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1436,7 +1462,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#addeventlistener">addEventListener</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L191">Shell.ts:191</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L191">Shell.ts:191</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1498,7 +1524,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#close">close</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L143">Shell.ts:143</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L143">Shell.ts:143</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1531,7 +1557,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#dispatchevent">dispatchEvent</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L232">Shell.ts:232</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L232">Shell.ts:232</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1562,7 +1588,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#forwardevents">forwardEvents</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L241">Shell.ts:241</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L249">Shell.ts:249</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1582,6 +1608,42 @@ img { max-width: 100%; }
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+				<a name="getonmessage" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagProtected">Protected</span> get<wbr>Onmessage</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<li class="tsd-signature tsd-kind-icon">get<wbr>Onmessage<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#getonmessage">getOnmessage</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L241">Shell.ts:241</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">function</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>ev<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MessageEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>ev: <span class="tsd-signature-type">MessageEvent</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 				<a name="getreadystate" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagProtected">Protected</span> get<wbr>Ready<wbr>State</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
@@ -1592,7 +1654,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#getreadystate">getReadyState</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L253">Shell.ts:253</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L261">Shell.ts:261</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1610,7 +1672,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#removeeventlistener">removeEventListener</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L212">Shell.ts:212</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L212">Shell.ts:212</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1672,7 +1734,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Overrides <a href="shell.html">Shell</a>.<a href="shell.html#send">send</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/tank/Tank.ts#L42">tank/Tank.ts:42</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/tank/Tank.ts#L42">tank/Tank.ts:42</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1710,6 +1772,48 @@ img { max-width: 100%; }
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+				<a name="setonmessage" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagProtected">Protected</span> set<wbr>Onmessage</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<li class="tsd-signature tsd-kind-icon">set<wbr>Onmessage<span class="tsd-signature-symbol">(</span>f<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#setonmessage">setOnmessage</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L245">Shell.ts:245</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>f: <span class="tsd-signature-type">function</span></h5>
+								<ul class="tsd-parameters">
+									<li class="tsd-parameter-siganture">
+										<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>ev<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MessageEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+										</ul>
+										<ul class="tsd-descriptions">
+											<li class="tsd-description">
+												<h4 class="tsd-parameters-title">Parameters</h4>
+												<ul class="tsd-parameters">
+													<li>
+														<h5>ev: <span class="tsd-signature-type">MessageEvent</span></h5>
+													</li>
+												</ul>
+												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 				<a name="stopforwardingevents" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagProtected">Protected</span> stop<wbr>Forwarding<wbr>Events</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
@@ -1720,7 +1824,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="shell.html">Shell</a>.<a href="shell.html#stopforwardingevents">stopForwardingEvents</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/8727c5a/src/Shell.ts#L247">Shell.ts:247</a></li>
+								<li>Defined in <a href="https://github.com/dcharbonnier/hydrated-ws/blob/e611941/src/Shell.ts#L255">Shell.ts:255</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>

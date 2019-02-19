@@ -4,49 +4,6 @@ import WebSocket from "./polyfill/WebSocket";
 
 export abstract class Shell implements WebSocket {
 
-    /** The connection is not yet open. */
-    public readonly CONNECTING = WebSocket.CONNECTING;
-    /**  The connection is open and ready to communicate. */
-    public readonly OPEN = WebSocket.OPEN;
-    /**  The connection is in the process of closing. */
-    public readonly CLOSING = WebSocket.CLOSING;
-    /**  The connection is closed or couldn't be opened. */
-    public readonly CLOSED = WebSocket.CLOSED;
-
-    /**
-     * A string indicating the type of binary data being transmitted by the connection.
-     * This should be either "blob" if DOM Blob objects are being used or "arraybuffer"
-     * if ArrayBuffer objects are being used.
-     */
-    public binaryType: "blob" | "arraybuffer";
-
-    protected closing: boolean = false;
-    protected ws: WebSocket;
-    protected _readyState: number = WebSocket.CONNECTING;
-
-    private readonly forwardListener: (evt: Event) => boolean;
-    private _onerror: (ev: Event) => any;
-    private _onmessage: (ev: MessageEvent) => any;
-    private _onopen: (ev: Event) => any;
-    private _onclose: (ev: CloseEvent) => any;
-    private listeners: Dict<keyof IHydratedWebSocketEventMap,
-        Array<{
-            listener: (this: WebSocket,
-                       ev: IHydratedWebSocketEventMap[keyof IHydratedWebSocketEventMap]) => any,
-            useCapture?: boolean,
-        }>> = new Dict();
-
-    constructor(ws?: WebSocket) {
-        if (!this.dispatchEvent) {
-            throw new TypeError("Failed to construct. Please use the 'new' operator");
-        }
-        this.forwardListener = this.dispatchEvent.bind(this);
-        if (ws) {
-            this.ws = ws;
-            this.forwardEvents();
-        }
-    }
-
     /**
      * An event listener to be called when the WebSocket connection's **readyState** changes to **CLOSED**.
      * The listener receives a _CloseEvent_ named "close".
@@ -75,11 +32,11 @@ export abstract class Shell implements WebSocket {
      * The listener receives a _MessageEvent_ named "message".
      */
     public get onmessage(): (ev: MessageEvent) => any {
-        return this._onmessage;
+        return this.getOnmessage();
     }
 
     public set onmessage(f: (ev: MessageEvent) => any) {
-        this._onmessage = f;
+        this.setOnmessage(f);
     }
 
     /**
@@ -128,6 +85,49 @@ export abstract class Shell implements WebSocket {
 
     public get protocol(): string {
         return this.ws.protocol;
+    }
+
+    /** The connection is not yet open. */
+    public readonly CONNECTING = WebSocket.CONNECTING;
+    /**  The connection is open and ready to communicate. */
+    public readonly OPEN = WebSocket.OPEN;
+    /**  The connection is in the process of closing. */
+    public readonly CLOSING = WebSocket.CLOSING;
+    /**  The connection is closed or couldn't be opened. */
+    public readonly CLOSED = WebSocket.CLOSED;
+
+    /**
+     * A string indicating the type of binary data being transmitted by the connection.
+     * This should be either "blob" if DOM Blob objects are being used or "arraybuffer"
+     * if ArrayBuffer objects are being used.
+     */
+    public binaryType: "blob" | "arraybuffer";
+
+    protected closing: boolean = false;
+    protected ws: WebSocket;
+    protected _readyState: number = WebSocket.CONNECTING;
+    protected listeners: Dict<keyof IHydratedWebSocketEventMap,
+        Array<{
+            listener: (this: WebSocket,
+                       ev: IHydratedWebSocketEventMap[keyof IHydratedWebSocketEventMap]) => any,
+            useCapture?: boolean,
+        }>> = new Dict();
+
+    private readonly forwardListener: (evt: Event) => boolean;
+    private _onerror: (ev: Event) => any;
+    private _onmessage: (ev: MessageEvent) => any;
+    private _onopen: (ev: Event) => any;
+    private _onclose: (ev: CloseEvent) => any;
+
+    constructor(ws?: WebSocket) {
+        if (!this.dispatchEvent) {
+            throw new TypeError("Failed to construct. Please use the 'new' operator");
+        }
+        this.forwardListener = this.dispatchEvent.bind(this);
+        if (ws) {
+            this.ws = ws;
+            this.forwardEvents();
+        }
     }
 
     /**
@@ -236,6 +236,14 @@ export abstract class Shell implements WebSocket {
         }
         return (this.listeners.get(evt.type as keyof IHydratedWebSocketEventMap) || [])
             .some(({ listener }) => listener.call(this, evt) === false) === void 0;
+    }
+
+    protected getOnmessage(): (ev: MessageEvent) => any {
+        return this._onmessage;
+    }
+
+    protected setOnmessage(f: (ev: MessageEvent) => any) {
+        this._onmessage = f;
     }
 
     protected forwardEvents<K extends keyof IHydratedWebSocketEventMap>(list?: K[]) {
