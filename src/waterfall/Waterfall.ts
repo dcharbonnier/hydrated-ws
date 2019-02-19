@@ -119,7 +119,9 @@ export class Waterfall extends Shell {
         }
         this.closing = true;
         clearTimeout(this.timeout);
-        this.ws.close(code, reason);
+        if ( this.ws) {
+        this.ws.close(  code, reason);
+        }
     }
 
     private set urlGenerator(value: string | UrlGenerator) {
@@ -205,6 +207,7 @@ export class Waterfall extends Shell {
     }
 
     private failed(): void {
+        clearTimeout(this.timeout);
         this.forceClose(true);
         const timeout = this.retryPolicy(this.attempts + 1, this);
         if (timeout === null) {

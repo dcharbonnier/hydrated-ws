@@ -146,7 +146,6 @@ describe("Waterfall", () => {
         let testCase: string;
         let urlGeneratorCall: number = 0;
         beforeEach(async () => {
-
             urlGeneratorCall = 0;
             const urlGenerator = (attemp: number, ws: Waterfall) => {
                 testCase = rnd();
@@ -173,6 +172,27 @@ describe("Waterfall", () => {
                     .to.deep.equal(["connect"]);
                 done();
             });
+        });
+        it("should avoid unnecessary close/open cycles", (done) => {
+            urlGeneratorCall = 0;
+            const succeedAfter = 2;
+            const validUrl = `ws://localtest.me:4752/${rnd}`;
+            const urlGenerator = (attemp: number, ws: Waterfall) => {
+                urlGeneratorCall++;
+                if (urlGeneratorCall >  succeedAfter) {
+                    return validUrl;
+                }
+                return `unknown`;
+            };
+            ws = new Waterfall(urlGenerator, null, {
+                connectionTimeout: 20,
+                retryPolicy: () => 0
+            });
+            setTimeout(() => {
+                expect(urlGeneratorCall).to.equal(succeedAfter + 1);
+                expect(ws.readyState).to.equal(WebSocket.OPEN);
+                done();
+            }, 100);
 
         });
     });
