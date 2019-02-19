@@ -34,7 +34,7 @@
     "test-karma": "yarn test-server && karma start --single-run",
     "test-phantom": "yarn test-server && karma start --single-run --browsers PhantomJS",
     "test-chrome": "yarn test-server && karma start --single-run --browsers Chrome",
-    "test-node": "yarn test-server && nyc mocha --opts mocha.opts",
+    "test-node": "yarn test-server && nyc mocha --config ./mocharc.yml",
     "lint": "tslint -c tslint.json  -p . --fix",
     "codecov": "codecov",
     "prepublishOnly": "yarn build && yarn toc && yarn doc"
@@ -64,7 +64,6 @@
   "author": "David Charbonnier",
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/es6-collections": "^0.5.31",
     "@types/es6-promise": "^3.3.0",
     "@types/karma": "^3.0.2",
     "@types/mocha": "^5.2.6",
@@ -85,7 +84,7 @@
     "karma-typescript": "^4.0.0",
     "karma-typescript-es6-transform": "^4.0.0",
     "markdown-toc": "^1.2.0",
-    "mocha": "^5.2.0",
+    "mocha": "^6.0.0",
     "mock-socket": "^8.0.5",
     "nyc": "^13.2.0",
     "puppeteer": "^1.12.2",
