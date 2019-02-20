@@ -58,7 +58,8 @@ export class Router {
     }
 
     public onStatus(id: string, status: number): void {
-        if (status === WebSocket.OPEN && this.localWebSockets.has(id) && this.localWebSockets.get(id) .readyState !== status) {
+        if (status === WebSocket.OPEN && this.localWebSockets.has(id) &&
+            this.localWebSockets.get(id) .readyState !== status) {
             if (this.virtualWebSockets.has(id)) {
                 this.virtualWebSockets.get(id).setReadyState(WebSocket.CLOSED);
             }
@@ -139,7 +140,8 @@ export class Router {
                             if (readyState && !routedWs.readyState) {
                                 routedWs.setReadyState(readyState);
                             }
-                        });
+                        })
+                        .catch( () => void 0);
                 }
             }
         }

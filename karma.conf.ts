@@ -18,6 +18,7 @@ let configData: any = {
         captureConsole: true,
         mocha: {
             timeout: TIMEOUT_FACTOR * 4000,
+            retries: 4,
         }
     },
     autoWatch: false,
