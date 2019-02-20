@@ -163,7 +163,7 @@ describe("Wormhole", () => {
         const client2 = new wormhole.Client("client2", new WebSocket(urls[1]), (ws: WebSocket) => {
             ws.onmessage = (event) => {
                 ws.send(`hello ${event.data}`);
-            }
+            };
         });
 
         const ws1 = new Tank(client1.connect("client2"));
@@ -174,4 +174,116 @@ describe("Wormhole", () => {
         ws1.send("client 1");
     });
 
+
+    it("keep the wormhole working when the client reconnect to a different server 1", (done) => {
+        const server1 = new wormhole.Server();
+        const server2 = new wormhole.Server();
+        const connector1 = new DummyRouterConnector();
+        const connector2 = new DummyRouterConnector();
+        server1.router.connector = connector1;
+        server2.router.connector = connector2;
+        mockServers[0].on("connection", (ws) => {
+            server1.addWebSocket(ws);
+        });
+        mockServers[1].on("connection", (ws) => {
+            server2.addWebSocket(ws);
+        });
+
+        const ws=new WebSocket(urls[1]);
+        new wormhole.Client("client1", ws, () => void 0);
+
+        setTimeout(() => {
+            ws.close();
+            const client1 = new wormhole.Client("client1", new WebSocket(urls[0]), () => void 0);
+            const client2 = new wormhole.Client("client2", new WebSocket(urls[1]), (ws: WebSocket) => {
+                ws.onmessage = (event) => {
+                    ws.send(`hello ${event.data}`);
+                };
+            });
+            setTimeout(() => {
+                const ws1 = new Tank(client1.connect("client2"));
+                ws1.onmessage = (event) => {
+                    expect(event.data).to.equal("hello client 1");
+                    done();
+                };
+                ws1.send("client 1");
+            }, 500);
+
+        }, 100);
+
+    });
+
+    it("keep the wormhole working when the client reconnect to a different server 2", (done) => {
+        const server1 = new wormhole.Server();
+        const server2 = new wormhole.Server();
+        const connector1 = new DummyRouterConnector();
+        const connector2 = new DummyRouterConnector();
+        server1.router.connector = connector1;
+        server2.router.connector = connector2;
+        mockServers[0].on("connection", (ws) => {
+            server1.addWebSocket(ws);
+        });
+        mockServers[1].on("connection", (ws) => {
+            server2.addWebSocket(ws);
+        });
+
+        const ws=new WebSocket(urls[0]);
+        new wormhole.Client("client1", ws, () => void 0);
+
+        setTimeout(() => {
+            ws.close();
+            const client1 = new wormhole.Client("client1", new WebSocket(urls[1]), () => void 0);
+            const client2 = new wormhole.Client("client2", new WebSocket(urls[1]), (ws: WebSocket) => {
+                ws.onmessage = (event) => {
+                    ws.send(`hello ${event.data}`);
+                };
+            });
+            setTimeout(() => {
+                const ws1 = new Tank(client1.connect("client2"));
+                ws1.onmessage = (event) => {
+                    expect(event.data).to.equal("hello client 1");
+                    done();
+                };
+                ws1.send("client 1");
+            }, 500);
+
+        }, 100);
+
+    });
+    it("keep the wormhole working when the client reconnect to a different server 3", (done) => {
+        const server1 = new wormhole.Server();
+        const server2 = new wormhole.Server();
+        const connector1 = new DummyRouterConnector();
+        const connector2 = new DummyRouterConnector();
+        server1.router.connector = connector1;
+        server2.router.connector = connector2;
+        mockServers[0].on("connection", (ws) => {
+            server1.addWebSocket(ws);
+        });
+        mockServers[1].on("connection", (ws) => {
+            server2.addWebSocket(ws);
+        });
+
+        const ws=new WebSocket(urls[1]);
+        new wormhole.Client("client2", ws, () => void 0);
+
+        setTimeout(() => {
+            ws.close();
+            const client1 = new wormhole.Client("client1", new WebSocket(urls[1]), () => void 0);
+            const client2 = new wormhole.Client("client2", new WebSocket(urls[0]), (ws: WebSocket) => {
+                ws.onmessage = (event) => {
+                    ws.send(`hello ${event.data}`);
+                };
+            });
+            setTimeout(() => {
+                const ws1 = new Tank(client1.connect("client2"));
+                ws1.onmessage = (event) => {
+                    expect(event.data).to.equal("hello client 1");
+                    done();
+                };
+                ws1.send("client 1");
+            }, 500);
+
+        }, 100);
+    });
 });
