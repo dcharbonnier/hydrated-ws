@@ -48,18 +48,12 @@ export class Server {
         const dataPipe = new Pipe(ws, "WOHD");
 
         cable.register("identity", ({uuid}: { uuid: string }): Promise<void> => {
-            try {
-                this.clients.set(uuid, {data: dataPipe, cable: cablePipe});
-                this.router.set(uuid, ws);
-            } catch (e) {
-                // ignore
-            }
+            this.router.set(uuid, ws);
             return new Promise((resolve) => setTimeout(resolve, 0));
         });
 
         cable.register("close", ({channel}: { channel: string }): Promise<void> => {
             const pipes = this.channels.get(channel);
-
             if (pipes && pipes.source) {
                 pipes.source.close();
             }
@@ -89,7 +83,11 @@ export class Server {
                     const targetCable = new Cable(targetCablePipe);
                     pipes.target = new Pipe(targetDataPipe, channel, 32);
                     pipes.target.onmessage = (event) => {
-                        pipes.source.send(event.data);
+                        try {
+                            pipes.source.send(event.data);
+                        } catch (e) {
+                            // ignore
+                        }
                     };
                     pipes.source.onclose = (event) => {
                         pipes.target.close();
@@ -99,7 +97,6 @@ export class Server {
                             // ignore
                         }
                         this.channels.delete(channel);
-
                     };
                     targetCable.request("open", {channel})
                         .then(() => {
@@ -120,6 +117,8 @@ export class Server {
                 }
                 targetWs.addEventListener("open", () => {
                     connect();
+                });
+                targetWs.addEventListener("close", () => {
                 });
             } catch (e) {
                 // ignore

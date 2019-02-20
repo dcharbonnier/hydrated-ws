@@ -38,6 +38,7 @@ export class Router {
             this._connector.onMessage = this.onMessage.bind(this);
             this._connector.onClose = this.onClose.bind(this);
             this._connector.onStatus = this.onStatus.bind(this);
+            this._connector.onRequestReadyState = this.onRequestReadyState.bind(this);
         }
     }
 
@@ -49,7 +50,21 @@ export class Router {
         }
     }
 
+    public onRequestReadyState(id: string, data: any): number {
+        const ws = this.localWebSockets.get(id);
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            return ws.readyState;
+        }
+    }
+
     public onStatus(id: string, status: number): void {
+        if (status === WebSocket.OPEN && this.localWebSockets.has(id) && this.localWebSockets.get(id) .readyState !== status) {
+            if (this.virtualWebSockets.has(id)) {
+                this.virtualWebSockets.get(id).setReadyState(WebSocket.CLOSED);
+            }
+            this.localWebSockets.delete(id);
+
+        }
         const ws = this.virtualWebSockets.get(id);
         if (ws) {
             ws.setReadyState(status);
@@ -80,10 +95,23 @@ export class Router {
     }
 
     public set(id: string, ws: WebSocket) {
+        if (this.localWebSockets.get(id) === ws) {
+            return;
+        }
         this.close(id, 1000, "Duplicate websocket");
-        ws.addEventListener("open", () => this.emitState(id, ws));
-        ws.addEventListener("close", () => this.emitState(id, ws));
-        ws.addEventListener("message", (event: MessageEvent) => this.emitMessage(id, event));
+        const openListener = () => this.emitState(id, ws);
+        const messageListener = (event: MessageEvent) => this.emitMessage(id, event);
+        const closeListener = (event) => {
+            if (this.localWebSockets.get(id) === ws) {
+                this.emitState(id, ws);
+            }
+        };
+        ws.addEventListener("open", openListener);
+        ws.addEventListener("message", messageListener);
+        ws.addEventListener("close", closeListener);
+        if (this.virtualWebSockets.has(id) && this.virtualWebSockets.get(id).readyState === ws.readyState) {
+            this.virtualWebSockets.get(id).setReadyState(WebSocket.CLOSED);
+        }
         this.localWebSockets.set(id, ws);
         this.emitState(id, ws);
     }
@@ -98,12 +126,21 @@ export class Router {
             const routedWs = new RoutedWebSocket(
                 (data: string | ArrayBufferLike | Blob | ArrayBufferView) => this.send(id, data),
                 (code: number, reason: string) => this.close(id, code, reason),
-                           (vWs) => this.onMessageSubscribe(id, vWs),
-                           (vWs) => this.onMessageUnsubscribe(id, vWs),
-        )     ;
+                (vWs) => this.onMessageSubscribe(id, vWs),
+                (vWs) => this.onMessageUnsubscribe(id, vWs),
+            );
             this.virtualWebSockets.set(id, routedWs);
             if (this.localWebSockets.has(id)) {
                 routedWs.setReadyState(this.localWebSockets.get(id).readyState);
+            } else {
+                if (this._connector) {
+                    this._connector.requestReadyState(id)
+                        .then((readyState) => {
+                            if (readyState && !routedWs.readyState) {
+                                routedWs.setReadyState(readyState);
+                            }
+                        });
+                }
             }
         }
         const ws = this.virtualWebSockets.get(id);
@@ -115,6 +152,7 @@ export class Router {
             this._connector.subscribe(id, ws);
         }
     }
+
     public onMessageUnsubscribe(id: string, ws: RoutedWebSocket) {
         if (this._connector) {
             this._connector.unsubscribe(id, ws);
@@ -144,7 +182,7 @@ export class Router {
     }
 
     private emitMessage(id, event: MessageEvent) {
-        if (this.virtualWebSockets.has(id)) {
+        if (this.localWebSockets.has(id) && this.virtualWebSockets.has(id)) {
             this.virtualWebSockets.get(id).emitMessage(event);
         }
         if (this._connector) {

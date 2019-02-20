@@ -11,6 +11,7 @@ export class DummyRouterConnector implements IRouterConnector {
     public onStatus?: (key: string, status: number) => boolean;
     public onBroadcast?: (data: any) => void;
     public onClose?: (key: string, code: number, reason: string) => boolean;
+    public onRequestReadyState?: (key: string) => number;
     public subscriptions: Dict<string, RoutedWebSocket[]> = new Dict();
 
     constructor() {
@@ -25,11 +26,23 @@ export class DummyRouterConnector implements IRouterConnector {
         }
     }
 
+    public async requestReadyState(key: string): Promise<number> {
+        return new Promise((resolve) => {
+            for (const connector of DummyRouterConnector.instances) {
+                if (connector !== this && connector.onRequestReadyState && connector.onRequestReadyState(key)) {
+                    setTimeout(() => resolve(connector.onRequestReadyState(key)), 0);
+                    return;
+                }
+            }
+        });
+
+    }
+
     public emitMessage(key: string, event: MessageEvent): void {
         DummyRouterConnector.instances.forEach((connector) => {
             if (connector !== this) {
                 (connector.subscriptions.get(key) || [])
-                    .forEach((ws: RoutedWebSocket) => ws.emitMessage(event));
+                    .forEach((ws: RoutedWebSocket) => setTimeout(() => ws.emitMessage(event)));
             }
         });
     }
@@ -57,16 +70,19 @@ export class DummyRouterConnector implements IRouterConnector {
     public broadcast(data: any): void {
         DummyRouterConnector.instances.forEach((connector) => {
             if (connector !== this && connector.onBroadcast) {
-                connector.onBroadcast(data);
+                setTimeout(() => connector.onBroadcast(data));
             }
         });
     }
 
     public readyState(key: string, status: number): void {
         DummyRouterConnector.instances.forEach((connector) => {
-            if (connector !== this && connector.onStatus) {
-                connector.onStatus(key, status);
-            }
+            setTimeout(() => {
+                if (connector !== this && connector.onStatus) {
+
+                    connector.onStatus(key, status);
+                }
+            });
         });
     }
 
