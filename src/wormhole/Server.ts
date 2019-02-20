@@ -107,9 +107,8 @@ export class Server {
                             pipes.source.onmessage = (event) => {
                                 pipes.target.send(event.data);
                             };
-
                         })
-                        .catch((e) => void 0);
+                        .catch(() => void 0);
 
                 };
                 if (targetWs.readyState === WebSocket.OPEN) {
@@ -117,8 +116,6 @@ export class Server {
                 }
                 targetWs.addEventListener("open", () => {
                     connect();
-                });
-                targetWs.addEventListener("close", () => {
                 });
             } catch (e) {
                 // ignore
