@@ -86,7 +86,7 @@
     "markdown-toc": "^1.2.0",
     "mocha": "^6.0.0",
     "mock-socket": "^8.0.5",
-    "nyc": "^13.2.0",
+    "nyc": "^14.0.0",
     "puppeteer": "^1.12.2",
     "ts-node": "^8.0.2",
     "tslint": "^5.12.1",
