@@ -178,6 +178,19 @@ lerna
 FAQ
 =======
 
+#### Aurelia bundler
+The bundler will complain about many packages with a message "Unable to load package metadata", the solution is to ignore the ws package in the task build :
+```
+function writeBundles() {
+  return buildCLI.dest({
+    onRequiringModule: moduleId =>
+      moduleId === "ws"
+        ? "define(['ws'] , function () {return undefined;});"
+        : void 0
+  });
+}
+```
+
 #### Webpack
 Webpack complain about the `ws` implementation of WebSocket, the errors
 are :
