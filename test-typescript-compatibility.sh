@@ -3,6 +3,7 @@ version=$1
 temp_dir=$(mktemp -d)
 package_path=`pwd`
 
+echo "test typescript $version" && \
 cd $temp_dir && \
 yarn init -y && \
 yarn add typescript/@$version && \
