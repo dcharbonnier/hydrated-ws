@@ -5,6 +5,7 @@ import { Waterfall } from "./Waterfall";
 
 describe("Waterfall", () => {
     let ws: Waterfall;
+    let wsList: Waterfall[] = [];
     before(async () => {
         await expectEventually(() => supervisor.ws.readyState === WebSocket.OPEN,
             "The supervisor failed to connect");
@@ -13,26 +14,33 @@ describe("Waterfall", () => {
         if (ws) {
             ws.close();
         }
+        while (wsList.length) {
+            try {
+                wsList.pop().close();
+            } catch(e) {
+                // ignore
+            }
+        }
     });
     describe("constructor", () => {
         it("should throw an error when not using the new operator", () => {
-            expect(() => (Waterfall as any)("")).to.throw(TypeError,
+            expect(() => ws = (Waterfall as any)("")).to.throw(TypeError,
                 "Failed to construct. Please use the 'new' operator");
         });
 
         it("should throw an error when using a bad url", () => {
             INVALID_URLS.forEach((url) => {
-                expect(() => new Waterfall(url)).to.throw("Invalid url");
+                expect(() => wsList.push(new Waterfall(url))).to.throw("Invalid url");
             });
         });
 
         it("should throw an error when using an undefined url", () => {
-            expect(() => new Waterfall(undefined)).to.throw("Invalid url");
+            expect(() => ws = new Waterfall(undefined)).to.throw("Invalid url");
         });
 
         it("should not throw when using a correct url", () => {
             VALID_URLS.forEach((url) => {
-                expect(() => new Waterfall(url)).to.not.throw();
+                expect(() => wsList.push(new Waterfall(url))).to.not.throw();
             });
         });
         it("should immediately connect to the server", async () => {
@@ -160,7 +168,6 @@ describe("Waterfall", () => {
 
         it("should call the url generator when reconnecting", (done) => {
             const firstTest = testCase;
-            ws.send("disconnect");
             ws.addEventListener("connecting", async () => {
                 await sleep(100);
                 const secondTest = testCase;
@@ -172,6 +179,8 @@ describe("Waterfall", () => {
                     .to.deep.equal(["connect"]);
                 done();
             });
+            ws.send("disconnect");
+
         });
         it("should avoid unnecessary close/open cycles", (done) => {
             urlGeneratorCall = 0;
