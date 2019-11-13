@@ -19,7 +19,7 @@ path over Websocket on the server and the browser.
 All components are seen from the outside world like a WebSocket allowing
 you to integrate is on any existing project.
 
-- [Api documentation](http://doc.hydrated.ws/)
+- [Api documentation](https://dcharbonnier.github.io/hydrated-ws/)
 
 <!-- toc -->
 
@@ -177,6 +177,19 @@ lerna
 
 FAQ
 =======
+
+#### Aurelia bundler
+The bundler will complain about many packages with a message "Unable to load package metadata", the solution is to ignore the ws package in the task build :
+```
+function writeBundles() {
+  return buildCLI.dest({
+    onRequiringModule: moduleId =>
+      moduleId === "ws"
+        ? "define(['ws'] , function () {return undefined;});"
+        : void 0
+  });
+}
+```
 
 #### Webpack
 Webpack complain about the `ws` implementation of WebSocket, the errors
