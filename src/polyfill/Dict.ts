@@ -3,7 +3,7 @@ export class Dict<K extends string, T> {
     private data: { [key: string]: T } = {};
 
     public get(key: K): T {
-        return this.data[key.toString()];
+        return key === void 0 ? void 0 : this.data[key.toString()];
     }
 
     public clear() {
@@ -11,21 +11,28 @@ export class Dict<K extends string, T> {
     }
 
     public set(key: K, value: T) {
-        this.data[key ? key.toString() : key] = value;
+        if (key === void 0) {
+            return;
+        }
+        this.data[key.toString()] = value;
     }
 
-    public has(key: K) {
-        return this.data[key ? key.toString() : key] !== void 0;
+    public has(key: K): boolean {
+        return key !== void 0 && this.data[key.toString()] !== void 0;
     }
 
     public delete(key: K) {
-        delete this.data[key ? key.toString() : key];
+        if (key === void 0) {
+            return;
+        }
+        delete this.data[key.toString()];
     }
     public keys() {
         return Object.keys(this.data);
     }
 
     public values(): T[] {
-        return this.keys().map((key) => this.data[key ? key.toString() : key]);
+        return this.keys().map((key) => this.data[key]);
     }
+
 }
