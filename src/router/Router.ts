@@ -124,12 +124,7 @@ export class Router {
 
     public get(id: string): WebSocket {
         if (!this.virtualWebSockets.has(id)) {
-            const routedWs = new RoutedWebSocket(
-                (data: string | ArrayBufferLike | Blob | ArrayBufferView) => this.send(id, data),
-                (code: number, reason: string) => this.close(id, code, reason),
-                (vWs) => this.onMessageSubscribe(id, vWs),
-                (vWs) => this.onMessageUnsubscribe(id, vWs),
-            );
+            const routedWs = this.createRoutedWebsocket(id);
             this.virtualWebSockets.set(id, routedWs);
             if (this.localWebSockets.has(id)) {
                 routedWs.setReadyState(this.localWebSockets.get(id).readyState);
@@ -168,6 +163,14 @@ export class Router {
         }
     }
 
+    private createRoutedWebsocket(id: string): RoutedWebSocket {
+        return new RoutedWebSocket(
+            (data: string | ArrayBufferLike | Blob | ArrayBufferView) => this.send(id, data),
+            (code: number, reason: string) => this.close(id, code, reason),
+            (vWs) => this.onMessageSubscribe(id, vWs),
+            (vWs) => this.onMessageUnsubscribe(id, vWs),
+        );
+    }
     private send(id: string, data: string | ArrayBufferLike | Blob | ArrayBufferView) {
         const ws = this.localWebSockets.get(id);
         if (ws && ws.readyState === WebSocket.OPEN) {
