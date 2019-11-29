@@ -1,1 +1,2 @@
-docs linguist-generated=true
+docs/**/* linguist-generated=true
+docs/**/* -diff -merge
