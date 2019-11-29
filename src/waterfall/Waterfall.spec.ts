@@ -150,7 +150,7 @@ describe("Waterfall", () => {
 
     });
 
-    describe("when using an url generator", () => {
+    describe("when using a sync url generator", () => {
         let testCase: string;
         let urlGeneratorCall: number = 0;
         beforeEach(async () => {
@@ -196,6 +196,62 @@ describe("Waterfall", () => {
             ws = new Waterfall(urlGenerator, null, {
                 connectionTimeout: 20,
                 retryPolicy: () => 0
+            });
+            setTimeout(() => {
+                expect(urlGeneratorCall).to.equal(succeedAfter + 1);
+                expect(ws.readyState).to.equal(WebSocket.OPEN);
+                done();
+            }, 100);
+
+        });
+    });
+
+    describe("when using an async url generator", () => {
+        let testCase: string;
+        let urlGeneratorCall: number = 0;
+        beforeEach(async () => {
+            urlGeneratorCall = 0;
+            const urlGenerator = async (attemp: number, ws: Waterfall) => {
+                testCase = rnd();
+                urlGeneratorCall++;
+                return `ws://localtest.me:4752/${testCase}`;
+            };
+            ws = new Waterfall(urlGenerator);
+            expect(ws.readyState).to.equal(WebSocket.CONNECTING);
+            await expectEventually(() => ws.readyState === WebSocket.OPEN,
+                "The WebSocket should be open");
+        });
+
+        it("should call the url generator when reconnecting", (done) => {
+            const firstTest = testCase;
+            ws.addEventListener("connecting", async () => {
+                await sleep(100);
+                const secondTest = testCase;
+                expect(firstTest).to.not.equal(secondTest);
+                expect(urlGeneratorCall).to.equal(2);
+                expect((await supervisor.logs(firstTest)).map((l) => l[1]))
+                    .to.deep.equal(["connect", "disconnect", "close"]);
+                expect((await supervisor.logs(secondTest)).map((l) => l[1]))
+                    .to.deep.equal(["connect"]);
+                done();
+            });
+            ws.send("disconnect");
+
+        });
+        it("should avoid unnecessary close/open cycles", (done) => {
+            urlGeneratorCall = 0;
+            const succeedAfter = 2;
+            const validUrl = `ws://localtest.me:4752/${rnd}`;
+            const urlGenerator = async (attemp: number, ws: Waterfall) => {
+                urlGeneratorCall++;
+                if (urlGeneratorCall >  succeedAfter) {
+                    return validUrl;
+                }
+                return `unknown`;
+            };
+            ws = new Waterfall(urlGenerator, null, {
+                connectionTimeout: 20,
+                retryPolicy: () => 0,
             });
             setTimeout(() => {
                 expect(urlGeneratorCall).to.equal(succeedAfter + 1);
