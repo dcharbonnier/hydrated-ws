@@ -2,6 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "module": "commonjs",
+    "experimentalDecorators": true,
     "noImplicitAny": false,
     "outDir": "dist/",
     "target": "es5",

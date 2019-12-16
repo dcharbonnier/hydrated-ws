@@ -1,3 +1,4 @@
+import {computedFrom} from "../computedFrom";
 import Event from "../polyfill/Event";
 import WebSocket from "../polyfill/WebSocket";
 import {Shell} from "../Shell";
@@ -40,6 +41,7 @@ export class Dam extends Shell {
         this.forwardEvents();
     }
 
+    @computedFrom("_status")
     public get status() {
         return this._status;
     }
@@ -62,6 +64,7 @@ export class Dam extends Shell {
      * of the underlying WebSocket
      * @returns {number} WebSocket constants (CONNECTING, OPEN, CLOSING, CLOSED)
      */
+    @computedFrom("_status", "ws.readyState")
     public get readyState() {
         if (this._status === Dam.CLOSED &&
             (this.ws.readyState === this.ws.CONNECTING || this.ws.readyState === this.ws.OPEN) ) {

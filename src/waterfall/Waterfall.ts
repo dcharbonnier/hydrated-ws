@@ -1,3 +1,4 @@
+import {computedFrom} from "../computedFrom";
 import CloseEvent from "../polyfill/CloseEvent";
 import CustomEvent from "../polyfill/CustomEvent";
 import WebSocket from "../polyfill/WebSocket";
@@ -49,6 +50,7 @@ export class Waterfall extends Shell {
     /**
      * The URL as resolved by the constructor. This is always an absolute URL.
      */
+    @computedFrom("_url")
     public get url(): string {
         return this._url;
     }
@@ -78,6 +80,7 @@ export class Waterfall extends Shell {
     /**
      * The current state of the connection; this is one of the Ready state constants. **Read only.**
      */
+    @computedFrom("_readyState")
     public get readyState(): number {
         return this._readyState;
     }
@@ -87,6 +90,7 @@ export class Waterfall extends Shell {
      * This value resets to zero once all queued data has been sent. This value does not reset to zero when the
      * connection is closed; if you keep calling _send()_, this will continue to climb. **Read only**
      */
+    @computedFrom("ws.bufferedAmount")
     public get bufferedAmount(): number {
         return this.ws.bufferedAmount;
     }
@@ -95,11 +99,13 @@ export class Waterfall extends Shell {
      * The extensions selected by the server. This is currently only the empty string or a list
      * of extensions as negotiated by the connection.
      */
+    @computedFrom("ws.extensions")
     public get extensions(): string {
         // https://github.com/websockets/ws/issues/1244
         return typeof (this.ws.extensions) === "string" ? this.ws.extensions : "";
     }
 
+    @computedFrom("ws.protocol")
     public get protocol(): string {
         return this.ws.protocol;
     }

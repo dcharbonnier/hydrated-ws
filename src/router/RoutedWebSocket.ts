@@ -1,3 +1,4 @@
+import {computedFrom} from "../computedFrom";
 import IHydratedWebSocketEventMap from "../IHydratedWebSocketEventMap";
 import CloseEvent from "../polyfill/CloseEvent";
 import Event from "../polyfill/Event";
