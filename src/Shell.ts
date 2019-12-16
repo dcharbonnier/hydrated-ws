@@ -1,3 +1,4 @@
+import {computedFrom} from "./computedFrom";
 import IHydratedWebSocketEventMap from "./IHydratedWebSocketEventMap";
 import { Dict } from "./polyfill/Dict";
 import WebSocket from "./polyfill/WebSocket";
@@ -8,6 +9,7 @@ export abstract class Shell implements WebSocket {
      * An event listener to be called when the WebSocket connection's **readyState** changes to **CLOSED**.
      * The listener receives a _CloseEvent_ named "close".
      */
+    @computedFrom("_onclose")
     public get onclose(): (ev: CloseEvent) => any {
         return this._onclose;
     }
@@ -19,6 +21,7 @@ export abstract class Shell implements WebSocket {
     /**
      * An event listener to be called when an error occurs. This is a simple event named "error".
      */
+    @computedFrom("_onerror")
     public get onerror(): (ev: Event) => any {
         return this._onerror;
     }
@@ -31,6 +34,7 @@ export abstract class Shell implements WebSocket {
      * An event listener to be called when a message is received from the server.
      * The listener receives a _MessageEvent_ named "message".
      */
+    @computedFrom("_onmessage")
     public get onmessage(): (ev: MessageEvent) => any {
         return this.getOnmessage();
     }
@@ -44,6 +48,7 @@ export abstract class Shell implements WebSocket {
      * this indicates that the connection is ready to send and receive data.
      * The event is a simple one with the name "open".
      */
+    @computedFrom("_onopen")
     public get onopen(): (ev: Event) => any {
         return this._onopen;
     }
@@ -55,6 +60,7 @@ export abstract class Shell implements WebSocket {
     /**
      * The current state of the connection; this is one of the Ready state constants. **Read only.**
      */
+    @computedFrom("ws.readyState")
     public get readyState(): number {
         return this.getReadyState();
     }
@@ -62,6 +68,7 @@ export abstract class Shell implements WebSocket {
     /**
      * The URL as resolved by the constructor. This is always an absolute URL. **Read only.**
      */
+    @computedFrom("ws.url")
     public get url(): string {
         return this.ws.url;
     }
@@ -71,6 +78,7 @@ export abstract class Shell implements WebSocket {
      * This value resets to zero once all queued data has been sent. This value does not reset to zero when the
      * connection is closed; if you keep calling _send()_, this will continue to climb. **Read only**
      */
+    @computedFrom("ws.bufferedAmount")
     public get bufferedAmount(): number {
         return this.ws.bufferedAmount;
     }
@@ -79,10 +87,12 @@ export abstract class Shell implements WebSocket {
      * The extensions selected by the server. This is currently only the empty string or a list
      * of extensions as negotiated by the connection.
      */
+    @computedFrom("ws.extensions")
     public get extensions(): string {
         return this.ws.extensions;
     }
 
+    @computedFrom("ws.protocol")
     public get protocol(): string {
         return this.ws.protocol;
     }
