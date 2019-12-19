@@ -15,11 +15,6 @@ export class Client {
     constructor(private readonly uuid: string, ws: WebSocket, onConnection: (ws: WebSocket) => void) {
         const cablePipe = new Pipe(ws, "WOHC");
         this.dataPipe = new Pipe(ws, "WOHD");
-        ws.addEventListener("open", () => {
-            this.identified = false;
-            this.identifyRunning = false;
-            this.identify();
-        });
         this.cable = new Cable(new Tank(cablePipe));
 
         this.cable.register("open", ({ channel }: { channel: string }): Promise<void> => {
@@ -39,6 +34,15 @@ export class Client {
             }
             return new Promise((resolve) => setTimeout(resolve, 0));
         });
+        if (ws.readyState === WebSocket.OPEN) {
+            this.identify();
+        }
+        ws.addEventListener("open", () => {
+            this.identified = false;
+            this.identifyRunning = false;
+            this.identify();
+        });
+
     }
 
     public connect(uuid): WebSocket {
