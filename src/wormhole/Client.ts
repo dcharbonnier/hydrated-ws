@@ -1,8 +1,7 @@
-import { Cable } from "../cable/Cable";
-import { Pipe } from "../pipe/Pipe";
+import { Cable, Pipe, Tank } from "..";
 import { Dict } from "../polyfill/Dict";
 import ErrorEvent from "../polyfill/ErrorEvent";
-import { Tank } from "../tank/Tank";
+import WebSocket from "../polyfill/WebSocket";
 
 export class Client {
 
