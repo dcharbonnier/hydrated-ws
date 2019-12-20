@@ -11,28 +11,12 @@ export class Client {
     private identified = false;
     private identifyRunning = false;
 
-    constructor(private readonly uuid: string, ws: WebSocket, onConnection: (ws: WebSocket) => void) {
+    constructor(private readonly uuid: string, ws: WebSocket, private readonly onConnection: (ws: WebSocket) => void) {
         const cablePipe = new Pipe(ws, "WOHC");
         this.dataPipe = new Pipe(ws, "WOHD");
         this.cable = new Cable(new Tank(cablePipe));
+        this.registerCableMethods();
 
-        this.cable.register("open", ({ channel }: { channel: string }): Promise<void> => {
-            if (this.webSockets.has(channel)) {
-                return new Promise((resolve) => setTimeout(resolve, 0));
-            }
-
-            const pipe = new Pipe(this.dataPipe, channel, 32);
-            this.webSockets.set(channel, pipe);
-            onConnection(pipe);
-            return new Promise((resolve) => setTimeout(resolve, 0));
-        });
-        this.cable.register("close", ({ channel }: { channel: string }): Promise<void> => {
-            if (this.webSockets.has(channel)) {
-                this.webSockets.get(channel).close();
-                this.webSockets.delete(channel);
-            }
-            return new Promise((resolve) => setTimeout(resolve, 0));
-        });
         if (ws.readyState === WebSocket.OPEN) {
             this.identify();
         }
@@ -59,6 +43,25 @@ export class Client {
         return pipe;
     }
 
+    private registerCableMethods() {
+        this.cable.register("open", ({ channel }: { channel: string }): Promise<void> => {
+            if (this.webSockets.has(channel)) {
+                return new Promise((resolve) => setTimeout(resolve, 0));
+            }
+
+            const pipe = new Pipe(this.dataPipe, channel, 32);
+            this.webSockets.set(channel, pipe);
+            this.onConnection(pipe);
+            return new Promise((resolve) => setTimeout(resolve, 0));
+        });
+        this.cable.register("close", ({ channel }: { channel: string }): Promise<void> => {
+            if (this.webSockets.has(channel)) {
+                this.webSockets.get(channel).close();
+                this.webSockets.delete(channel);
+            }
+            return new Promise((resolve) => setTimeout(resolve, 0));
+        });
+    }
     private identify() {
         if (this.identified || this.identifyRunning) {
             return;
