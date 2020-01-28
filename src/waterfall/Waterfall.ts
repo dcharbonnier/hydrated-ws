@@ -252,7 +252,7 @@ export class Waterfall extends Shell {
 
         this.attempts++;
         const urlOrPromise: any = this._urlGenerator(this.attempts, this);
-        urlOrPromise.then ? urlOrPromise.then(doOpen) : doOpen(urlOrPromise);
+        urlOrPromise.then ? urlOrPromise.then(doOpen).catch(() => this.failed()) : doOpen(urlOrPromise);
     }
 
 }
