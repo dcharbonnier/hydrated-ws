@@ -260,6 +260,24 @@ describe("Waterfall", () => {
             }, 100);
 
         });
+
+        it("should retry when generator throws", (done) => {
+            let called = false;
+            const validUrl = `ws://localtest.me:4752/${rnd}`;
+            const urlGenerator = async (attempt: number, ws: Waterfall) => {
+                if (called) {
+                    return validUrl;
+                } else {
+                    called = true;
+                    throw new Error("First attempt fails.");
+                }
+            };
+            ws = new Waterfall(urlGenerator);
+            setTimeout(() => {
+                expect(ws.readyState).to.equal(WebSocket.OPEN);
+                done();
+            }, 100);
+        });
     });
 
     describe("when disconnect with emitClose option", () => {
