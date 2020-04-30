@@ -8,6 +8,7 @@ import {Shell} from "../Shell";
 export class Tank extends Shell {
 
     private buffer: any[] = [];
+    private flushInterval: NodeJS.Timeout;
 
     constructor(ws: WebSocket) {
         super();
@@ -18,7 +19,22 @@ export class Tank extends Shell {
         // The tank do not send twice an open event so the readyState can
         // change without an open or close event
         // detect this is a tank, add a readyState change event
-        setInterval(() => this.flush(), 100);
+        this.flushInterval = setInterval(() => this.flush(), 100);
+    }
+
+    /**
+     * Closes the WebSocket connection or connection attempt, if any.
+     * If the connection is already CLOSED, this method does nothing.
+     * @param {number} A numeric value indicating the status code explaining why the connection is being closed.
+     * If this parameter is not specified, a default value of 1005 is assumed.
+     * See the list of status codes https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent#Status_codes
+     * on the CloseEvent page for permitted values.
+     * @param {string} A human-readable string explaining why the connection is closing.
+     * This string must be no longer than 123 bytes of UTF-8 text (not characters).
+     */
+    public close(code: number = 1000, reason?: string) {
+        clearInterval(this.flushInterval);
+        super.close(code, reason);
     }
 
     /**
