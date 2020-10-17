@@ -8,7 +8,7 @@ import {Shell} from "../Shell";
 export class Tank extends Shell {
 
     private buffer: any[] = [];
-    private flushInterval: NodeJS.Timeout;
+    private flushInterval: NodeJS.Timeout | number;
 
     constructor(ws: WebSocket) {
         super();
@@ -19,7 +19,6 @@ export class Tank extends Shell {
         // The tank do not send twice an open event so the readyState can
         // change without an open or close event
         // detect this is a tank, add a readyState change event
-        this.flushInterval = setInterval(() => this.flush(), 100);
     }
 
     /**
@@ -33,7 +32,7 @@ export class Tank extends Shell {
      * This string must be no longer than 123 bytes of UTF-8 text (not characters).
      */
     public close(code: number = 1000, reason?: string) {
-        clearInterval(this.flushInterval);
+        this.stopFlushInterval();
         super.close(code, reason);
     }
 
@@ -61,12 +60,28 @@ export class Tank extends Shell {
         this.flush();
     }
 
+    private startFlushInterval() {
+        if (!this.flushInterval) {
+            this.flushInterval = setInterval(() => this.flush(), 100);
+        }
+    }
+
+    private stopFlushInterval() {
+        if (this.flushInterval) {
+            clearInterval(this.flushInterval as any);
+        }
+        this.flushInterval = null;
+    }
+
     private flush() {
         if (this.ws.readyState === this.OPEN) {
             let data: any;
             while (data = this.buffer.pop()) { // tslint:disable-line:no-conditional-assignment
                 this.ws.send(data);
             }
+            this.stopFlushInterval();
+        } else {
+            this.startFlushInterval();
         }
     }
 
