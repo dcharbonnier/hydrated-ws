@@ -8,7 +8,7 @@ import {Shell} from "../Shell";
 export class Tank extends Shell {
 
     private buffer: any[] = [];
-    private flushInterval: NodeJS.Timeout;
+    private flushInterval: NodeJS.Timeout | number;
 
     constructor(ws: WebSocket) {
         super();
@@ -33,7 +33,7 @@ export class Tank extends Shell {
      * This string must be no longer than 123 bytes of UTF-8 text (not characters).
      */
     public close(code: number = 1000, reason?: string) {
-        clearInterval(this.flushInterval);
+        clearInterval(this.flushInterval as any);
         super.close(code, reason);
     }
 

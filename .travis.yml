@@ -7,5 +7,5 @@ node_js:
 
 
 after_success:
-  - yarn run codecov
+  - npm run codecov
 

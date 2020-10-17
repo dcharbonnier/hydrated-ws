@@ -28,16 +28,16 @@
     "doc": "typedoc",
     "toc": "markdown-toc README.md -i --maxdepth 3",
     "build": "tsc -p ./tsconfig.json --outDir dist/",
-    "test": "yarn test-node && yarn test-karma && yarn build && yarn test-typescript-compatibility",
+    "test": "npm run test-node && npm run test-karma && npm run build && npm run test-typescript-compatibility",
     "test-typescript-compatibility": "for version in 3.6.4 3.7.2; do ./test-typescript-compatibility.sh $version || exit 1;done;",
     "test-server": "node --experimental-modules mock.mjs >/dev/null 2>&1 &",
-    "test-karma": "yarn test-server && karma start --single-run",
-    "test-phantom": "yarn test-server && karma start --single-run --browsers PhantomJS",
-    "test-chrome": "yarn test-server && karma start --single-run --browsers Chrome",
-    "test-node": "yarn test-server && nyc mocha --config ./mocharc.yml",
+    "test-karma": "npm run test-server && karma start --single-run",
+    "test-phantom": "npm run test-server && karma start --single-run --browsers PhantomJS",
+    "test-chrome": "npm run test-server && karma start --single-run --browsers Chrome",
+    "test-node": "npm run test-server && nyc mocha --config ./mocharc.yml",
     "lint": "tslint -c tslint.json  -p . --fix",
     "codecov": "codecov",
-    "prepublishOnly": "yarn build && yarn toc && yarn doc"
+    "prepublishOnly": "npm run build && npm run toc && npm run doc"
   },
   "nyc": {
     "include": [
@@ -90,7 +90,7 @@
     "puppeteer": "^3.0.0",
     "ts-node": "^8.5.0",
     "tslint": "^5.20.1",
-    "typedoc": "^0.17.0",
+    "typedoc": "^0.17.6",
     "typescript": "^3.7.2",
     "ws": "^7.2.0"
   }
